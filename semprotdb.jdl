@@ -1,0 +1,124 @@
+// Versao 2 - 21/07/24
+
+entity Curadoria {
+	email String required,
+    data Instant required,
+    anotacoes String
+}
+
+entity Carga {
+    status String,
+    ordem Integer,
+    planilha AnyBlob,
+    nome String required,
+    caminho String,
+    validado Boolean,
+    tipo Tipo required,
+    formato Formato required,
+    destino Destino,
+    linhas Integer,
+    checksum String
+}
+
+entity Versao {
+    nome String required,
+    detalhes String,
+    release Instant,
+    label String,
+    status Status required,
+    numero Integer required,
+    logo String,
+    log TextBlob,
+    texto TextBlob,
+    imagem ImageBlob
+}
+
+entity Referencia {
+    citacao String required,
+    link String,
+    ano Integer,
+    autores String
+}
+
+entity Organismo {
+    nome String required,
+    sigla String,
+    apelido String,
+    silhueta ImageBlob,
+    icone String,
+    pos String,
+    imagem String,
+    descricao String
+}
+
+entity Gene {
+	nome String required,
+    descricao String
+}
+
+entity Proteina {
+	nome String required,
+    tamanho Integer,
+    massa String,
+    descricao String
+}
+
+entity Recurso {
+	uid String required,
+    db BioDB,
+    link String
+}
+
+entity DBConfig {
+	key String required,
+    habilitado Boolean,
+    vstring String,
+    vbol Boolean,
+    vdate Instant,
+    vint Integer,
+    vtext TextBlob,
+    vimg ImageBlob
+}
+
+//Enumerações
+enum Tipo {
+    ARQUIVO, CAMINHO, REMOTO
+}
+
+enum Formato {
+    TSV, XLSX, ZIP, PNG, SVG, OUTRO
+}
+
+enum Destino {
+	DADOS, METADADOS, UPLOAD, MAPEAR, DOWNLOAD, OUTRO
+}
+
+enum Status {
+    CRIADO, CARREGADO, PROCESSADO, DISPONIVEL, OCULTO, INVALIDO
+}
+
+enum BioDB {
+	UNIPROT, INTERPRO, REFSEQ, GI, KEGG, STRINGDB, OUTRO
+}
+
+// Relacionamentos
+relationship ManyToOne {
+    Proteina to Curadoria
+    Gene to Curadoria
+    Gene to Organismo
+    Proteina to Versao
+    Carga to Versao
+    Proteina to Gene
+}
+
+relationship  ManyToMany {
+    Proteina to Referencia
+    Proteina to Recurso
+}
+
+// Opçoes de paginação das entidades
+paginate Curadoria, Versao, Referencia, Organismo, Carga with pagination
+paginate Gene, Proteina, Recurso with infinite-scroll
+
+// Opcoes de filtro
+filter Proteina, Gene, Carga, Versao, Organismo
