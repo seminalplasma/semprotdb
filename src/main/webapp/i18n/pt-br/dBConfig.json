@@ -1,0 +1,31 @@
+{
+  "semprotdbApp": {
+    "dBConfig": {
+      "home": {
+        "title": "DB Configs",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo DB Config",
+        "createOrEditLabel": "Criar ou editar DB Config",
+        "notFound": "Nenhum DB Config encontrado"
+      },
+      "created": "Um novo DB Config foi criado com o identificador { param }",
+      "updated": "Um DB Config foi atualizado com o identificador { param }",
+      "deleted": "Um DB Config foi excluído com o identificador { param }",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir DB Config { id }?"
+      },
+      "detail": {
+        "title": "DB Config"
+      },
+      "id": "ID",
+      "key": "Key",
+      "habilitado": "Habilitado",
+      "vstring": "Vstring",
+      "vbol": "Vbol",
+      "vdate": "Vdate",
+      "vint": "Vint",
+      "vtext": "Vtext",
+      "vimg": "Vimg"
+    }
+  }
+}

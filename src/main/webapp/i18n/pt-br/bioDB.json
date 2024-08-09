@@ -1,0 +1,14 @@
+{
+  "semprotdbApp": {
+    "BioDB": {
+      "null": "",
+      "UNIPROT": "UNIPROT",
+      "INTERPRO": "INTERPRO",
+      "REFSEQ": "REFSEQ",
+      "GI": "GI",
+      "KEGG": "KEGG",
+      "STRINGDB": "STRINGDB",
+      "OUTRO": "OUTRO"
+    }
+  }
+}

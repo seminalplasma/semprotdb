@@ -1,0 +1,45 @@
+{
+  "annotations": {
+    "changelogDate": "20240809002633"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "descricao",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Gene",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "curadoria",
+      "otherEntityRelationshipName": "gene",
+      "relationshipName": "curadoria",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "organismo",
+      "otherEntityRelationshipName": "gene",
+      "relationshipName": "organismo",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "proteina",
+      "otherEntityRelationshipName": "gene",
+      "relationshipName": "proteina",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

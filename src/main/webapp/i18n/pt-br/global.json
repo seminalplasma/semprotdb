@@ -7,7 +7,16 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entidades",
-        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
+        "curadoria": "Curadoria",
+        "carga": "Carga",
+        "versao": "Versao",
+        "referencia": "Referencia",
+        "organismo": "Organismo",
+        "gene": "Gene",
+        "proteina": "Proteina",
+        "recurso": "Recurso",
+        "dbConfig": "DB Config"
       },
       "account": {
         "main": "Conta",

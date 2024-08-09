@@ -1,0 +1,32 @@
+{
+  "semprotdbApp": {
+    "organismo": {
+      "home": {
+        "title": "Organismos",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Organismo",
+        "createOrEditLabel": "Criar ou editar Organismo",
+        "notFound": "Nenhum Organismo encontrado"
+      },
+      "created": "Um novo Organismo foi criado com o identificador { param }",
+      "updated": "Um Organismo foi atualizado com o identificador { param }",
+      "deleted": "Um Organismo foi excluído com o identificador { param }",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Organismo { id }?"
+      },
+      "detail": {
+        "title": "Organismo"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "sigla": "Sigla",
+      "apelido": "Apelido",
+      "silhueta": "Silhueta",
+      "icone": "Icone",
+      "pos": "Pos",
+      "imagem": "Imagem",
+      "descricao": "Descricao",
+      "gene": "Gene"
+    }
+  }
+}

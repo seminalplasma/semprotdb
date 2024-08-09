@@ -1,0 +1,27 @@
+{
+  "semprotdbApp": {
+    "recurso": {
+      "home": {
+        "title": "Recursos",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Recurso",
+        "createOrEditLabel": "Criar ou editar Recurso",
+        "notFound": "Nenhum Recurso encontrado"
+      },
+      "created": "Um novo Recurso foi criado com o identificador { param }",
+      "updated": "Um Recurso foi atualizado com o identificador { param }",
+      "deleted": "Um Recurso foi excluído com o identificador { param }",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Recurso { id }?"
+      },
+      "detail": {
+        "title": "Recurso"
+      },
+      "id": "ID",
+      "uid": "Uid",
+      "db": "Db",
+      "link": "Link",
+      "proteina": "Proteina"
+    }
+  }
+}

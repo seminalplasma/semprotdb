@@ -1,0 +1,37 @@
+{
+  "annotations": {
+    "changelogDate": "20240809002631"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "citacao",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "link",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "ano",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "autores",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Referencia",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "proteina",
+      "otherEntityRelationshipName": "referencia",
+      "relationshipName": "proteina",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

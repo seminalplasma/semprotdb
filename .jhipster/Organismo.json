@@ -1,0 +1,56 @@
+{
+  "annotations": {
+    "changelogDate": "20240809002632"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "sigla",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "apelido",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "silhueta",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "icone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "pos",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "imagem",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descricao",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Organismo",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "gene",
+      "otherEntityRelationshipName": "organismo",
+      "relationshipName": "gene",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

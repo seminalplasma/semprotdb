@@ -1,0 +1,27 @@
+{
+  "semprotdbApp": {
+    "recurso": {
+      "home": {
+        "title": "Recursos",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Recurso",
+        "createOrEditLabel": "Create or edit a Recurso",
+        "notFound": "No Recursos found"
+      },
+      "created": "A new Recurso is created with identifier { param }",
+      "updated": "A Recurso is updated with identifier { param }",
+      "deleted": "A Recurso is deleted with identifier { param }",
+      "delete": {
+        "question": "Are you sure you want to delete Recurso { id }?"
+      },
+      "detail": {
+        "title": "Recurso"
+      },
+      "id": "ID",
+      "uid": "Uid",
+      "db": "Db",
+      "link": "Link",
+      "proteina": "Proteina"
+    }
+  }
+}

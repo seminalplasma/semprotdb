@@ -1,0 +1,41 @@
+{
+  "annotations": {
+    "changelogDate": "20240809002628"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "data",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "anotacoes",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Curadoria",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "proteina",
+      "otherEntityRelationshipName": "curadoria",
+      "relationshipName": "proteina",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "gene",
+      "otherEntityRelationshipName": "curadoria",
+      "relationshipName": "gene",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

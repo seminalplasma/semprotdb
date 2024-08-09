@@ -1,0 +1,35 @@
+{
+  "semprotdbApp": {
+    "versao": {
+      "home": {
+        "title": "Versaos",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Versao",
+        "createOrEditLabel": "Criar ou editar Versao",
+        "notFound": "Nenhum Versao encontrado"
+      },
+      "created": "Um novo Versao foi criado com o identificador { param }",
+      "updated": "Um Versao foi atualizado com o identificador { param }",
+      "deleted": "Um Versao foi excluído com o identificador { param }",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Versao { id }?"
+      },
+      "detail": {
+        "title": "Versao"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "detalhes": "Detalhes",
+      "release": "Release",
+      "label": "Label",
+      "status": "Status",
+      "numero": "Numero",
+      "logo": "Logo",
+      "log": "Log",
+      "texto": "Texto",
+      "imagem": "Imagem",
+      "proteina": "Proteina",
+      "carga": "Carga"
+    }
+  }
+}

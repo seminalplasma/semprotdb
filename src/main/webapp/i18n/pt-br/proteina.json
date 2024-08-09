@@ -1,0 +1,32 @@
+{
+  "semprotdbApp": {
+    "proteina": {
+      "home": {
+        "title": "Proteinas",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Proteina",
+        "createOrEditLabel": "Criar ou editar Proteina",
+        "notFound": "Nenhum Proteina encontrado"
+      },
+      "created": "Um novo Proteina foi criado com o identificador { param }",
+      "updated": "Um Proteina foi atualizado com o identificador { param }",
+      "deleted": "Um Proteina foi excluído com o identificador { param }",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Proteina { id }?"
+      },
+      "detail": {
+        "title": "Proteina"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "tamanho": "Tamanho",
+      "massa": "Massa",
+      "descricao": "Descricao",
+      "curadoria": "Curadoria",
+      "versao": "Versao",
+      "gene": "Gene",
+      "referencia": "Referencia",
+      "recurso": "Recurso"
+    }
+  }
+}

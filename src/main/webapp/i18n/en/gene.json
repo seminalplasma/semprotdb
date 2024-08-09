@@ -1,0 +1,28 @@
+{
+  "semprotdbApp": {
+    "gene": {
+      "home": {
+        "title": "Genes",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Gene",
+        "createOrEditLabel": "Create or edit a Gene",
+        "notFound": "No Genes found"
+      },
+      "created": "A new Gene is created with identifier { param }",
+      "updated": "A Gene is updated with identifier { param }",
+      "deleted": "A Gene is deleted with identifier { param }",
+      "delete": {
+        "question": "Are you sure you want to delete Gene { id }?"
+      },
+      "detail": {
+        "title": "Gene"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "descricao": "Descricao",
+      "curadoria": "Curadoria",
+      "organismo": "Organismo",
+      "proteina": "Proteina"
+    }
+  }
+}

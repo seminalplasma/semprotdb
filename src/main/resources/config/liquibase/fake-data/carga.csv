@@ -1,0 +1,11 @@
+id;status;ordem;planilha;planilha_content_type;nome;caminho;validado;tipo;formato;destino;linhas;checksum
+1;propagandize headache phew;26970;../fake-data/blob/hipster.png;image/png;apt what;highly unimpressively ew;true;CAMINHO;PNG;METADADOS;31899;finally mmm
+2;jealousy frigid;28480;../fake-data/blob/hipster.png;image/png;unto;instil fooey;true;CAMINHO;TSV;DOWNLOAD;8090;excepting
+3;up worsen communicate;21888;../fake-data/blob/hipster.png;image/png;outside upon although;well-documented;false;REMOTO;ZIP;MAPEAR;16584;hark ah
+4;psst realistic source;30157;../fake-data/blob/hipster.png;image/png;between gladly crusade;aching;true;CAMINHO;XLSX;OUTRO;17042;blushing quake
+5;patrol;11887;../fake-data/blob/hipster.png;image/png;searchingly;given ouch notwithstanding;false;REMOTO;PNG;DOWNLOAD;12201;besides truthfully
+6;poised;17005;../fake-data/blob/hipster.png;image/png;foresee surprisingly ford;commune fooey svelte;true;ARQUIVO;SVG;MAPEAR;31464;circa aw
+7;gah whereas;30682;../fake-data/blob/hipster.png;image/png;zowie yet;honestly;true;CAMINHO;TSV;UPLOAD;3059;which hm extraneous
+8;lively surprisingly;20325;../fake-data/blob/hipster.png;image/png;skill wherever swift;or;true;CAMINHO;XLSX;UPLOAD;8409;huzzah how eyebrows
+9;angrily;24240;../fake-data/blob/hipster.png;image/png;not;chatter;true;ARQUIVO;XLSX;MAPEAR;11097;unnecessarily
+10;who;20586;../fake-data/blob/hipster.png;image/png;throughout likewise;till madly;false;ARQUIVO;SVG;METADADOS;16051;scarcely definite

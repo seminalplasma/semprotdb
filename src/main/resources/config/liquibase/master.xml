@@ -11,7 +11,19 @@
     <property name="datetimeType" value="datetime" dbms="postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002628_added_entity_Curadoria.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002629_added_entity_Carga.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002630_added_entity_Versao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002631_added_entity_Referencia.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002632_added_entity_Organismo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002633_added_entity_Gene.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002634_added_entity_Proteina.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002635_added_entity_Recurso.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002636_added_entity_DBConfig.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20240809002629_added_entity_constraints_Carga.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002633_added_entity_constraints_Gene.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240809002634_added_entity_constraints_Proteina.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

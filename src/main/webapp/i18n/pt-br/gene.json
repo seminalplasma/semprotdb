@@ -1,0 +1,28 @@
+{
+  "semprotdbApp": {
+    "gene": {
+      "home": {
+        "title": "Genes",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Gene",
+        "createOrEditLabel": "Criar ou editar Gene",
+        "notFound": "Nenhum Gene encontrado"
+      },
+      "created": "Um novo Gene foi criado com o identificador { param }",
+      "updated": "Um Gene foi atualizado com o identificador { param }",
+      "deleted": "Um Gene foi excluído com o identificador { param }",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Gene { id }?"
+      },
+      "detail": {
+        "title": "Gene"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "descricao": "Descricao",
+      "curadoria": "Curadoria",
+      "organismo": "Organismo",
+      "proteina": "Proteina"
+    }
+  }
+}

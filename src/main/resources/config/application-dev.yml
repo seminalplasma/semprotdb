@@ -32,15 +32,15 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/semprotdb
-    username: semprotdb
-    password:
+    url: jdbc:postgresql://localhost:5432/JHISPD
+    username: spdsgbd
+    password: 123
     hikari:
       poolName: Hikari
       auto-commit: false
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev, faker
+    contexts: dev
   mail:
     host: localhost
     port: 25
@@ -80,7 +80,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: Zjg1ZDlmNDhjMTgwYzQ4NjBiNTBiZDM0YzkwNjk3ZTI0ZTQ5ZmQzYmJjZDQwOTM3YjFiODZmYmZhNzBhNzg4OTZlOTFkMzhjNWZkZjMyNGZjMzE2NWRkMzAyOTc0MDc1NmJjNmIwNDk1MzA0ZDU5Y2EzY2JkZmQ5NmZjY2NkMTI=
+        base64-secret: Zjc1YTU5N2E3NTNlYzAyYTA3OTA5NWJmZTcwNzA1NTMxZmU0ZTgwMWZiNjhmZTQ1NzNmN2M4ODMxZTlkMjhlZTZkZGZlOGI0NmI5NjkyN2NiMjc3NmYxZjUxMjJmNTllMTkyNmJkNzM4NWMyN2EyNDNlZDRmODg3ZDc4MTZlODM=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

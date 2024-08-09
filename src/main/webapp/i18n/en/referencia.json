@@ -1,0 +1,28 @@
+{
+  "semprotdbApp": {
+    "referencia": {
+      "home": {
+        "title": "Referencias",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Referencia",
+        "createOrEditLabel": "Create or edit a Referencia",
+        "notFound": "No Referencias found"
+      },
+      "created": "A new Referencia is created with identifier { param }",
+      "updated": "A Referencia is updated with identifier { param }",
+      "deleted": "A Referencia is deleted with identifier { param }",
+      "delete": {
+        "question": "Are you sure you want to delete Referencia { id }?"
+      },
+      "detail": {
+        "title": "Referencia"
+      },
+      "id": "ID",
+      "citacao": "Citacao",
+      "link": "Link",
+      "ano": "Ano",
+      "autores": "Autores",
+      "proteina": "Proteina"
+    }
+  }
+}

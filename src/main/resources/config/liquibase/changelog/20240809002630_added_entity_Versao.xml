@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity Versao.
+    -->
+    <changeSet id="20240809002630-1" author="jhipster">
+        <createTable tableName="versao">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nome" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="detalhes" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="release" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="label" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="numero" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="logo" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="log" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="texto" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="imagem" type="${blobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="imagem_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <dropDefaultValue tableName="versao" columnName="release" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet id="20240809002630-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="config/liquibase/fake-data/versao.csv"
+                  separator=";"
+                  tableName="versao"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="nome" type="string"/>
+            <column name="detalhes" type="string"/>
+            <column name="release" type="date"/>
+            <column name="label" type="string"/>
+            <column name="status" type="string"/>
+            <column name="numero" type="numeric"/>
+            <column name="logo" type="string"/>
+            <column name="log" type="clob"/>
+            <column name="texto" type="clob"/>
+            <column name="imagem" type="blob"/>
+            <column name="imagem_content_type" type="string"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

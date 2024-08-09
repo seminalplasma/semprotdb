@@ -1,0 +1,13 @@
+{
+  "semprotdbApp": {
+    "Formato": {
+      "null": "",
+      "TSV": "TSV",
+      "XLSX": "XLSX",
+      "ZIP": "ZIP",
+      "PNG": "PNG",
+      "SVG": "SVG",
+      "OUTRO": "OUTRO"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Proteina.
+    -->
+    <changeSet id="20240809002634-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="curadoria_id"
+                                 baseTableName="proteina"
+                                 constraintName="fk_proteina__curadoria_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="curadoria"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="versao_id"
+                                 baseTableName="proteina"
+                                 constraintName="fk_proteina__versao_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="versao"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="gene_id"
+                                 baseTableName="proteina"
+                                 constraintName="fk_proteina__gene_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="gene"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="proteina_id"
+                                 baseTableName="rel_proteina__referencia"
+                                 constraintName="fk_rel_proteina__referencia__proteina_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="proteina"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="referencia_id"
+                                 baseTableName="rel_proteina__referencia"
+                                 constraintName="fk_rel_proteina__referencia__referencia_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="referencia"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="proteina_id"
+                                 baseTableName="rel_proteina__recurso"
+                                 constraintName="fk_rel_proteina__recurso__proteina_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="proteina"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="recurso_id"
+                                 baseTableName="rel_proteina__recurso"
+                                 constraintName="fk_rel_proteina__recurso__recurso_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="recurso"
+                                 />
+    </changeSet>
+</databaseChangeLog>

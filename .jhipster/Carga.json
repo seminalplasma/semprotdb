@@ -1,0 +1,73 @@
+{
+  "annotations": {
+    "changelogDate": "20240809002629"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "status",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "ordem",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "planilha",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    },
+    {
+      "fieldName": "nome",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "caminho",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "validado",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "tipo",
+      "fieldType": "Tipo",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "ARQUIVO,CAMINHO,REMOTO"
+    },
+    {
+      "fieldName": "formato",
+      "fieldType": "Formato",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "TSV,XLSX,ZIP,PNG,SVG,OUTRO"
+    },
+    {
+      "fieldName": "destino",
+      "fieldType": "Destino",
+      "fieldValues": "DADOS,METADADOS,UPLOAD,MAPEAR,DOWNLOAD,OUTRO"
+    },
+    {
+      "fieldName": "linhas",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "checksum",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Carga",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "versao",
+      "otherEntityRelationshipName": "carga",
+      "relationshipName": "versao",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

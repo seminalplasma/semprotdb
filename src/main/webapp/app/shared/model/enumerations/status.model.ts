@@ -1,0 +1,13 @@
+export enum Status {
+  CRIADO = 'CRIADO',
+
+  CARREGADO = 'CARREGADO',
+
+  PROCESSADO = 'PROCESSADO',
+
+  DISPONIVEL = 'DISPONIVEL',
+
+  OCULTO = 'OCULTO',
+
+  INVALIDO = 'INVALIDO',
+}

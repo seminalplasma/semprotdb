@@ -1,0 +1,28 @@
+{
+  "semprotdbApp": {
+    "referencia": {
+      "home": {
+        "title": "Referencias",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Referencia",
+        "createOrEditLabel": "Criar ou editar Referencia",
+        "notFound": "Nenhum Referencia encontrado"
+      },
+      "created": "Um novo Referencia foi criado com o identificador { param }",
+      "updated": "Um Referencia foi atualizado com o identificador { param }",
+      "deleted": "Um Referencia foi excluído com o identificador { param }",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Referencia { id }?"
+      },
+      "detail": {
+        "title": "Referencia"
+      },
+      "id": "ID",
+      "citacao": "Citacao",
+      "link": "Link",
+      "ano": "Ano",
+      "autores": "Autores",
+      "proteina": "Proteina"
+    }
+  }
+}

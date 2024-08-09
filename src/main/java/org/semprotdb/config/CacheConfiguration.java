@@ -50,6 +50,25 @@ public class CacheConfiguration {
             createCache(cm, org.semprotdb.domain.User.class.getName());
             createCache(cm, org.semprotdb.domain.Authority.class.getName());
             createCache(cm, org.semprotdb.domain.User.class.getName() + ".authorities");
+            createCache(cm, org.semprotdb.domain.Curadoria.class.getName());
+            createCache(cm, org.semprotdb.domain.Curadoria.class.getName() + ".proteinas");
+            createCache(cm, org.semprotdb.domain.Curadoria.class.getName() + ".genes");
+            createCache(cm, org.semprotdb.domain.Carga.class.getName());
+            createCache(cm, org.semprotdb.domain.Versao.class.getName());
+            createCache(cm, org.semprotdb.domain.Versao.class.getName() + ".proteinas");
+            createCache(cm, org.semprotdb.domain.Versao.class.getName() + ".cargas");
+            createCache(cm, org.semprotdb.domain.Referencia.class.getName());
+            createCache(cm, org.semprotdb.domain.Referencia.class.getName() + ".proteinas");
+            createCache(cm, org.semprotdb.domain.Organismo.class.getName());
+            createCache(cm, org.semprotdb.domain.Organismo.class.getName() + ".genes");
+            createCache(cm, org.semprotdb.domain.Gene.class.getName());
+            createCache(cm, org.semprotdb.domain.Gene.class.getName() + ".proteinas");
+            createCache(cm, org.semprotdb.domain.Proteina.class.getName());
+            createCache(cm, org.semprotdb.domain.Proteina.class.getName() + ".referencias");
+            createCache(cm, org.semprotdb.domain.Proteina.class.getName() + ".recursos");
+            createCache(cm, org.semprotdb.domain.Recurso.class.getName());
+            createCache(cm, org.semprotdb.domain.Recurso.class.getName() + ".proteinas");
+            createCache(cm, org.semprotdb.domain.DBConfig.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

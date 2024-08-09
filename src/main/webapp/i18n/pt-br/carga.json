@@ -1,0 +1,35 @@
+{
+  "semprotdbApp": {
+    "carga": {
+      "home": {
+        "title": "Cargas",
+        "refreshListLabel": "Atualizar lista",
+        "createLabel": "Criar novo Carga",
+        "createOrEditLabel": "Criar ou editar Carga",
+        "notFound": "Nenhum Carga encontrado"
+      },
+      "created": "Um novo Carga foi criado com o identificador { param }",
+      "updated": "Um Carga foi atualizado com o identificador { param }",
+      "deleted": "Um Carga foi excluído com o identificador { param }",
+      "delete": {
+        "question": "Tem certeza de que deseja excluir Carga { id }?"
+      },
+      "detail": {
+        "title": "Carga"
+      },
+      "id": "ID",
+      "status": "Status",
+      "ordem": "Ordem",
+      "planilha": "Planilha",
+      "nome": "Nome",
+      "caminho": "Caminho",
+      "validado": "Validado",
+      "tipo": "Tipo",
+      "formato": "Formato",
+      "destino": "Destino",
+      "linhas": "Linhas",
+      "checksum": "Checksum",
+      "versao": "Versao"
+    }
+  }
+}

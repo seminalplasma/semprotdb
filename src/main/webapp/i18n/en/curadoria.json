@@ -1,0 +1,28 @@
+{
+  "semprotdbApp": {
+    "curadoria": {
+      "home": {
+        "title": "Curadorias",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Curadoria",
+        "createOrEditLabel": "Create or edit a Curadoria",
+        "notFound": "No Curadorias found"
+      },
+      "created": "A new Curadoria is created with identifier { param }",
+      "updated": "A Curadoria is updated with identifier { param }",
+      "deleted": "A Curadoria is deleted with identifier { param }",
+      "delete": {
+        "question": "Are you sure you want to delete Curadoria { id }?"
+      },
+      "detail": {
+        "title": "Curadoria"
+      },
+      "id": "ID",
+      "email": "Email",
+      "data": "Data",
+      "anotacoes": "Anotacoes",
+      "proteina": "Proteina",
+      "gene": "Gene"
+    }
+  }
+}

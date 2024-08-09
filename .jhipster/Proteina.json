@@ -1,0 +1,67 @@
+{
+  "annotations": {
+    "changelogDate": "20240809002634"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "tamanho",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "massa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descricao",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Proteina",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "curadoria",
+      "otherEntityRelationshipName": "proteina",
+      "relationshipName": "curadoria",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "versao",
+      "otherEntityRelationshipName": "proteina",
+      "relationshipName": "versao",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "gene",
+      "otherEntityRelationshipName": "proteina",
+      "relationshipName": "gene",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "referencia",
+      "otherEntityRelationshipName": "proteina",
+      "relationshipName": "referencia",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "recurso",
+      "otherEntityRelationshipName": "proteina",
+      "relationshipName": "recurso",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

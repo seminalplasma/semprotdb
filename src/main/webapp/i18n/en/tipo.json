@@ -1,0 +1,10 @@
+{
+  "semprotdbApp": {
+    "Tipo": {
+      "null": "",
+      "ARQUIVO": "ARQUIVO",
+      "CAMINHO": "CAMINHO",
+      "REMOTO": "REMOTO"
+    }
+  }
+}

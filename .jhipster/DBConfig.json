@@ -1,0 +1,47 @@
+{
+  "annotations": {
+    "changelogDate": "20240809002636"
+  },
+  "applications": "*",
+  "entityTableName": "db_config",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "habilitado",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "vstring",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "vbol",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "vdate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "vint",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "vtext",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "vimg",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    }
+  ],
+  "name": "DBConfig",
+  "relationships": [],
+  "searchEngine": "no"
+}

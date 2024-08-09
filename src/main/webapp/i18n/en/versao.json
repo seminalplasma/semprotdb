@@ -1,0 +1,35 @@
+{
+  "semprotdbApp": {
+    "versao": {
+      "home": {
+        "title": "Versaos",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Versao",
+        "createOrEditLabel": "Create or edit a Versao",
+        "notFound": "No Versaos found"
+      },
+      "created": "A new Versao is created with identifier { param }",
+      "updated": "A Versao is updated with identifier { param }",
+      "deleted": "A Versao is deleted with identifier { param }",
+      "delete": {
+        "question": "Are you sure you want to delete Versao { id }?"
+      },
+      "detail": {
+        "title": "Versao"
+      },
+      "id": "ID",
+      "nome": "Nome",
+      "detalhes": "Detalhes",
+      "release": "Release",
+      "label": "Label",
+      "status": "Status",
+      "numero": "Numero",
+      "logo": "Logo",
+      "log": "Log",
+      "texto": "Texto",
+      "imagem": "Imagem",
+      "proteina": "Proteina",
+      "carga": "Carga"
+    }
+  }
+}
