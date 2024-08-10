@@ -90,7 +90,7 @@ const useDataUtils = () => ({
     return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' bytes';
   },
 
-  setFileData(event, entity, field, isImage) {
+  setFileData(event, entity, field, isImage, field_name, res = (a: string, b: string) => {}) {
     if (event && event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       if (isImage && !/^image\//.test(file.type)) {
@@ -99,6 +99,8 @@ const useDataUtils = () => ({
       this.toBase64(file, base64Data => {
         entity[field] = base64Data;
         entity[`${field}ContentType`] = file.type;
+        if (field_name) entity[field_name] = file.name;
+        if (res) res(file.name, file.type);
       });
     }
   },

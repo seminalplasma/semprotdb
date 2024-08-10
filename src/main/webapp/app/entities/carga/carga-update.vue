@@ -12,31 +12,50 @@
             <label for="id" v-text="t$('global.field.id')"></label>
             <input type="text" class="form-control" id="id" name="id" v-model="carga.id" readonly />
           </div>
+          <div class="form-group my-4">
+            <b-form-checkbox @change="carga.tipo = modoRemoto ? 'REMOTO' : 'ARQUIVO'" v-model="modoRemoto" name="check-button" switch>
+              Baixar dados remoto
+            </b-form-checkbox>
+          </div>
+
+          <!--          TIPO-->
           <div class="form-group">
-            <label class="form-control-label" v-text="t$('semprotdbApp.carga.status')" for="carga-status"></label>
+            <label class="form-control-label" v-text="t$('semprotdbApp.carga.tipo')" for="carga-tipo"></label>
+            <select
+              :disabled="!!carga.validado"
+              class="form-control"
+              name="tipo"
+              :class="{ valid: !v$.tipo.$invalid, invalid: v$.tipo.$invalid }"
+              v-model="v$.tipo.$model"
+              id="carga-tipo"
+              data-cy="tipo"
+              required
+            >
+              <option v-for="tipo in tipoValues" :key="tipo" v-bind:value="tipo" v-bind:label="t$('semprotdbApp.Tipo.' + tipo)">
+                {{ tipo }}
+              </option>
+            </select>
+            <div v-if="v$.tipo.$anyDirty && v$.tipo.$invalid">
+              <small class="form-text text-danger" v-for="error of v$.tipo.$errors" :key="error.$uid">{{ error.$message }}</small>
+            </div>
+          </div>
+
+          <!--          CAMINHO-->
+          <div v-if="modoRemoto" class="form-group">
+            <label class="form-control-label" v-text="t$('semprotdbApp.carga.caminho')" for="carga-caminho"></label>
             <input
               type="text"
               class="form-control"
-              name="status"
-              id="carga-status"
-              data-cy="status"
-              :class="{ valid: !v$.status.$invalid, invalid: v$.status.$invalid }"
-              v-model="v$.status.$model"
+              name="caminho"
+              id="carga-caminho"
+              data-cy="caminho"
+              :class="{ valid: !v$.caminho.$invalid, invalid: v$.caminho.$invalid }"
+              v-model="v$.caminho.$model"
             />
           </div>
-          <div class="form-group">
-            <label class="form-control-label" v-text="t$('semprotdbApp.carga.ordem')" for="carga-ordem"></label>
-            <input
-              type="number"
-              class="form-control"
-              name="ordem"
-              id="carga-ordem"
-              data-cy="ordem"
-              :class="{ valid: !v$.ordem.$invalid, invalid: v$.ordem.$invalid }"
-              v-model.number="v$.ordem.$model"
-            />
-          </div>
-          <div class="form-group">
+
+          <!--          PLANILHA-->
+          <div v-else class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.planilha')" for="carga-planilha"></label>
             <div>
               <div v-if="carga.planilha" class="form-text text-danger clearfix">
@@ -61,7 +80,17 @@
                 id="file_planilha"
                 style="display: none"
                 data-cy="planilha"
-                v-on:change="setFileData($event, carga, 'planilha', false)"
+                v-on:change="
+                  setFileData(
+                    $event,
+                    carga,
+                    'planilha',
+                    false,
+                    'nome',
+                    (f, t) => (carga.formato = /.*sheet.*/.test(t || '') ? 'XLSX' : 'TSV'),
+                  );
+                  carga.tipo = 'ARQUIVO';
+                "
               />
             </div>
             <input
@@ -81,6 +110,8 @@
               v-model="carga.planilhaContentType"
             />
           </div>
+
+          <!--          NOME-->
           <div class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.nome')" for="carga-nome"></label>
             <input
@@ -97,19 +128,37 @@
               <small class="form-text text-danger" v-for="error of v$.nome.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
-          <div class="form-group">
-            <label class="form-control-label" v-text="t$('semprotdbApp.carga.caminho')" for="carga-caminho"></label>
+
+          <!--          STATUS-->
+          <div :hidden="isNew" class="form-group">
+            <label class="form-control-label" v-text="t$('semprotdbApp.carga.status')" for="carga-status"></label>
             <input
               type="text"
               class="form-control"
-              name="caminho"
-              id="carga-caminho"
-              data-cy="caminho"
-              :class="{ valid: !v$.caminho.$invalid, invalid: v$.caminho.$invalid }"
-              v-model="v$.caminho.$model"
+              name="status"
+              id="carga-status"
+              data-cy="status"
+              :class="{ valid: !v$.status.$invalid, invalid: v$.status.$invalid }"
+              v-model="v$.status.$model"
             />
           </div>
-          <div class="form-group">
+
+          <!--          ORDEM-->
+          <div :hidden="isNew" class="form-group">
+            <label class="form-control-label" v-text="t$('semprotdbApp.carga.ordem')" for="carga-ordem"></label>
+            <input
+              type="number"
+              class="form-control"
+              name="ordem"
+              id="carga-ordem"
+              data-cy="ordem"
+              :class="{ valid: !v$.ordem.$invalid, invalid: v$.ordem.$invalid }"
+              v-model.number="v$.ordem.$model"
+            />
+          </div>
+
+          <!--          VALIDADO-->
+          <div hidden class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.validado')" for="carga-validado"></label>
             <input
               type="checkbox"
@@ -121,25 +170,8 @@
               v-model="v$.validado.$model"
             />
           </div>
-          <div class="form-group">
-            <label class="form-control-label" v-text="t$('semprotdbApp.carga.tipo')" for="carga-tipo"></label>
-            <select
-              class="form-control"
-              name="tipo"
-              :class="{ valid: !v$.tipo.$invalid, invalid: v$.tipo.$invalid }"
-              v-model="v$.tipo.$model"
-              id="carga-tipo"
-              data-cy="tipo"
-              required
-            >
-              <option v-for="tipo in tipoValues" :key="tipo" v-bind:value="tipo" v-bind:label="t$('semprotdbApp.Tipo.' + tipo)">
-                {{ tipo }}
-              </option>
-            </select>
-            <div v-if="v$.tipo.$anyDirty && v$.tipo.$invalid">
-              <small class="form-text text-danger" v-for="error of v$.tipo.$errors" :key="error.$uid">{{ error.$message }}</small>
-            </div>
-          </div>
+
+          <!--          FORMATO-->
           <div class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.formato')" for="carga-formato"></label>
             <select
@@ -164,9 +196,12 @@
               <small class="form-text text-danger" v-for="error of v$.formato.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
-          <div class="form-group">
+
+          <!--          DESTINO-->
+          <div :hidden="isNew" class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.destino')" for="carga-destino"></label>
             <select
+              disabled
               class="form-control"
               name="destino"
               :class="{ valid: !v$.destino.$invalid, invalid: v$.destino.$invalid }"
@@ -184,7 +219,9 @@
               </option>
             </select>
           </div>
-          <div class="form-group">
+
+          <!--          LINHAS-->
+          <div hidden class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.linhas')" for="carga-linhas"></label>
             <input
               type="number"
@@ -196,7 +233,9 @@
               v-model.number="v$.linhas.$model"
             />
           </div>
-          <div class="form-group">
+
+          <!--          CHECKSUM-->
+          <div hidden class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.checksum')" for="carga-checksum"></label>
             <input
               type="text"
@@ -208,6 +247,8 @@
               v-model="v$.checksum.$model"
             />
           </div>
+
+          <!--          VERSAO-->
           <div class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.versao')" for="carga-versao"></label>
             <select class="form-control" id="carga-versao" data-cy="versao" name="versao" v-model="carga.versao">
@@ -231,7 +272,7 @@
             id="save-entity"
             data-cy="entityCreateSaveButton"
             :disabled="v$.$invalid || isSaving"
-            class="btn btn-primary"
+            class="btn btn-primary mx-2"
           >
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
           </button>

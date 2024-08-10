@@ -42,7 +42,7 @@ public class CargaQueryService extends QueryService<Carga> {
     public Page<Carga> findByCriteria(CargaCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Carga> specification = createSpecification(criteria);
-        return cargaRepository.findAll(specification, page);
+        return cargaRepository.findAllLight(specification, page);
     }
 
     /**

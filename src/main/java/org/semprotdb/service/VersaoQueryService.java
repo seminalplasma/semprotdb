@@ -1,20 +1,17 @@
 package org.semprotdb.service;
 
 import jakarta.persistence.criteria.JoinType;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.semprotdb.domain.*; // for static metamodels
+import org.semprotdb.domain.Carga_;
+import org.semprotdb.domain.Proteina_;
 import org.semprotdb.domain.Versao;
+import org.semprotdb.domain.Versao_;
 import org.semprotdb.repository.VersaoRepository;
 import org.semprotdb.service.criteria.VersaoCriteria;
-import org.semprotdb.service.dto.VersaoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
@@ -39,20 +36,21 @@ public class VersaoQueryService extends QueryService<Versao> {
 
     /**
      * Return a {@link Page} of {@link Versao} which matches the criteria from the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
+     * @param page     The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
     public Page<Versao> findByCriteria(VersaoCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Versao> specification = createSpecification(criteria);
-        Page<Versao> content = versaoRepository.findAllLight(specification, page);
-        return content;
+        return versaoRepository.findAllLight(specification, page);
     }
 
     /**
      * Return the number of matching entities in the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
@@ -65,6 +63,7 @@ public class VersaoQueryService extends QueryService<Versao> {
 
     /**
      * Function to convert {@link VersaoCriteria} to a {@link Specification}
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */

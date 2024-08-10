@@ -4,13 +4,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import org.semprotdb.domain.Versao;
 import org.semprotdb.domain.enumeration.Status;
 import org.semprotdb.repository.VersaoRepository;
+import org.semprotdb.service.UserService;
 import org.semprotdb.service.VersaoQueryService;
 import org.semprotdb.service.VersaoService;
 import org.semprotdb.service.criteria.VersaoCriteria;
@@ -24,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.service.filter.Filter;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -38,6 +37,7 @@ public class VersaoResource {
     private static final Logger log = LoggerFactory.getLogger(VersaoResource.class);
 
     private static final String ENTITY_NAME = "versao";
+    private final UserService userService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -48,10 +48,20 @@ public class VersaoResource {
 
     private final VersaoQueryService versaoQueryService;
 
-    public VersaoResource(VersaoService versaoService, VersaoRepository versaoRepository, VersaoQueryService versaoQueryService) {
+    private final VersaoCriteria.StatusFilter STATUS_PUBLIC_FILTER;
+
+    public VersaoResource(
+        VersaoService versaoService,
+        VersaoRepository versaoRepository,
+        VersaoQueryService versaoQueryService,
+        UserService userService
+    ) {
         this.versaoService = versaoService;
         this.versaoRepository = versaoRepository;
         this.versaoQueryService = versaoQueryService;
+        this.STATUS_PUBLIC_FILTER = new VersaoCriteria.StatusFilter();
+        this.STATUS_PUBLIC_FILTER.setSpecified(true).setIn(Arrays.asList(Status.DISPONIVEL, Status.OCULTO));
+        this.userService = userService;
     }
 
     /**
@@ -157,6 +167,10 @@ public class VersaoResource {
         VersaoCriteria criteria,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
+        if (userService.usuarioNAOLogado()) {
+            criteria.setStatus(STATUS_PUBLIC_FILTER);
+        }
+
         log.debug("REST request to get Versaos by criteria: {}", criteria);
 
         Page<Versao> page = versaoQueryService.findByCriteria(criteria, pageable);

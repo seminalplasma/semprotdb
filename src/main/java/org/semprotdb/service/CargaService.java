@@ -2,9 +2,14 @@ package org.semprotdb.service;
 
 import java.util.Optional;
 import org.semprotdb.domain.Carga;
+import org.semprotdb.domain.enumeration.Destino;
+import org.semprotdb.domain.enumeration.Status;
 import org.semprotdb.repository.CargaRepository;
+import org.semprotdb.util.DataModelTabela;
+import org.semprotdb.util.DataModelUniprot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +36,15 @@ public class CargaService {
      */
     public Carga save(Carga carga) {
         log.debug("Request to save Carga : {}", carga);
-        return cargaRepository.save(carga);
+
+        carga.setDestino(Destino.OUTRO);
+        carga.setStatus("Não verificado");
+        carga.setValidado(false);
+        carga.setOrdem(2);
+
+        Carga _carga = cargaRepository.save(carga);
+        this.processarCarga(_carga.getId());
+        return cargaRepository.save(_carga);
     }
 
     /**
@@ -42,7 +55,9 @@ public class CargaService {
      */
     public Carga update(Carga carga) {
         log.debug("Request to update Carga : {}", carga);
-        return cargaRepository.save(carga);
+        Carga _carga = cargaRepository.save(carga);
+        this.processarCarga(_carga.getId());
+        return _carga;
     }
 
     /**
@@ -96,7 +111,11 @@ public class CargaService {
 
                 return existingCarga;
             })
-            .map(cargaRepository::save);
+            .map(cargaRepository::save)
+            .map(c -> {
+                processarCarga(c.getId());
+                return c;
+            });
     }
 
     /**
@@ -119,5 +138,59 @@ public class CargaService {
     public void delete(Long id) {
         log.debug("Request to delete Carga : {}", id);
         cargaRepository.deleteById(id);
+    }
+
+    ///@Scheduled(cron = "1 * * * * ?")
+    @Async
+    public void processarCarga(Long cargaId) {
+        Carga carga = findOne(cargaId).orElse(null);
+        if (carga == null) return;
+
+        /// ORDEM
+        /// 0 - outros
+        /// 1 - invalido
+        //  2 - nova carga
+        /// 3 - downloads
+        /// 4 - upload
+        /// 5 - dados, metadata
+        /// 6 -
+        /// 7 -
+        /// 8 -
+        /// 9 -
+
+        if (carga.getVersao().getStatus().ordinal() >= Status.DISPONIVEL.ordinal()) {
+            log.info("Carga carga {} {} sera tratada como DOWNLOAD.", carga.getId(), carga.getNome());
+            carga.setDestino(Destino.DOWNLOAD);
+            carga.setValidado(true);
+            carga.setOrdem(3);
+            carga.setStatus("Arquivo para download.");
+        }
+
+        log.info("Verificando carga {} ", carga);
+
+        if (carga.getValidado()) return;
+
+        try {
+            //// verificar se é carga de dados
+            DataModelTabela dataModelTabela = new DataModelTabela(carga);
+            if (dataModelTabela.validar(5)) return;
+
+            /// verificar se é carga de mapeamento
+            DataModelUniprot dataModelUniprot = new DataModelUniprot(carga);
+            if (dataModelUniprot.validar(5)) return;
+
+            carga.setLinhas(0);
+            carga.setDestino(Destino.OUTRO);
+            carga.setValidado(false);
+            carga.setOrdem(0);
+            carga.setStatus("Arquivo desconhecido.");
+            log.warn("Enviado CARGA de arquivo desconhecido: {}", carga);
+        } catch (Exception e) {
+            carga.setStatus(e.getMessage());
+            log.error("Falhou ao validar CARGA: {}", e.getCause());
+        } finally {
+            cargaRepository.save(carga);
+            log.info("Finalizou validaçao CARGA: {}", carga);
+        }
     }
 }

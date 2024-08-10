@@ -32,34 +32,34 @@
               <span v-text="t$('global.field.id')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('status')">
-              <span v-text="t$('semprotdbApp.carga.status')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'status'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('status')">-->
+            <!--              <span v-text="t$('semprotdbApp.carga.status')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'status'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row" v-on:click="changeOrder('ordem')">
               <span v-text="t$('semprotdbApp.carga.ordem')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'ordem'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('planilha')">
-              <span v-text="t$('semprotdbApp.carga.planilha')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'planilha'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('planilha')">-->
+            <!--              <span v-text="t$('semprotdbApp.carga.planilha')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'planilha'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row" v-on:click="changeOrder('nome')">
               <span v-text="t$('semprotdbApp.carga.nome')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'nome'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('caminho')">
-              <span v-text="t$('semprotdbApp.carga.caminho')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'caminho'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('caminho')">-->
+            <!--              <span v-text="t$('semprotdbApp.carga.caminho')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'caminho'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row" v-on:click="changeOrder('validado')">
               <span v-text="t$('semprotdbApp.carga.validado')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'validado'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('tipo')">
-              <span v-text="t$('semprotdbApp.carga.tipo')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'tipo'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('tipo')">-->
+            <!--              <span v-text="t$('semprotdbApp.carga.tipo')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'tipo'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row" v-on:click="changeOrder('formato')">
               <span v-text="t$('semprotdbApp.carga.formato')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'formato'"></jhi-sort-indicator>
@@ -72,13 +72,13 @@
               <span v-text="t$('semprotdbApp.carga.linhas')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'linhas'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('checksum')">
-              <span v-text="t$('semprotdbApp.carga.checksum')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'checksum'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('versao.id')">
+            <!--            <th scope="row" v-on:click="changeOrder('checksum')">-->
+            <!--              <span v-text="t$('semprotdbApp.carga.checksum')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'checksum'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <th scope="row" v-on:click="changeOrder('versao.nome')">
               <span v-text="t$('semprotdbApp.carga.versao')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'versao.id'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'versao.nome'"></jhi-sort-indicator>
             </th>
             <th scope="row"></th>
           </tr>
@@ -88,27 +88,27 @@
             <td>
               <router-link :to="{ name: 'CargaView', params: { cargaId: carga.id } }">{{ carga.id }}</router-link>
             </td>
-            <td>{{ carga.status }}</td>
+            <!--            <td>{{ carga.status }}</td>-->
             <td>{{ carga.ordem }}</td>
-            <td>
-              <a
-                v-if="carga.planilha"
-                v-on:click="openFile(carga.planilhaContentType, carga.planilha)"
-                v-text="t$('entity.action.open')"
-              ></a>
-              <span v-if="carga.planilha">{{ carga.planilhaContentType }}, {{ byteSize(carga.planilha) }}</span>
-            </td>
+            <!--            <td>-->
+            <!--              <a-->
+            <!--                v-if="carga.planilha"-->
+            <!--                v-on:click="openFile(carga.planilhaContentType, carga.planilha)"-->
+            <!--                v-text="t$('entity.action.open')"-->
+            <!--              ></a>-->
+            <!--              <span v-if="carga.planilha">{{ carga.planilhaContentType }}, {{ byteSize(carga.planilha) }}</span>-->
+            <!--            </td>-->
             <td>{{ carga.nome }}</td>
-            <td>{{ carga.caminho }}</td>
+            <!--            <td>{{ carga.caminho }}</td>-->
             <td>{{ carga.validado }}</td>
-            <td v-text="t$('semprotdbApp.Tipo.' + carga.tipo)"></td>
+            <!--            <td v-text="t$('semprotdbApp.Tipo.' + carga.tipo)"></td>-->
             <td v-text="t$('semprotdbApp.Formato.' + carga.formato)"></td>
             <td v-text="t$('semprotdbApp.Destino.' + carga.destino)"></td>
             <td>{{ carga.linhas }}</td>
-            <td>{{ carga.checksum }}</td>
+            <!--            <td>{{ carga.checksum }}</td>-->
             <td>
               <div v-if="carga.versao">
-                <router-link :to="{ name: 'VersaoView', params: { versaoId: carga.versao.id } }">{{ carga.versao.id }}</router-link>
+                <router-link :to="{ name: 'VersaoView', params: { versaoId: carga.versao.id } }">{{ carga.versao.nome }} </router-link>
               </div>
             </td>
             <td class="text-right">

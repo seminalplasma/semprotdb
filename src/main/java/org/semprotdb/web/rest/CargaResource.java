@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.semprotdb.domain.Carga;
+import org.semprotdb.domain.enumeration.Destino;
 import org.semprotdb.repository.CargaRepository;
 import org.semprotdb.service.CargaQueryService;
 import org.semprotdb.service.CargaService;

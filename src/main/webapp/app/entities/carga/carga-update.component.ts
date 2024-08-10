@@ -14,6 +14,7 @@ import { type ICarga, Carga } from '@/shared/model/carga.model';
 import { Tipo } from '@/shared/model/enumerations/tipo.model';
 import { Formato } from '@/shared/model/enumerations/formato.model';
 import { Destino } from '@/shared/model/enumerations/destino.model';
+import { Status } from '@/shared/model/enumerations/status.model';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
@@ -31,6 +32,8 @@ export default defineComponent({
     const formatoValues: Ref<string[]> = ref(Object.keys(Formato));
     const destinoValues: Ref<string[]> = ref(Object.keys(Destino));
     const isSaving = ref(false);
+    const isNew = ref(false);
+    const modoRemoto = ref(false);
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
 
     const route = useRoute();
@@ -49,6 +52,8 @@ export default defineComponent({
 
     if (route.params?.cargaId) {
       retrieveCarga(route.params.cargaId);
+    } else {
+      isNew.value = true;
     }
 
     const initRelationships = () => {
@@ -56,6 +61,10 @@ export default defineComponent({
         .retrieve()
         .then(res => {
           versaos.value = res.data;
+          const criados = versaos.value.filter(v => v.status === Status.CRIADO);
+          if (isNew.value && criados.length < 2) {
+            carga.value.versao = criados[0];
+          }
         });
     };
 
@@ -102,6 +111,8 @@ export default defineComponent({
       ...dataUtils,
       v$,
       t$,
+      isNew,
+      modoRemoto,
     };
   },
   created(): void {},
