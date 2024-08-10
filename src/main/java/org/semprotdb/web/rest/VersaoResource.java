@@ -4,10 +4,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.semprotdb.domain.Versao;
+import org.semprotdb.domain.enumeration.Status;
 import org.semprotdb.repository.VersaoRepository;
 import org.semprotdb.service.VersaoQueryService;
 import org.semprotdb.service.VersaoService;
@@ -65,6 +67,9 @@ public class VersaoResource {
         if (versao.getId() != null) {
             throw new BadRequestAlertException("A new versao cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        versao.setStatus(Status.CRIADO);
+        versao.setRelease(versao.getRelease() == null ? new Date().toInstant() : versao.getRelease());
+        versao.setTexto(versao.getDetalhes() == null ? versao.toString() : versao.getTexto());
         versao = versaoService.save(versao);
         return ResponseEntity.created(new URI("/api/versaos/" + versao.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, versao.getId().toString()))

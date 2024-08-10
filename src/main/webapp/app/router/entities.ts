@@ -103,13 +103,13 @@ export default {
       path: 'versao/new',
       name: 'VersaoCreate',
       component: VersaoUpdate,
-      meta: { authorities: [Authority.USER] },
+      meta: { authorities: [Authority.USER, Authority.ADMIN] },
     },
     {
       path: 'versao/:versaoId/edit',
       name: 'VersaoEdit',
       component: VersaoUpdate,
-      meta: { authorities: [Authority.USER] },
+      meta: { authorities: [Authority.USER, Authority.ADMIN] },
     },
     {
       path: 'versao/:versaoId/view',
@@ -247,13 +247,13 @@ export default {
       path: 'db-config/new',
       name: 'DBConfigCreate',
       component: DBConfigUpdate,
-      meta: { authorities: [Authority.USER] },
+      meta: { authorities: [Authority.USER, Authority.ADMIN] },
     },
     {
       path: 'db-config/:dBConfigId/edit',
       name: 'DBConfigEdit',
       component: DBConfigUpdate,
-      meta: { authorities: [Authority.USER] },
+      meta: { authorities: [Authority.USER, Authority.ADMIN] },
     },
     {
       path: 'db-config/:dBConfigId/view',

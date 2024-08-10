@@ -6,11 +6,15 @@ import { type IVersao } from '@/shared/model/versao.model';
 import useDataUtils from '@/shared/data/data-utils.service';
 import { useDateFormat } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
+import type AccountService from '@/account/account.service';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'Versao',
   setup() {
+    const accountService = inject<AccountService>('accountService');
+    const hasAnyAuthorityValues: Ref<any> = ref({});
+
     const { t: t$ } = useI18n();
     const dateFormat = useDateFormat();
     const dataUtils = useDataUtils();
@@ -135,6 +139,18 @@ export default defineComponent({
       changeOrder,
       t$,
       ...dataUtils,
+      accountService,
+      hasAnyAuthorityValues,
     };
+  },
+  methods: {
+    hasAnyAuthority(authorities: any): boolean {
+      this.accountService.hasAnyAuthorityAndCheckAuth(authorities).then(value => {
+        if (this.hasAnyAuthorityValues[authorities] !== value) {
+          this.hasAnyAuthorityValues = { ...this.hasAnyAuthorityValues, [authorities]: value };
+        }
+      });
+      return this.hasAnyAuthorityValues[authorities] ?? false;
+    },
   },
 });

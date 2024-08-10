@@ -5,11 +5,12 @@ import { useVuelidate } from '@vuelidate/core';
 
 import VersaoService from './versao.service';
 import useDataUtils from '@/shared/data/data-utils.service';
-import { useValidation, useDateFormat } from '@/shared/composables';
+import { useDateFormat, useValidation } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 
 import { type IVersao, Versao } from '@/shared/model/versao.model';
 import { Status } from '@/shared/model/enumerations/status.model';
+import type AccountService from '@/account/account.service';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
@@ -38,8 +39,14 @@ export default defineComponent({
       }
     };
 
+    const isNew = ref(false);
+
     if (route.params?.versaoId) {
       retrieveVersao(route.params.versaoId);
+    } else {
+      isNew.value = true;
+      versao.value.release = new Date();
+      versao.value.status = Status.CRIADO;
     }
 
     const initRelationships = () => {};
@@ -86,6 +93,7 @@ export default defineComponent({
       v$,
       ...useDateFormat({ entityRef: versao }),
       t$,
+      isNew,
     };
   },
   created(): void {},

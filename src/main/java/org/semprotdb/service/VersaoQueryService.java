@@ -1,15 +1,20 @@
 package org.semprotdb.service;
 
 import jakarta.persistence.criteria.JoinType;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.semprotdb.domain.*; // for static metamodels
 import org.semprotdb.domain.Versao;
 import org.semprotdb.repository.VersaoRepository;
 import org.semprotdb.service.criteria.VersaoCriteria;
+import org.semprotdb.service.dto.VersaoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
@@ -42,7 +47,8 @@ public class VersaoQueryService extends QueryService<Versao> {
     public Page<Versao> findByCriteria(VersaoCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Versao> specification = createSpecification(criteria);
-        return versaoRepository.findAll(specification, page);
+        Page<Versao> content = versaoRepository.findAllLight(specification, page);
+        return content;
     }
 
     /**

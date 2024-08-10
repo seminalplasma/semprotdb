@@ -13,6 +13,7 @@
             id="jh-create-entity"
             data-cy="entityCreateButton"
             class="btn btn-primary jh-create-entity create-versao"
+            :disabled="!hasAnyAuthority('ROLE_ADMIN')"
           >
             <font-awesome-icon icon="plus"></font-awesome-icon>
             <span v-text="t$('semprotdbApp.versao.home.createLabel')"></span>
@@ -36,42 +37,42 @@
               <span v-text="t$('semprotdbApp.versao.nome')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'nome'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('detalhes')">
-              <span v-text="t$('semprotdbApp.versao.detalhes')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'detalhes'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('release')">
-              <span v-text="t$('semprotdbApp.versao.release')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'release'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('label')">
-              <span v-text="t$('semprotdbApp.versao.label')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'label'"></jhi-sort-indicator>
+            <th scope="row" v-on:click="changeOrder('numero')">
+              <span v-text="t$('semprotdbApp.versao.numero')"></span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'numero'"></jhi-sort-indicator>
             </th>
             <th scope="row" v-on:click="changeOrder('status')">
               <span v-text="t$('semprotdbApp.versao.status')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'status'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('numero')">
-              <span v-text="t$('semprotdbApp.versao.numero')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'numero'"></jhi-sort-indicator>
+            <th scope="row" v-on:click="changeOrder('release')">
+              <span v-text="t$('semprotdbApp.versao.release')"></span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'release'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('logo')">
-              <span v-text="t$('semprotdbApp.versao.logo')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'logo'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('log')">
-              <span v-text="t$('semprotdbApp.versao.log')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'log'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('texto')">
-              <span v-text="t$('semprotdbApp.versao.texto')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'texto'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('imagem')">
-              <span v-text="t$('semprotdbApp.versao.imagem')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'imagem'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('detalhes')">-->
+            <!--              <span v-text="t$('semprotdbApp.versao.detalhes')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'detalhes'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('label')">-->
+            <!--              <span v-text="t$('semprotdbApp.versao.label')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'label'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('logo')">-->
+            <!--              <span v-text="t$('semprotdbApp.versao.logo')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'logo'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('log')">-->
+            <!--              <span v-text="t$('semprotdbApp.versao.log')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'log'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('texto')">-->
+            <!--              <span v-text="t$('semprotdbApp.versao.texto')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'texto'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('imagem')">-->
+            <!--              <span v-text="t$('semprotdbApp.versao.imagem')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'imagem'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row"></th>
           </tr>
         </thead>
@@ -81,20 +82,20 @@
               <router-link :to="{ name: 'VersaoView', params: { versaoId: versao.id } }">{{ versao.id }}</router-link>
             </td>
             <td>{{ versao.nome }}</td>
-            <td>{{ versao.detalhes }}</td>
-            <td>{{ formatDateShort(versao.release) || '' }}</td>
-            <td>{{ versao.label }}</td>
-            <td v-text="t$('semprotdbApp.Status.' + versao.status)"></td>
             <td>{{ versao.numero }}</td>
-            <td>{{ versao.logo }}</td>
-            <td>{{ versao.log }}</td>
-            <td>{{ versao.texto }}</td>
-            <td>
-              <a v-if="versao.imagem" v-on:click="openFile(versao.imagemContentType, versao.imagem)">
-                <img v-bind:src="'data:' + versao.imagemContentType + ';base64,' + versao.imagem" style="max-height: 30px" alt="versao" />
-              </a>
-              <span v-if="versao.imagem">{{ versao.imagemContentType }}, {{ byteSize(versao.imagem) }}</span>
-            </td>
+            <td v-text="t$('semprotdbApp.Status.' + versao.status)"></td>
+            <td>{{ formatDateShort(versao.release) || '' }}</td>
+            <!--            <td>{{ versao.detalhes }}</td>-->
+            <!--            <td>{{ versao.label }}</td>-->
+            <!--            <td>{{ versao.logo }}</td>-->
+            <!--            <td>{{ versao.log }}</td>-->
+            <!--            <td>{{ versao.texto }}</td>-->
+            <!--            <td>-->
+            <!--              <a v-if="versao.imagem" v-on:click="openFile(versao.imagemContentType, versao.imagem)">-->
+            <!--                <img v-bind:src="'data:' + versao.imagemContentType + ';base64,' + versao.imagem" style="max-height: 30px" alt="versao" />-->
+            <!--              </a>-->
+            <!--              <span v-if="versao.imagem">{{ versao.imagemContentType }}, {{ byteSize(versao.imagem) }}</span>-->
+            <!--            </td>-->
             <td class="text-right">
               <div class="btn-group">
                 <router-link :to="{ name: 'VersaoView', params: { versaoId: versao.id } }" custom v-slot="{ navigate }">
@@ -104,12 +105,18 @@
                   </button>
                 </router-link>
                 <router-link :to="{ name: 'VersaoEdit', params: { versaoId: versao.id } }" custom v-slot="{ navigate }">
-                  <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
+                  <button
+                    :disabled="!hasAnyAuthority('ROLE_ADMIN')"
+                    @click="navigate"
+                    class="btn btn-primary btn-sm edit"
+                    data-cy="entityEditButton"
+                  >
                     <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                     <span class="d-none d-md-inline" v-text="t$('entity.action.edit')"></span>
                   </button>
                 </router-link>
                 <b-button
+                  :disabled="!hasAnyAuthority('ROLE_ADMIN')"
                   v-on:click="prepareRemove(versao)"
                   variant="danger"
                   class="btn btn-sm"

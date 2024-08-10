@@ -76,7 +76,7 @@
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.back')"></span>
         </button>
         <router-link v-if="versao.id" :to="{ name: 'VersaoEdit', params: { versaoId: versao.id } }" custom v-slot="{ navigate }">
-          <button @click="navigate" class="btn btn-primary">
+          <button @click="navigate" class="btn btn-primary mx-2">
             <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.edit')"></span>
           </button>
         </router-link>
