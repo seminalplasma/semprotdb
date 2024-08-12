@@ -8,5 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface VersaoDTORepository {
     Page<VersaoDTO> findAllDTO(Specification<Versao> specification, Pageable pageable);
+
     Page<Versao> findAllLight(Specification<Versao> specification, Pageable pageable);
 }

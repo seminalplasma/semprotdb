@@ -1,4 +1,4 @@
-package org.semprotdb.service;
+package org.semprotdb.service.erros;
 
 public class InvalidPasswordException extends RuntimeException {
 

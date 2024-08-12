@@ -77,10 +77,9 @@ public class VersaoResource {
         if (versao.getId() != null) {
             throw new BadRequestAlertException("A new versao cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        versao.setStatus(Status.CRIADO);
-        versao.setRelease(versao.getRelease() == null ? new Date().toInstant() : versao.getRelease());
-        versao.setTexto(versao.getDetalhes() == null ? versao.toString() : versao.getTexto());
+
         versao = versaoService.save(versao);
+
         return ResponseEntity.created(new URI("/api/versaos/" + versao.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, versao.getId().toString()))
             .body(versao);
@@ -114,6 +113,7 @@ public class VersaoResource {
         }
 
         versao = versaoService.update(versao);
+        versaoService.processarVersaoasync(versao.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, versao.getId().toString()))
             .body(versao);
@@ -148,6 +148,7 @@ public class VersaoResource {
         }
 
         Optional<Versao> result = versaoService.partialUpdate(versao);
+        versaoService.processarVersaoasync(versao.getId());
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -212,7 +213,18 @@ public class VersaoResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVersao(@PathVariable("id") Long id) {
         log.debug("REST request to delete Versao : {}", id);
-        versaoService.delete(id);
+
+        Optional<Versao> versao = versaoService.findOne(id);
+
+        versao.ifPresent(_v -> {
+            if (_v.getStatus().ordinal() < Status.OCULTO.ordinal()) {
+                String msg = "Oculte a versao antes de remover.";
+                throw new BadRequestAlertException(msg, ENTITY_NAME, msg);
+            }
+            versaoRepository.save(_v.status(Status.INVALIDO));
+            versaoService.delete(_v);
+        });
+
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

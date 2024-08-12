@@ -1,5 +1,6 @@
 package org.semprotdb.repository;
 
+import java.util.Optional;
 import org.semprotdb.domain.DBConfig;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface DBConfigRepository extends JpaRepository<DBConfig, Long> {}
+public interface DBConfigRepository extends JpaRepository<DBConfig, Long>, DBConfigDTORepository {
+    Optional<DBConfig> findDBConfigByKey(String key);
+}

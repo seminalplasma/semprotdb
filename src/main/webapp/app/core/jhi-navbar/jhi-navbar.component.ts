@@ -8,6 +8,8 @@ import EntitiesMenu from '@/entities/entities-menu.vue';
 
 import { useStore } from '@/store';
 
+import { useVersaoStore } from '@/store';
+
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'JhiNavbar',
@@ -19,6 +21,12 @@ export default defineComponent({
     const accountService = inject<AccountService>('accountService');
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
     const changeLanguage = inject<(string) => Promise<void>>('changeLanguage');
+
+    const versaoStore = useVersaoStore();
+    const versao = computed(() => versaoStore.versao);
+    const versoes = computed(() => versaoStore.versoes);
+    const vloaded = computed(() => versaoStore.carregado);
+    const chooseVersao = versaoStore.chooseVersao;
 
     const isActiveLanguage = (key: string) => {
       return key === currentLanguage.value;
@@ -69,6 +77,10 @@ export default defineComponent({
       inProduction,
       authenticated,
       t$: useI18n().t,
+      versao,
+      versoes,
+      vloaded,
+      chooseVersao,
     };
   },
   methods: {

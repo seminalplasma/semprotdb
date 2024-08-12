@@ -38,6 +38,8 @@ public class ProteinaCriteria implements Serializable, Criteria {
 
     private LongFilter geneId;
 
+    private LongFilter organismoId;
+
     private LongFilter referenciaId;
 
     private LongFilter recursoId;
@@ -55,6 +57,7 @@ public class ProteinaCriteria implements Serializable, Criteria {
         this.curadoriaId = other.optionalCuradoriaId().map(LongFilter::copy).orElse(null);
         this.versaoId = other.optionalVersaoId().map(LongFilter::copy).orElse(null);
         this.geneId = other.optionalGeneId().map(LongFilter::copy).orElse(null);
+        this.organismoId = other.optionalGeneId().map(LongFilter::copy).orElse(null);
         this.referenciaId = other.optionalReferenciaId().map(LongFilter::copy).orElse(null);
         this.recursoId = other.optionalRecursoId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
@@ -217,6 +220,25 @@ public class ProteinaCriteria implements Serializable, Criteria {
         this.geneId = geneId;
     }
 
+    public LongFilter getOrganismoId() {
+        return organismoId;
+    }
+
+    public Optional<LongFilter> optionalOrganismoId() {
+        return Optional.ofNullable(organismoId);
+    }
+
+    public LongFilter organismoId() {
+        if (organismoId == null) {
+            setOrganismoId(new LongFilter());
+        }
+        return organismoId;
+    }
+
+    public void setOrganismoId(LongFilter organismoId) {
+        this.organismoId = organismoId;
+    }
+
     public LongFilter getReferenciaId() {
         return referenciaId;
     }
@@ -292,6 +314,7 @@ public class ProteinaCriteria implements Serializable, Criteria {
             Objects.equals(curadoriaId, that.curadoriaId) &&
             Objects.equals(versaoId, that.versaoId) &&
             Objects.equals(geneId, that.geneId) &&
+            Objects.equals(organismoId, that.organismoId) &&
             Objects.equals(referenciaId, that.referenciaId) &&
             Objects.equals(recursoId, that.recursoId) &&
             Objects.equals(distinct, that.distinct)
@@ -300,7 +323,20 @@ public class ProteinaCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, tamanho, massa, descricao, curadoriaId, versaoId, geneId, referenciaId, recursoId, distinct);
+        return Objects.hash(
+            id,
+            nome,
+            tamanho,
+            massa,
+            descricao,
+            curadoriaId,
+            versaoId,
+            geneId,
+            organismoId,
+            referenciaId,
+            recursoId,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -315,6 +351,7 @@ public class ProteinaCriteria implements Serializable, Criteria {
             optionalCuradoriaId().map(f -> "curadoriaId=" + f + ", ").orElse("") +
             optionalVersaoId().map(f -> "versaoId=" + f + ", ").orElse("") +
             optionalGeneId().map(f -> "geneId=" + f + ", ").orElse("") +
+            optionalOrganismoId().map(f -> "organismoId=" + f + ", ").orElse("") +
             optionalReferenciaId().map(f -> "referenciaId=" + f + ", ").orElse("") +
             optionalRecursoId().map(f -> "recursoId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +

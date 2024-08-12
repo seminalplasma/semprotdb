@@ -1,6 +1,8 @@
 package org.semprotdb.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +11,13 @@ import org.semprotdb.domain.Proteina;
 import org.semprotdb.domain.Versao;
 import org.semprotdb.domain.enumeration.Status;
 
-public class VersaoDTO extends Versao {
+public class VersaoDTO extends Versao implements IDTO<VersaoDTO> {
+
+    @JsonIgnore
+    private final Set<Proteina> proteinas = new HashSet<>();
+
+    @JsonIgnore
+    private final Set<Carga> cargas = new HashSet<>();
 
     @JsonIgnore
     private String detalhes;
@@ -32,11 +40,20 @@ public class VersaoDTO extends Versao {
     @JsonIgnore
     private String imagemContentType;
 
-    @JsonIgnore
-    private final Set<Proteina> proteinas = new HashSet<>();
+    public VersaoDTO() {}
 
-    @JsonIgnore
-    private final Set<Carga> cargas = new HashSet<>();
+    public VersaoDTO(Long id, String nome, Integer numero, Status status, Instant release) {
+        setId(id);
+        setNome(nome);
+        setNumero(numero);
+        setStatus(status);
+        setRelease(release);
+    }
+
+    @Override
+    public Path[] getConstructorArgsPath(Root<VersaoDTO> root) {
+        return new Path[] { root.get("id"), root.get("nome"), root.get("numero"), root.get("status"), root.get("release") };
+    }
 
     public static final class VersaoDTOmin extends VersaoDTO {
 
@@ -52,13 +69,5 @@ public class VersaoDTO extends Versao {
         public VersaoDTOmin(Long id, String nome) {
             super(id, nome, null, null, null);
         }
-    }
-
-    public VersaoDTO(Long id, String nome, Integer numero, Status status, Instant release) {
-        setId(id);
-        setNome(nome);
-        setNumero(numero);
-        setStatus(status);
-        setRelease(release);
     }
 }

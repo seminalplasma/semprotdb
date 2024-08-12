@@ -187,6 +187,19 @@ public class ReferenciaResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReferencia(@PathVariable("id") Long id) {
         log.debug("REST request to delete Referencia : {}", id);
+
+        Referencia referencia = referenciaRepository.findById(id).orElseThrow();
+        int ptnas = referencia.getProteinas().size();
+        if (ptnas > 0) {
+            String msg =
+                "Não pode remover essa REFERENCIA " +
+                "por possuir " +
+                ptnas +
+                " proteinas de diferentes versões relacionadas! " +
+                "remova cada versão individualmente";
+            throw new BadRequestAlertException(msg, ENTITY_NAME, msg);
+        }
+
         referenciaRepository.deleteById(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

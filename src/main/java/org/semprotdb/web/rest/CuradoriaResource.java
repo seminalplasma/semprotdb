@@ -184,6 +184,16 @@ public class CuradoriaResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCuradoria(@PathVariable("id") Long id) {
         log.debug("REST request to delete Curadoria : {}", id);
+
+        Curadoria curadoria = curadoriaRepository.findById(id).orElseThrow();
+        int ptnas = curadoria.getProteinas().size();
+        int genes = curadoria.getGenes().size();
+
+        if (ptnas + genes > 0) {
+            String msg = "Não pode remover essa CURADORIA " + "por possuir " + ptnas + " proteinas e " + genes + " genes relacionados.";
+            throw new BadRequestAlertException(msg, ENTITY_NAME, msg);
+        }
+
         curadoriaRepository.deleteById(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

@@ -17,7 +17,7 @@ import org.semprotdb.domain.enumeration.BioDB;
 @Table(name = "recurso")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Recurso implements Serializable {
+public class Recurso implements Serializable, Comparable<Recurso> {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,7 @@ public class Recurso implements Serializable {
     @Column(name = "link")
     private String link;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "recursos")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "recursos", cascade = { CascadeType.REFRESH })
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "curadoria", "versao", "gene", "referencias", "recursos" }, allowSetters = true)
     private Set<Proteina> proteinas = new HashSet<>();
@@ -156,5 +156,10 @@ public class Recurso implements Serializable {
             ", db='" + getDb() + "'" +
             ", link='" + getLink() + "'" +
             "}";
+    }
+
+    @Override
+    public int compareTo(Recurso o) {
+        return o == null ? 1 : getId().compareTo(o.getId());
     }
 }

@@ -29,4 +29,9 @@ export class Versao implements IVersao {
     public imagemContentType?: string | null,
     public imagem?: string | null,
   ) {}
+
+  with_status(s: Status): IVersao {
+    this.status = s;
+    return this;
+  }
 }

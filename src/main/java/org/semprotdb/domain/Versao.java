@@ -68,12 +68,12 @@ public class Versao implements Serializable {
     @Column(name = "imagem_content_type")
     private String imagemContentType;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "versao")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "versao", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "curadoria", "versao", "gene", "referencias", "recursos" }, allowSetters = true)
     private Set<Proteina> proteinas = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "versao")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "versao", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "versao" }, allowSetters = true)
     private Set<Carga> cargas = new HashSet<>();
@@ -334,5 +334,14 @@ public class Versao implements Serializable {
             ", imagem='" + getImagem() + "'" +
             ", imagemContentType='" + getImagemContentType() + "'" +
             "}";
+    }
+
+    public Versao addLog(String s) {
+        setLog(this.log == null || this.log.isEmpty() ? s : (this.log + "\n" + s));
+        return this;
+    }
+
+    public String identfy() {
+        return ("Versao{" + "id=" + getId() + ", nome='" + getNome() + "'" + ", numero=" + getNumero() + ", status='" + getStatus() + "'}");
     }
 }

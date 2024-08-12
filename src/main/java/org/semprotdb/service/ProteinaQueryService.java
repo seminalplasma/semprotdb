@@ -42,7 +42,9 @@ public class ProteinaQueryService extends QueryService<Proteina> {
     public Page<Proteina> findByCriteria(ProteinaCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Proteina> specification = createSpecification(criteria);
-        return proteinaRepository.fetchBagRelationships(proteinaRepository.findAll(specification, page));
+        ///return proteinaRepository.fetchBagRelationships(proteinaRepository.findAll(specification, page));
+
+        return proteinaRepository.fetchBagRelationships(proteinaRepository.findAllLight(specification, page));
     }
 
     /**
@@ -97,6 +99,14 @@ public class ProteinaQueryService extends QueryService<Proteina> {
             if (criteria.getGeneId() != null) {
                 specification = specification.and(
                     buildSpecification(criteria.getGeneId(), root -> root.join(Proteina_.gene, JoinType.LEFT).get(Gene_.id))
+                );
+            }
+            if (criteria.getOrganismoId() != null) {
+                specification = specification.and(
+                    buildSpecification(
+                        criteria.getOrganismoId(),
+                        root -> root.join(Proteina_.gene, JoinType.LEFT).get(Gene_.organismo).get(Organismo_.id)
+                    )
                 );
             }
             if (criteria.getReferenciaId() != null) {

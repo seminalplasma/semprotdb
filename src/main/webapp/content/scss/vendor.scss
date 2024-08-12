@@ -5,6 +5,9 @@ put Sass variables here:
 eg $input-color: red;
 ****************************/
 // Override Boostrap variables
+
+$primary: #3a6ede;
+
 // Import Bootstrap source files from node_modules
 @import 'bootswatch/dist/minty/variables';
 @import 'bootstrap/scss/bootstrap';

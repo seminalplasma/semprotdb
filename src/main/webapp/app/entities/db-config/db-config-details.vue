@@ -46,7 +46,7 @@
             <span v-text="t$('semprotdbApp.dBConfig.vtext')"></span>
           </dt>
           <dd>
-            <span>{{ dBConfig.vtext }}</span>
+            <pre style="font-size: xx-small">{{ dBConfig.vtext }}</pre>
           </dd>
           <dt>
             <span v-text="t$('semprotdbApp.dBConfig.vimg')"></span>

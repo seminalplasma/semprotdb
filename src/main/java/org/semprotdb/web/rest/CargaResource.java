@@ -12,6 +12,7 @@ import org.semprotdb.domain.enumeration.Destino;
 import org.semprotdb.repository.CargaRepository;
 import org.semprotdb.service.CargaQueryService;
 import org.semprotdb.service.CargaService;
+import org.semprotdb.service.UserService;
 import org.semprotdb.service.criteria.CargaCriteria;
 import org.semprotdb.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -37,20 +38,27 @@ public class CargaResource {
     private static final Logger log = LoggerFactory.getLogger(CargaResource.class);
 
     private static final String ENTITY_NAME = "carga";
+    private final CargaService cargaService;
+    private final CargaRepository cargaRepository;
+    private final CargaQueryService cargaQueryService;
+    private final CargaCriteria.DestinoFilter TIPO_DOWNLOAD_FILTER;
+    private final UserService userService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final CargaService cargaService;
-
-    private final CargaRepository cargaRepository;
-
-    private final CargaQueryService cargaQueryService;
-
-    public CargaResource(CargaService cargaService, CargaRepository cargaRepository, CargaQueryService cargaQueryService) {
+    public CargaResource(
+        CargaService cargaService,
+        CargaRepository cargaRepository,
+        CargaQueryService cargaQueryService,
+        UserService userService
+    ) {
         this.cargaService = cargaService;
         this.cargaRepository = cargaRepository;
         this.cargaQueryService = cargaQueryService;
+        this.TIPO_DOWNLOAD_FILTER = new CargaCriteria.DestinoFilter();
+        this.TIPO_DOWNLOAD_FILTER.setSpecified(true).setIn(List.of(Destino.DOWNLOAD));
+        this.userService = userService;
     }
 
     /**
@@ -75,7 +83,7 @@ public class CargaResource {
     /**
      * {@code PUT  /cargas/:id} : Updates an existing carga.
      *
-     * @param id the id of the carga to save.
+     * @param id    the id of the carga to save.
      * @param carga the carga to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated carga,
      * or with status {@code 400 (Bad Request)} if the carga is not valid,
@@ -106,7 +114,7 @@ public class CargaResource {
     /**
      * {@code PATCH  /cargas/:id} : Partial updates given fields of an existing carga, field will ignore if it is null
      *
-     * @param id the id of the carga to save.
+     * @param id    the id of the carga to save.
      * @param carga the carga to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated carga,
      * or with status {@code 400 (Bad Request)} if the carga is not valid,
@@ -152,7 +160,9 @@ public class CargaResource {
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get Cargas by criteria: {}", criteria);
-
+        if (userService.usuarioNAOLogado()) {
+            criteria.setDestino(TIPO_DOWNLOAD_FILTER);
+        }
         Page<Carga> page = cargaQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

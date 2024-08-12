@@ -1,8 +1,13 @@
 package org.semprotdb.service;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
 import org.semprotdb.domain.Proteina;
+import org.semprotdb.domain.Recurso;
 import org.semprotdb.repository.ProteinaRepository;
+import org.semprotdb.repository.RecursoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,9 +25,11 @@ public class ProteinaService {
     private static final Logger log = LoggerFactory.getLogger(ProteinaService.class);
 
     private final ProteinaRepository proteinaRepository;
+    private final RecursoRepository recursoRepository;
 
-    public ProteinaService(ProteinaRepository proteinaRepository) {
+    public ProteinaService(ProteinaRepository proteinaRepository, RecursoRepository recursoRepository) {
         this.proteinaRepository = proteinaRepository;
+        this.recursoRepository = recursoRepository;
     }
 
     /**
@@ -105,6 +112,13 @@ public class ProteinaService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Proteina : {}", id);
+        proteinaRepository
+            .findById(id)
+            .ifPresent(p -> {
+                final HashSet<Recurso> recursos = new HashSet<>(p.getRecursos());
+                recursos.forEach(r -> r.removeProteina(p));
+                recursoRepository.saveAll(recursos);
+            });
         proteinaRepository.deleteById(id);
     }
 }

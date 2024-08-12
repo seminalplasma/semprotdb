@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.semprotdb.domain.Organismo;
+import org.semprotdb.repository.GeneRepository;
 import org.semprotdb.repository.OrganismoRepository;
+import org.semprotdb.service.GeneQueryService;
 import org.semprotdb.service.OrganismoQueryService;
 import org.semprotdb.service.OrganismoService;
+import org.semprotdb.service.criteria.GeneCriteria;
 import org.semprotdb.service.criteria.OrganismoCriteria;
 import org.semprotdb.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -18,10 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -36,6 +41,8 @@ public class OrganismoResource {
     private static final Logger log = LoggerFactory.getLogger(OrganismoResource.class);
 
     private static final String ENTITY_NAME = "organismo";
+    private final GeneRepository geneRepository;
+    private final GeneQueryService geneQueryService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -49,11 +56,15 @@ public class OrganismoResource {
     public OrganismoResource(
         OrganismoService organismoService,
         OrganismoRepository organismoRepository,
-        OrganismoQueryService organismoQueryService
+        OrganismoQueryService organismoQueryService,
+        GeneRepository geneRepository,
+        GeneQueryService geneQueryService
     ) {
         this.organismoService = organismoService;
         this.organismoRepository = organismoRepository;
         this.organismoQueryService = organismoQueryService;
+        this.geneRepository = geneRepository;
+        this.geneQueryService = geneQueryService;
     }
 
     /**
@@ -197,6 +208,21 @@ public class OrganismoResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrganismo(@PathVariable("id") Long id) {
         log.debug("REST request to delete Organismo : {}", id);
+
+        GeneCriteria geneCriteria = new GeneCriteria();
+        LongFilter lf = new LongFilter();
+        lf.setSpecified(true).setEquals(id);
+        geneCriteria.setOrganismoId(lf);
+        long genes = geneQueryService.countByCriteria(geneCriteria);
+        if (genes > 0) {
+            String msg =
+                "Não pode remover esse ORGANISMO " +
+                "por possuir " +
+                genes +
+                " genes de diferentes versões relacionadas! " +
+                "Remova cada versão individualmente.";
+            throw new BadRequestAlertException(msg, ENTITY_NAME, msg);
+        }
         organismoService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

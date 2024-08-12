@@ -2,10 +2,7 @@ package org.semprotdb.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.IntStream;
 import org.semprotdb.domain.Proteina;
 import org.springframework.data.domain.Page;
@@ -38,47 +35,70 @@ public class ProteinaRepositoryWithBagRelationshipsImpl implements ProteinaRepos
     }
 
     Proteina fetchReferencias(Proteina result) {
-        return entityManager
-            .createQuery(
-                "select proteina from Proteina proteina left join fetch proteina.referencias where proteina.id = :id",
-                Proteina.class
-            )
-            .setParameter(ID_PARAMETER, result.getId())
-            .getSingleResult();
+        return result.referencias(
+            entityManager
+                .createQuery(
+                    "select proteina.referencias from Proteina proteina left join fetch proteina.referencias where proteina.id = :id",
+                    Proteina.class
+                )
+                .setParameter(ID_PARAMETER, result.getId())
+                .getSingleResult()
+                .getReferencias()
+        );
     }
 
     List<Proteina> fetchReferencias(List<Proteina> proteinas) {
         HashMap<Object, Integer> order = new HashMap<>();
+        HashMap<Long, Proteina> prs = new HashMap<>();
+        proteinas.forEach(p -> prs.put(p.getId(), p));
         IntStream.range(0, proteinas.size()).forEach(index -> order.put(proteinas.get(index).getId(), index));
-        List<Proteina> result = entityManager
-            .createQuery(
-                "select proteina from Proteina proteina left join fetch proteina.referencias where proteina in :proteinas",
-                Proteina.class
-            )
-            .setParameter(PROTEINAS_PARAMETER, proteinas)
-            .getResultList();
-        Collections.sort(result, (o1, o2) -> Integer.compare(order.get(o1.getId()), order.get(o2.getId())));
+        List<Proteina> result = new ArrayList<>(
+            entityManager
+                .createQuery(
+                    "select proteina from Proteina proteina left join fetch proteina.referencias where proteina in :proteinas",
+                    Proteina.class
+                )
+                .setParameter(PROTEINAS_PARAMETER, proteinas)
+                .getResultList()
+                .stream()
+                .map(pf -> prs.get(pf.getId()).referencias(pf.getReferencias()))
+                .toList()
+        );
+        Collections.sort(result, Comparator.comparingInt(o -> order.get(o.getId())));
         return result;
     }
 
     Proteina fetchRecursos(Proteina result) {
-        return entityManager
-            .createQuery("select proteina from Proteina proteina left join fetch proteina.recursos where proteina.id = :id", Proteina.class)
-            .setParameter(ID_PARAMETER, result.getId())
-            .getSingleResult();
+        return result.recursos(
+            entityManager
+                .createQuery(
+                    "select proteina from Proteina proteina left join fetch proteina.recursos where proteina.id = :id",
+                    Proteina.class
+                )
+                .setParameter(ID_PARAMETER, result.getId())
+                .getSingleResult()
+                .getRecursos()
+        );
     }
 
     List<Proteina> fetchRecursos(List<Proteina> proteinas) {
         HashMap<Object, Integer> order = new HashMap<>();
+        HashMap<Long, Proteina> prs = new HashMap<>();
+        proteinas.forEach(p -> prs.put(p.getId(), p));
         IntStream.range(0, proteinas.size()).forEach(index -> order.put(proteinas.get(index).getId(), index));
-        List<Proteina> result = entityManager
-            .createQuery(
-                "select proteina from Proteina proteina left join fetch proteina.recursos where proteina in :proteinas",
-                Proteina.class
-            )
-            .setParameter(PROTEINAS_PARAMETER, proteinas)
-            .getResultList();
-        Collections.sort(result, (o1, o2) -> Integer.compare(order.get(o1.getId()), order.get(o2.getId())));
+        List<Proteina> result = new ArrayList<>(
+            entityManager
+                .createQuery(
+                    "select proteina from Proteina proteina left join fetch proteina.recursos where proteina in :proteinas",
+                    Proteina.class
+                )
+                .setParameter(PROTEINAS_PARAMETER, proteinas)
+                .getResultList()
+                .stream()
+                .map(pf -> prs.get(pf.getId()).recursos(pf.getRecursos()))
+                .toList()
+        );
+        Collections.sort(result, Comparator.comparingInt(o -> order.get(o.getId())));
         return result;
     }
 }

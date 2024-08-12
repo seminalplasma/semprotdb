@@ -5,7 +5,7 @@
       <jhi-navbar></jhi-navbar>
     </div>
     <div class="container-fluid">
-      <div class="card jh-card">
+      <div class="card jh-card conteudo mx-4 shadow">
         <router-view></router-view>
       </div>
       <b-modal id="login-page" hide-footer lazy>
@@ -21,3 +21,15 @@
 </template>
 
 <script lang="ts" src="./app.component.ts"></script>
+
+<style scoped>
+.contanier {
+  background-color: rgba(95, 50, 205, 0.02);
+}
+
+.conteudo {
+  background-image: url('/content/images/background.png');
+  background-color: #f8f8f8;
+  background-repeat: no-repeat;
+}
+</style>

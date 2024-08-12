@@ -52,8 +52,8 @@ public class TSV extends AbstractTabela {
             .planilhaContentType(this.formato)
             .validado(true)
             .planilha(this.dados)
-            .ordem(1)
             .linhas(this.linhas)
-            .status(this.md5);
+            .checksum(this.md5)
+            .status("OK");
     }
 }

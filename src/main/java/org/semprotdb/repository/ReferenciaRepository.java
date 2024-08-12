@@ -1,5 +1,6 @@
 package org.semprotdb.repository;
 
+import java.util.List;
 import org.semprotdb.domain.Referencia;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ReferenciaRepository extends JpaRepository<Referencia, Long> {}
+public interface ReferenciaRepository extends JpaRepository<Referencia, Long> {
+    List<Referencia> findAllByProteinasIsEmpty();
+}

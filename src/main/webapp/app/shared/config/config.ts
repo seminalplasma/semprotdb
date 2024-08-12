@@ -39,6 +39,23 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons/faUserPlus';
 import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
 import { faUsersCog } from '@fortawesome/free-solid-svg-icons/faUsersCog';
 import { faWrench } from '@fortawesome/free-solid-svg-icons/faWrench';
+import { faFileCircleCheck } from '@fortawesome/free-solid-svg-icons/faFileCircleCheck';
+import { faFileExcel } from '@fortawesome/free-solid-svg-icons/faFileExcel';
+import { faFileCsv } from '@fortawesome/free-solid-svg-icons/faFileCsv';
+import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash';
+import { faHammer } from '@fortawesome/free-solid-svg-icons/faHammer';
+import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
+import { faDna } from '@fortawesome/free-solid-svg-icons/faDna';
+import { faCloudArrowDown } from '@fortawesome/free-solid-svg-icons/faCloudArrowDown';
+import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons/faPeopleGroup';
+import { faShield } from '@fortawesome/free-solid-svg-icons/faShield';
+import { faStar } from '@fortawesome/free-solid-svg-icons/faStar';
+import { faTag } from '@fortawesome/free-solid-svg-icons/faTag';
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons/faTriangleExclamation';
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+import { faUpLong } from '@fortawesome/free-solid-svg-icons/faUpLong';
+import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 
 const datetimeFormats: IntlDateTimeFormats = {
   en: {
@@ -135,6 +152,24 @@ export function initFortAwesome(vue) {
     faUsers,
     faUsersCog,
     faWrench,
+    faFileCircleCheck,
+    faFileExcel,
+    faFileCsv,
+    faFile,
+    faEyeSlash,
+    faHammer,
+    faDownload,
+    faDna,
+    faCloudArrowDown,
+    faPeopleGroup,
+    faShield,
+    faStar,
+    faTag,
+    faTriangleExclamation,
+    faCheck,
+    faUpLong,
+    faDatabase,
+    faCog,
   );
 }
 

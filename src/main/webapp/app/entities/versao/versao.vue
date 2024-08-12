@@ -41,7 +41,7 @@
               <span v-text="t$('semprotdbApp.versao.numero')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'numero'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('status')">
+            <th scope="row" v-on:click="changeOrder('status')" class="text-center">
               <span v-text="t$('semprotdbApp.versao.status')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'status'"></jhi-sort-indicator>
             </th>
@@ -83,7 +83,27 @@
             </td>
             <td>{{ versao.nome }}</td>
             <td>{{ versao.numero }}</td>
-            <td v-text="t$('semprotdbApp.Status.' + versao.status)"></td>
+
+            <td class="text-center">
+              <!--            criado =>  <i class="fa-solid fa-volleyball fa-bounce animation-iteration-count:3;"></i>-->
+              <!--            invalido => <i class="fa-solid fa-square-exclamation fa-beat-fade"></i>-->
+              <!--          carrgegado =>  <i class="fa-solid fa-cog fa-spin" style="&#45;&#45;fa-animation-duration: 15s;"></i>-->
+
+              <template v-if="versao.status === Status.CRIADO">
+                <font-awesome-icon icon="check" bounce class="text-success"></font-awesome-icon>
+              </template>
+              <template v-else-if="versao.status === Status.CARREGADO">
+                <font-awesome-icon icon="cog" spin></font-awesome-icon>
+              </template>
+              <template v-else-if="versao.status === Status.INVALIDO">
+                <font-awesome-icon icon="triangle-exclamation" beatFade class="text-danger"></font-awesome-icon>
+              </template>
+              <template v-else>
+                <span class="badge badge-primary" v-text="t$('semprotdbApp.Status.' + versao.status)"></span>
+              </template>
+            </td>
+
+            <!--            <td v-text="t$('semprotdbApp.Status.' + versao.status)"></td>-->
             <td>{{ formatDateShort(versao.release) || '' }}</td>
             <!--            <td>{{ versao.detalhes }}</td>-->
             <!--            <td>{{ versao.label }}</td>-->
@@ -98,12 +118,48 @@
             <!--            </td>-->
             <td class="text-right">
               <div class="btn-group">
-                <router-link :to="{ name: 'VersaoView', params: { versaoId: versao.id } }" custom v-slot="{ navigate }">
-                  <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">
-                    <font-awesome-icon icon="eye"></font-awesome-icon>
-                    <span class="d-none d-md-inline" v-text="t$('entity.action.view')"></span>
-                  </button>
-                </router-link>
+                <!--              <router-link :to="{ name: 'VersaoView', params: { versaoId: versao.id } }" custom v-slot="{ navigate }">-->
+                <!--                <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">-->
+                <!--                  <font-awesome-icon icon="eye"></font-awesome-icon>-->
+                <!--                  <span class="d-none d-md-inline" v-text="t$('entity.action.view')"></span>-->
+                <!--                </button>-->
+                <!--              </router-link>-->
+
+                <!--PROCESSAR VERSAO-->
+                <b-button
+                  v-if="versao.status !== Status.INVALIDO && versao.status !== Status.CARREGADO"
+                  :disabled="!hasAnyAuthority('ROLE_ADMIN')"
+                  v-on:click="changeStatus(versao, Status.PROCESSADO)"
+                  variant="warning"
+                  class="btn btn-sm"
+                >
+                  <font-awesome-icon icon="hammer"></font-awesome-icon>
+                  <span class="d-none d-md-inline">Processar</span>
+                </b-button>
+
+                <!--LIBERAR VERSAO-->
+                <button
+                  v-if="versao.status === Status.PROCESSADO || versao.status === Status.OCULTO"
+                  @click="changeStatus(versao, Status.DISPONIVEL)"
+                  class="btn btn-info btn-sm details"
+                  data-cy="entityDetailsButton"
+                >
+                  <font-awesome-icon icon="eye"></font-awesome-icon>
+                  <span class="d-none d-md-inline">Liberar</span>
+                </button>
+
+                <!--OCULTAR VERSAO-->
+                <button
+                  v-if="versao.status === Status.DISPONIVEL || versao.status === Status.INVALIDO"
+                  @click="changeStatus(versao, Status.OCULTO)"
+                  class="btn btn-info btn-sm details"
+                  data-cy="entityDetailsButton"
+                >
+                  <font-awesome-icon icon="eye-slash"></font-awesome-icon>
+                  <span class="d-none d-md-inline">Ocultar</span>
+                </button>
+
+                <!--EDITAR VERSAO-->
                 <router-link :to="{ name: 'VersaoEdit', params: { versaoId: versao.id } }" custom v-slot="{ navigate }">
                   <button
                     :disabled="!hasAnyAuthority('ROLE_ADMIN')"
@@ -115,7 +171,10 @@
                     <span class="d-none d-md-inline" v-text="t$('entity.action.edit')"></span>
                   </button>
                 </router-link>
+
+                <!--REMOVER VERSAO-->
                 <b-button
+                  v-if="versao.status === Status.OCULTO"
                   :disabled="!hasAnyAuthority('ROLE_ADMIN')"
                   v-on:click="prepareRemove(versao)"
                   variant="danger"

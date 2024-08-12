@@ -2,13 +2,19 @@ import { defineComponent, inject, onMounted, ref, type Ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import VersaoService from './versao.service';
-import { type IVersao } from '@/shared/model/versao.model';
+import { type IVersao, Versao } from '@/shared/model/versao.model';
 import useDataUtils from '@/shared/data/data-utils.service';
 import { useDateFormat } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 import type AccountService from '@/account/account.service';
+import { Status } from '@/shared/model/enumerations/status.model';
 
 export default defineComponent({
+  computed: {
+    Status() {
+      return Status;
+    },
+  },
   compatConfig: { MODE: 3 },
   name: 'Versao',
   setup() {
@@ -93,6 +99,11 @@ export default defineComponent({
       }
     };
 
+    const changeStatus = async (v: IVersao, s: Status) => {
+      await versaoService().partialUpdate(new Versao(v.id).with_status(s));
+      await retrieveVersaos();
+    };
+
     const changeOrder = (newOrder: string) => {
       if (propOrder.value === newOrder) {
         reverse.value = !reverse.value;
@@ -141,6 +152,7 @@ export default defineComponent({
       ...dataUtils,
       accountService,
       hasAnyAuthorityValues,
+      changeStatus,
     };
   },
   methods: {

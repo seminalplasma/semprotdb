@@ -37,11 +37,11 @@ public class Gene implements Serializable {
     @JsonIgnoreProperties(value = { "proteinas", "genes" }, allowSetters = true)
     private Curadoria curadoria;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "genes" }, allowSetters = true)
     private Organismo organismo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "gene")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "gene", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "curadoria", "versao", "gene", "referencias", "recursos" }, allowSetters = true)
     private Set<Proteina> proteinas = new HashSet<>();

@@ -4,10 +4,10 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import org.semprotdb.domain.Proteina;
 import org.semprotdb.domain.Recurso;
+import org.semprotdb.repository.ProteinaRepository;
 import org.semprotdb.repository.RecursoRepository;
 import org.semprotdb.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -35,14 +35,16 @@ public class RecursoResource {
     private static final Logger log = LoggerFactory.getLogger(RecursoResource.class);
 
     private static final String ENTITY_NAME = "recurso";
+    private final ProteinaRepository proteinaRepository;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
     private final RecursoRepository recursoRepository;
 
-    public RecursoResource(RecursoRepository recursoRepository) {
+    public RecursoResource(RecursoRepository recursoRepository, ProteinaRepository proteinaRepository) {
         this.recursoRepository = recursoRepository;
+        this.proteinaRepository = proteinaRepository;
     }
 
     /**
@@ -184,6 +186,15 @@ public class RecursoResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecurso(@PathVariable("id") Long id) {
         log.debug("REST request to delete Recurso : {}", id);
+
+        recursoRepository
+            .findById(id)
+            .ifPresent(r -> {
+                final HashSet<Proteina> proteinas = new HashSet<>(r.getProteinas());
+                proteinas.forEach(p -> p.removeRecurso(r));
+                proteinaRepository.saveAll(proteinas);
+            });
+
         recursoRepository.deleteById(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

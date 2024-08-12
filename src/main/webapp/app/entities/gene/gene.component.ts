@@ -74,6 +74,7 @@ export default defineComponent({
     const removeEntity = ref<any>(null);
     const prepareRemove = (instance: IGene) => {
       removeId.value = instance.id;
+      alertService.showInfo(`Ao remover esse gene, tambem serao removidos suas proteinas!`, { variant: 'warning', title: 'Atenção' });
       removeEntity.value.show();
     };
     const closeDialog = () => {

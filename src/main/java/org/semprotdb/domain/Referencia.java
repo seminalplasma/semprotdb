@@ -16,7 +16,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "referencia")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Referencia implements Serializable {
+public class Referencia implements Serializable, Comparable<Referencia> {
 
     private static final long serialVersionUID = 1L;
 
@@ -171,5 +171,10 @@ public class Referencia implements Serializable {
             ", ano=" + getAno() +
             ", autores='" + getAutores() + "'" +
             "}";
+    }
+
+    @Override
+    public int compareTo(Referencia o) {
+        return o == null ? 1 : getId().compareTo(o.getId());
     }
 }

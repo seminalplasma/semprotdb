@@ -1,12 +1,15 @@
 package org.semprotdb.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
 import org.semprotdb.domain.Carga;
 import org.semprotdb.domain.enumeration.Destino;
 import org.semprotdb.domain.enumeration.Formato;
 import org.semprotdb.domain.enumeration.Tipo;
 
-public class CargaDTO extends Carga {
+public class CargaDTO extends Carga implements IDTO<CargaDTO> {
 
     @JsonIgnore
     private String planilhaContentType;
@@ -22,6 +25,8 @@ public class CargaDTO extends Carga {
 
     @JsonIgnore
     private String checksum;
+
+    public CargaDTO() {}
 
     public CargaDTO(
         Long id,
@@ -44,5 +49,22 @@ public class CargaDTO extends Carga {
         setDestino(destino);
         setLinhas(linhas);
         setVersao(new VersaoDTO.VersaoDTOmin(versaoID, versaoNOME));
+    }
+
+    @Override
+    public Path[] getConstructorArgsPath(Root<CargaDTO> root) {
+        Join versao = root.join("versao");
+        return new Path[] {
+            root.get("id"),
+            root.get("ordem"),
+            root.get("nome"),
+            root.get("validado"),
+            root.get("tipo"),
+            root.get("formato"),
+            root.get("destino"),
+            root.get("linhas"),
+            versao.get("id"),
+            versao.get("nome"),
+        };
     }
 }

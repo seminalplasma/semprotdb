@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class VersaoDTORepositoryImpl extends LigthDTORepository<Versao, VersaoDTO> implements VersaoDTORepository {
 
     public VersaoDTORepositoryImpl() {
-        super(Versao.class, VersaoDTO.class);
+        super(Versao.class, new VersaoDTO());
     }
 
     @Override

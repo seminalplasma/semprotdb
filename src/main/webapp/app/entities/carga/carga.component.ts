@@ -5,8 +5,14 @@ import CargaService from './carga.service';
 import { type ICarga } from '@/shared/model/carga.model';
 import useDataUtils from '@/shared/data/data-utils.service';
 import { useAlertService } from '@/shared/alert/alert.service';
+import { Formato } from '@/shared/model/enumerations/formato.model';
 
 export default defineComponent({
+  computed: {
+    Formato() {
+      return Formato;
+    },
+  },
   compatConfig: { MODE: 3 },
   name: 'Carga',
   setup() {

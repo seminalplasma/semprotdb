@@ -1,6 +1,8 @@
 package org.semprotdb.repository;
 
+import java.util.List;
 import org.semprotdb.domain.Versao;
+import org.semprotdb.domain.enumeration.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -10,4 +12,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface VersaoRepository extends JpaRepository<Versao, Long>, JpaSpecificationExecutor<Versao>, VersaoDTORepository {}
+public interface VersaoRepository extends JpaRepository<Versao, Long>, JpaSpecificationExecutor<Versao>, VersaoDTORepository {
+    List<Versao> findAllByStatusIn(List<Status> status);
+}

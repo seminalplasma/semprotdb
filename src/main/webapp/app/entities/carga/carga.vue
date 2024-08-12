@@ -89,7 +89,9 @@
               <router-link :to="{ name: 'CargaView', params: { cargaId: carga.id } }">{{ carga.id }}</router-link>
             </td>
             <!--            <td>{{ carga.status }}</td>-->
-            <td>{{ carga.ordem }}</td>
+            <td class="text-center">
+              <span class="badge badge-dark">{{ carga.ordem }}</span>
+            </td>
             <!--            <td>-->
             <!--              <a-->
             <!--                v-if="carga.planilha"-->
@@ -100,11 +102,17 @@
             <!--            </td>-->
             <td>{{ carga.nome }}</td>
             <!--            <td>{{ carga.caminho }}</td>-->
-            <td>{{ carga.validado }}</td>
+            <td class="text-center">
+              <font-awesome-icon v-if="carga.validado" icon="file-circle-check" class="text-success"></font-awesome-icon>
+            </td>
             <!--            <td v-text="t$('semprotdbApp.Tipo.' + carga.tipo)"></td>-->
-            <td v-text="t$('semprotdbApp.Formato.' + carga.formato)"></td>
+            <td class="text-center">
+              <font-awesome-icon
+                :icon="carga.formato === Formato.XLSX ? 'file-excel' : carga.formato === Formato.TSV ? 'file-csv' : 'file'"
+              ></font-awesome-icon>
+            </td>
             <td v-text="t$('semprotdbApp.Destino.' + carga.destino)"></td>
-            <td>{{ carga.linhas }}</td>
+            <td class="text-right text-monospace">{{ carga.linhas }}</td>
             <!--            <td>{{ carga.checksum }}</td>-->
             <td>
               <div v-if="carga.versao">

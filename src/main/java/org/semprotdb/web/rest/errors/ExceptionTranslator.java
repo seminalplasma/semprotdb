@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import org.semprotdb.service.erros.UsernameAlreadyUsedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.ConcurrencyFailureException;
@@ -81,13 +82,13 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private ProblemDetailWithCause getProblemDetailWithCause(Throwable ex) {
+        if (ex instanceof UsernameAlreadyUsedException) return (ProblemDetailWithCause) new LoginAlreadyUsedException().getBody();
         if (
-            ex instanceof org.semprotdb.service.UsernameAlreadyUsedException
-        ) return (ProblemDetailWithCause) new LoginAlreadyUsedException().getBody();
-        if (ex instanceof org.semprotdb.service.EmailAlreadyUsedException) return (ProblemDetailWithCause) new EmailAlreadyUsedException()
-            .getBody();
-        if (ex instanceof org.semprotdb.service.InvalidPasswordException) return (ProblemDetailWithCause) new InvalidPasswordException()
-            .getBody();
+            ex instanceof org.semprotdb.service.erros.EmailAlreadyUsedException
+        ) return (ProblemDetailWithCause) new EmailAlreadyUsedException().getBody();
+        if (
+            ex instanceof org.semprotdb.service.erros.InvalidPasswordException
+        ) return (ProblemDetailWithCause) new InvalidPasswordException().getBody();
 
         if (
             ex instanceof ErrorResponseException exp && exp.getBody() instanceof ProblemDetailWithCause problemDetailWithCause

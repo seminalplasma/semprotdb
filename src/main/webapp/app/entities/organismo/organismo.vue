@@ -32,38 +32,38 @@
               <span v-text="t$('global.field.id')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('nome')">
-              <span v-text="t$('semprotdbApp.organismo.nome')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'nome'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('sigla')">
-              <span v-text="t$('semprotdbApp.organismo.sigla')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'sigla'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('nome')">-->
+            <!--              <span v-text="t$('semprotdbApp.organismo.nome')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'nome'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('sigla')">-->
+            <!--              <span v-text="t$('semprotdbApp.organismo.sigla')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'sigla'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row" v-on:click="changeOrder('apelido')">
               <span v-text="t$('semprotdbApp.organismo.apelido')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'apelido'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('silhueta')">
-              <span v-text="t$('semprotdbApp.organismo.silhueta')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'silhueta'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('icone')">
-              <span v-text="t$('semprotdbApp.organismo.icone')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'icone'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('pos')">
-              <span v-text="t$('semprotdbApp.organismo.pos')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'pos'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('imagem')">
-              <span v-text="t$('semprotdbApp.organismo.imagem')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'imagem'"></jhi-sort-indicator>
-            </th>
-            <th scope="row" v-on:click="changeOrder('descricao')">
-              <span v-text="t$('semprotdbApp.organismo.descricao')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'descricao'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('silhueta')">-->
+            <!--              <span v-text="t$('semprotdbApp.organismo.silhueta')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'silhueta'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('icone')">-->
+            <!--              <span v-text="t$('semprotdbApp.organismo.icone')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'icone'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('pos')">-->
+            <!--              <span v-text="t$('semprotdbApp.organismo.pos')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'pos'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('imagem')">-->
+            <!--              <span v-text="t$('semprotdbApp.organismo.imagem')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'imagem'"></jhi-sort-indicator>-->
+            <!--            </th>-->
+            <!--            <th scope="row" v-on:click="changeOrder('descricao')">-->
+            <!--              <span v-text="t$('semprotdbApp.organismo.descricao')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'descricao'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row"></th>
           </tr>
         </thead>
@@ -72,23 +72,23 @@
             <td>
               <router-link :to="{ name: 'OrganismoView', params: { organismoId: organismo.id } }">{{ organismo.id }}</router-link>
             </td>
-            <td>{{ organismo.nome }}</td>
-            <td>{{ organismo.sigla }}</td>
+            <!--            <td>{{ organismo.nome }}</td>-->
+            <!--            <td>{{ organismo.sigla }}</td>-->
             <td>{{ organismo.apelido }}</td>
-            <td>
-              <a v-if="organismo.silhueta" v-on:click="openFile(organismo.silhuetaContentType, organismo.silhueta)">
-                <img
-                  v-bind:src="'data:' + organismo.silhuetaContentType + ';base64,' + organismo.silhueta"
-                  style="max-height: 30px"
-                  alt="organismo"
-                />
-              </a>
-              <span v-if="organismo.silhueta">{{ organismo.silhuetaContentType }}, {{ byteSize(organismo.silhueta) }}</span>
-            </td>
-            <td>{{ organismo.icone }}</td>
-            <td>{{ organismo.pos }}</td>
-            <td>{{ organismo.imagem }}</td>
-            <td>{{ organismo.descricao }}</td>
+            <!--            <td>-->
+            <!--              <a v-if="organismo.silhueta" v-on:click="openFile(organismo.silhuetaContentType, organismo.silhueta)">-->
+            <!--                <img-->
+            <!--                  v-bind:src="'data:' + organismo.silhuetaContentType + ';base64,' + organismo.silhueta"-->
+            <!--                  style="max-height: 30px"-->
+            <!--                  alt="organismo"-->
+            <!--                />-->
+            <!--              </a>-->
+            <!--              <span v-if="organismo.silhueta">{{ organismo.silhuetaContentType }}, {{ byteSize(organismo.silhueta) }}</span>-->
+            <!--            </td>-->
+            <!--            <td>{{ organismo.icone }}</td>-->
+            <!--            <td>{{ organismo.pos }}</td>-->
+            <!--            <td>{{ organismo.imagem }}</td>-->
+            <!--            <td>{{ organismo.descricao }}</td>-->
             <td class="text-right">
               <div class="btn-group">
                 <router-link :to="{ name: 'OrganismoView', params: { organismoId: organismo.id } }" custom v-slot="{ navigate }">

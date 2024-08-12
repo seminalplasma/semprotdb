@@ -47,8 +47,8 @@ public class Proteina implements Serializable {
     @JsonIgnoreProperties(value = { "proteinas", "cargas" }, allowSetters = true)
     private Versao versao;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "curadoria", "organismo", "proteinas" }, allowSetters = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = { "curadoria", "proteinas" }, allowSetters = true)
     private Gene gene;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -61,7 +61,7 @@ public class Proteina implements Serializable {
     @JsonIgnoreProperties(value = { "proteinas" }, allowSetters = true)
     private Set<Referencia> referencias = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REFRESH })
     @JoinTable(
         name = "rel_proteina__recurso",
         joinColumns = @JoinColumn(name = "proteina_id"),

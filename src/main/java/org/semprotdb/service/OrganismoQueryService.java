@@ -1,9 +1,11 @@
 package org.semprotdb.service;
 
 import jakarta.persistence.criteria.JoinType;
-import org.semprotdb.domain.*; // for static metamodels
+import org.semprotdb.domain.Gene_;
 import org.semprotdb.domain.Organismo;
+import org.semprotdb.domain.Organismo_;
 import org.semprotdb.repository.OrganismoRepository;
+import org.semprotdb.repository.VersaoRepository;
 import org.semprotdb.service.criteria.OrganismoCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,26 +29,37 @@ public class OrganismoQueryService extends QueryService<Organismo> {
     private static final Logger log = LoggerFactory.getLogger(OrganismoQueryService.class);
 
     private final OrganismoRepository organismoRepository;
+    private final UserService userService;
+    private final VersaoRepository versaoRepository;
 
-    public OrganismoQueryService(OrganismoRepository organismoRepository) {
+    public OrganismoQueryService(OrganismoRepository organismoRepository, UserService userService, VersaoRepository versaoRepository) {
         this.organismoRepository = organismoRepository;
+        this.userService = userService;
+        this.versaoRepository = versaoRepository;
     }
 
     /**
      * Return a {@link Page} of {@link Organismo} which matches the criteria from the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
+     * @param page     The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
     public Page<Organismo> findByCriteria(OrganismoCriteria criteria, Pageable page) {
+        if (userService.usuarioNAOLogado()) {
+            log.debug("find by criteria : {}, page: {} [PUBLIC USER]", criteria, page);
+            return organismoRepository.findAllLightPublic(page).map(o -> o);
+        }
+
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Organismo> specification = createSpecification(criteria);
-        return organismoRepository.findAll(specification, page);
+        return organismoRepository.findAllLight(specification, page);
     }
 
     /**
      * Return the number of matching entities in the database.
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
@@ -59,6 +72,7 @@ public class OrganismoQueryService extends QueryService<Organismo> {
 
     /**
      * Function to convert {@link OrganismoCriteria} to a {@link Specification}
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */

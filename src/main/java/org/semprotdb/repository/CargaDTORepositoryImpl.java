@@ -12,14 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class CargaDTORepositoryImpl extends LigthDTORepository<Carga, CargaDTO> implements CargaDTORepository {
 
     public CargaDTORepositoryImpl() {
-        super(Carga.class, CargaDTO.class);
-    }
-
-    @Override
-    public HashMap<String, Class> getJoins() {
-        HashMap<String, Class> filhos = new HashMap<>();
-        filhos.put("versao", VersaoDTO.VersaoDTOmin.class);
-        return filhos;
+        super(Carga.class, new CargaDTO());
     }
 
     @Override

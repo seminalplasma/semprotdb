@@ -74,6 +74,8 @@ export default defineComponent({
     const removeEntity = ref<any>(null);
     const prepareRemove = (instance: IRecurso) => {
       removeId.value = instance.id;
+      const ptnas = instance.proteinas?.map(p => p.id).join(', ');
+      alertService.showInfo(`Ao remover esse recurso, suas proteinas ${ptnas} o perderao!`, { variant: 'warning', title: 'Atenção' });
       removeEntity.value.show();
     };
     const closeDialog = () => {

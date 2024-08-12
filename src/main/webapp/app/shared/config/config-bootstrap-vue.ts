@@ -25,6 +25,13 @@ import {
   BInputGroup,
   BInputGroupPrepend,
   ToastPlugin,
+  BSpinner,
+  BTooltip,
+  BSkeleton,
+  BSkeletonWrapper,
+  BSkeletonImg,
+  BSkeletonTable,
+  BInputGroupAppend,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -55,4 +62,11 @@ export function initBootstrapVue(vue) {
   vue.component('b-form-datepicker', BFormDatepicker);
   vue.component('b-input-group', BInputGroup);
   vue.component('b-input-group-prepend', BInputGroupPrepend);
+  vue.component('b-input-group-append', BInputGroupAppend);
+  vue.component('b-spinner', BSpinner);
+  vue.component('b-skeleton', BSkeleton);
+  vue.component('b-skeleton-wrapper', BSkeletonWrapper);
+  vue.component('b-skeleton-img', BSkeletonImg);
+  vue.component('b-skeleton-table', BSkeletonTable);
+  vue.component('b-tooltip', BTooltip);
 }

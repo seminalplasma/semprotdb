@@ -7,14 +7,27 @@ import admin from '@/router/admin';
 import entities from '@/router/entities';
 import pages from '@/router/pages';
 
+const Tabela = () => import('@/core/tabela/tabela.vue');
+const Downloads = () => import('@/core/downloads/downloads.component.vue');
+
 export const createRouter = () =>
   createVueRouter({
-    history: createWebHistory(),
+    history: createWebHistory('/semprotdb'),
     routes: [
       {
         path: '/',
         name: 'Home',
         component: Home,
+      },
+      {
+        path: '/tabela',
+        name: 'Tabela',
+        component: Tabela,
+      },
+      {
+        path: '/downloads',
+        name: 'Downloads',
+        component: Downloads,
       },
       {
         path: '/forbidden',

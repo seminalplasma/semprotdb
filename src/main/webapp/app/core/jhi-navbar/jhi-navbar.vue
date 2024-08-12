@@ -2,7 +2,8 @@
   <b-navbar data-cy="navbar" toggleable="md" type="dark" class="bg-primary">
     <b-navbar-brand class="logo" b-link to="/">
       <span class="logo-img"></span>
-      <span v-text="t$('global.title')" class="navbar-title"></span> <span class="navbar-version">{{ version }}</span>
+      <span v-text="t$('global.title')" class="navbar-title"></span>
+      <span v-if="authenticated" class="navbar-version">{{ version }}</span>
     </b-navbar-brand>
     <b-navbar-toggle
       right
@@ -18,10 +19,54 @@
 
     <b-collapse is-nav id="header-tabs">
       <b-navbar-nav class="ml-auto">
-        <b-nav-item to="/" exact>
+        <!--        <b-nav-item to="/" exact>-->
+        <!--          <span>-->
+        <!--            <font-awesome-icon icon="home" />-->
+        <!--            <span v-text="t$('global.menu.home')"></span>-->
+        <!--          </span>-->
+        <!--        </b-nav-item>-->
+
+        <!--        <b-nav-item>-->
+        <!--          {{ versao.nome }}-->
+        <!--          <img :src="'/content/images/' + versao.logo" width="25">-->
+        <!--        </b-nav-item>-->
+
+        <template v-if="vloaded">
+          <template v-if="versoes.length < 1">
+            <b-nav-item> No versions found </b-nav-item>
+          </template>
+          <template v-else-if="versoes.length < 2">
+            <b-nav-item
+              ><span class="badge badge-dark">{{ versao.nome }}</span></b-nav-item
+            >
+          </template>
+          <template v-else>
+            <b-nav-item-dropdown right>
+              <template #button-content>
+                <span class="badge badge-dark">{{ versao.nome }}</span>
+                <img v-if="versao.logo" :src="'/content/images/' + versao.logo" width="25" />
+              </template>
+              <b-dropdown-item v-for="v in versoes" :key="v.id" v-on:click="chooseVersao(v)" :class="{ active: versao.id === v.id }">
+                {{ v.nome }}
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
+          </template>
+        </template>
+        <template v-else>
+          <b-nav-item><b-spinner label="Load versions" small></b-spinner></b-nav-item>
+        </template>
+
+        <b-nav-item to="/tabela" active-class="active" exact>
           <span>
-            <font-awesome-icon icon="home" />
-            <span v-text="t$('global.menu.home')"></span>
+            <font-awesome-icon icon="dna" />
+            <span v-text="t$('Proteinas')"></span>
+          </span>
+        </b-nav-item>
+
+        <b-nav-item to="/downloads" active-class="active" exact>
+          <span>
+            <font-awesome-icon icon="cloud-arrow-down" />
+            <span v-text="t$('Downloads')"></span>
           </span>
         </b-nav-item>
         <b-nav-item-dropdown right id="entity-menu" v-if="authenticated" active-class="active" class="pointer" data-cy="entity">
@@ -172,7 +217,7 @@
 
 .logo-img {
   height: 100%;
-  background: url('/content/images/logo-jhipster.png') no-repeat center center;
+  background: url('/content/images/logo-semprotdb.png') no-repeat center center;
   background-size: contain;
   width: 100%;
   filter: drop-shadow(0 0 0.05rem white);

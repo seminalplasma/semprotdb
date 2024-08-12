@@ -1,9 +1,5 @@
 <template>
   <div>
-    <b-dropdown-item to="/curadoria">
-      <font-awesome-icon icon="asterisk" />
-      <span v-text="t$('global.menu.entities.curadoria')"></span>
-    </b-dropdown-item>
     <b-dropdown-item to="/carga">
       <font-awesome-icon icon="asterisk" />
       <span v-text="t$('global.menu.entities.carga')"></span>
@@ -31,6 +27,10 @@
     <b-dropdown-item to="/recurso">
       <font-awesome-icon icon="asterisk" />
       <span v-text="t$('global.menu.entities.recurso')"></span>
+    </b-dropdown-item>
+    <b-dropdown-item to="/curadoria">
+      <font-awesome-icon icon="asterisk" />
+      <span v-text="t$('global.menu.entities.curadoria')"></span>
     </b-dropdown-item>
     <b-dropdown-item to="/db-config">
       <font-awesome-icon icon="asterisk" />

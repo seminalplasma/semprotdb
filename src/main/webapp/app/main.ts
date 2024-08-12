@@ -13,11 +13,12 @@ import JhiSortIndicatorComponent from './shared/sort/jhi-sort-indicator.vue';
 import LoginService from './account/login.service';
 import AccountService from './account/account.service';
 import { setupAxiosInterceptors } from '@/shared/config/axios-interceptor';
-import { useStore, useTranslationStore } from '@/store';
+import { useStore, useTranslationStore, useVersaoStore } from '@/store';
 
 import '../content/scss/global.scss';
 import '../content/scss/vendor.scss';
 import TranslationService from '@/locale/translation.service';
+import VersaoService from '@/entities/versao/versao.service';
 
 const pinia = createPinia();
 
@@ -69,6 +70,13 @@ const app = createApp({
     const translationStore = useTranslationStore();
     const translationService = new TranslationService(i18n);
 
+    const versaoStore = useVersaoStore();
+    const versaoService = new VersaoService();
+    provide(
+      'versao',
+      computed(() => versaoStore.versao),
+    );
+
     const changeLanguage = async (newLanguage: string) => {
       if (i18n.locale.value !== newLanguage) {
         await translationService.refreshTranslation(newLanguage);
@@ -95,11 +103,24 @@ const app = createApp({
       },
     );
 
+    watch(
+      () => versaoStore.selecionada,
+      async value => {
+        if (!versaoStore.esta_carregada && value.id) {
+          const versao = await versaoService.find(value.id);
+          versaoStore.loadVersao(versao);
+        }
+      },
+    );
+
     onMounted(async () => {
       const lang = [translationService.getLocalStoreLanguage(), store.account?.langKey, navigator.language, 'en'].find(
         lang => lang && translationService.isLanguageSupported(lang),
       );
       await changeLanguage(lang);
+
+      const ret = await versaoService.retrieve();
+      versaoStore.setList(ret.data);
     });
 
     router.beforeResolve(async (to, from, next) => {
