@@ -58,16 +58,13 @@ public class VersaoDTO extends Versao implements IDTO<VersaoDTO> {
     public static final class VersaoDTOmin extends VersaoDTO {
 
         @JsonIgnore
-        private Integer numero;
-
-        @JsonIgnore
         private Status status;
 
         @JsonIgnore
         private Instant release;
 
-        public VersaoDTOmin(Long id, String nome) {
-            super(id, nome, null, null, null);
+        public VersaoDTOmin(Long id, String nome, Integer numero) {
+            super(id, nome, numero, null, null);
         }
     }
 }

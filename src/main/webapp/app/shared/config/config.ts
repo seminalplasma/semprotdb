@@ -56,6 +56,8 @@ import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons/faTrian
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faUpLong } from '@fortawesome/free-solid-svg-icons/faUpLong';
 import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
+import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
+import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 
 const datetimeFormats: IntlDateTimeFormats = {
   en: {
@@ -170,6 +172,8 @@ export function initFortAwesome(vue) {
     faUpLong,
     faDatabase,
     faCog,
+    faFilter,
+    faX,
   );
 }
 

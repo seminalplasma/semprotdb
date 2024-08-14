@@ -22,17 +22,24 @@ public class GeneDTO extends Gene implements IDTO<GeneDTO> {
     private CuradoriaDTO curadoria;
     private OrganismoDTO organismo;
 
-    public GeneDTO(Long id, String nome, Long curadoriaID, Long organismoID, String organismoAPELIDO) {
+    public GeneDTO(Long id, String nome, Long curadoriaID, Long organismoID, String organismoAPELIDO, String organismoSIGLA) {
         setId(id);
         setNome(nome);
         setCuradoria(new CuradoriaDTO(curadoriaID));
-        setOrganismo(new OrganismoDTO(organismoID, organismoAPELIDO));
+        setOrganismo(new OrganismoDTO(organismoID, organismoAPELIDO, organismoSIGLA));
     }
 
     @Override
     public Path[] getConstructorArgsPath(Root<GeneDTO> root) {
         Join curadoria = root.join("curadoria");
         Join organismo = root.join("organismo");
-        return new Path[] { root.get("id"), root.get("nome"), curadoria.get("id"), organismo.get("id"), organismo.get("apelido") };
+        return new Path[] {
+            root.get("id"),
+            root.get("nome"),
+            curadoria.get("id"),
+            organismo.get("id"),
+            organismo.get("apelido"),
+            organismo.get("sigla"),
+        };
     }
 }

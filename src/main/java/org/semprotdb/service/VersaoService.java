@@ -491,7 +491,7 @@ public class VersaoService {
         longFilter.setSpecified(true).setEquals(versao.getId());
         proteinaCriteria.setVersaoId(longFilter);
 
-        List<Proteina> proteinas = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.unpaged()).stream().toList();
+        List<Proteina> proteinas = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.unpaged(), null, null).stream().toList();
         log.info("Gerando TSV para {} proteinas", proteinas.size());
 
         ArrayList<String> linhas = new ArrayList<>();

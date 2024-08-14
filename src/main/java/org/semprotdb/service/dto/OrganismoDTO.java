@@ -17,9 +17,6 @@ public class OrganismoDTO extends Organismo implements IDTO<OrganismoDTO> {
     private String nome;
 
     @JsonIgnore
-    private String sigla;
-
-    @JsonIgnore
     private byte[] silhueta;
 
     @JsonIgnore
@@ -37,15 +34,16 @@ public class OrganismoDTO extends Organismo implements IDTO<OrganismoDTO> {
     @JsonIgnore
     private String descricao;
 
-    public OrganismoDTO(Long id, String apelido) {
+    public OrganismoDTO(Long id, String apelido, String sigla) {
         setId(id);
         setApelido(apelido);
+        setSigla(sigla);
     }
 
     public OrganismoDTO() {}
 
     @Override
     public Path[] getConstructorArgsPath(Root<OrganismoDTO> root) {
-        return new Path[] { root.get("id"), root.get("nome") };
+        return new Path[] { root.get("id"), root.get("apelido"), root.get("sigla") };
     }
 }

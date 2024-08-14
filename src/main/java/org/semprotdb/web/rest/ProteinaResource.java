@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -154,11 +155,13 @@ public class ProteinaResource {
     @GetMapping("")
     public ResponseEntity<List<Proteina>> getAllProteinas(
         ProteinaCriteria criteria,
+        String qfirst,
+        String qors,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
-        log.debug("REST request to get Proteinas by criteria: {}", criteria);
+        log.debug("REST request to get Proteinas by criteria: {} search: ({} OR: {})", criteria, qfirst, qors);
 
-        Page<Proteina> page = proteinaQueryService.findByCriteria(criteria, pageable);
+        Page<Proteina> page = proteinaQueryService.findByCriteria(criteria, pageable, qfirst, qors);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

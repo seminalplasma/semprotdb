@@ -38,7 +38,8 @@ public class CargaDTO extends Carga implements IDTO<CargaDTO> {
         Destino destino,
         Integer linhas,
         Long versaoID,
-        String versaoNOME
+        String versaoNOME,
+        Integer versaoNUMERO
     ) {
         setId(id);
         setOrdem(ordem);
@@ -48,7 +49,7 @@ public class CargaDTO extends Carga implements IDTO<CargaDTO> {
         setFormato(formato);
         setDestino(destino);
         setLinhas(linhas);
-        setVersao(new VersaoDTO.VersaoDTOmin(versaoID, versaoNOME));
+        setVersao(new VersaoDTO.VersaoDTOmin(versaoID, versaoNOME, versaoNUMERO));
     }
 
     @Override
@@ -65,6 +66,7 @@ public class CargaDTO extends Carga implements IDTO<CargaDTO> {
             root.get("linhas"),
             versao.get("id"),
             versao.get("nome"),
+            versao.get("numero"),
         };
     }
 }

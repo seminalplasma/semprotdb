@@ -5,7 +5,10 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springdoc.core.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.*;
+import tech.jhipster.service.filter.Filter;
+import tech.jhipster.service.filter.IntegerFilter;
+import tech.jhipster.service.filter.LongFilter;
+import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Criteria class for the {@link org.semprotdb.domain.Proteina} entity. This class is used
@@ -37,8 +40,11 @@ public class ProteinaCriteria implements Serializable, Criteria {
     private LongFilter versaoId;
 
     private LongFilter geneId;
+    private StringFilter geneNome;
 
     private LongFilter organismoId;
+    private StringFilter organismoNome;
+    private StringFilter organismoSigla;
 
     private LongFilter referenciaId;
 
@@ -57,7 +63,10 @@ public class ProteinaCriteria implements Serializable, Criteria {
         this.curadoriaId = other.optionalCuradoriaId().map(LongFilter::copy).orElse(null);
         this.versaoId = other.optionalVersaoId().map(LongFilter::copy).orElse(null);
         this.geneId = other.optionalGeneId().map(LongFilter::copy).orElse(null);
+        this.geneNome = other.optionalGeneNome().map(StringFilter::copy).orElse(null);
         this.organismoId = other.optionalGeneId().map(LongFilter::copy).orElse(null);
+        this.organismoNome = other.optionalOrganismoNome().map(StringFilter::copy).orElse(null);
+        this.organismoSigla = other.optionalOrganismoSigla().map(StringFilter::copy).orElse(null);
         this.referenciaId = other.optionalReferenciaId().map(LongFilter::copy).orElse(null);
         this.recursoId = other.optionalRecursoId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
@@ -72,6 +81,10 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public void setId(LongFilter id) {
+        this.id = id;
+    }
+
     public Optional<LongFilter> optionalId() {
         return Optional.ofNullable(id);
     }
@@ -83,12 +96,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return id;
     }
 
-    public void setId(LongFilter id) {
-        this.id = id;
-    }
-
     public StringFilter getNome() {
         return nome;
+    }
+
+    public void setNome(StringFilter nome) {
+        this.nome = nome;
     }
 
     public Optional<StringFilter> optionalNome() {
@@ -102,12 +115,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return nome;
     }
 
-    public void setNome(StringFilter nome) {
-        this.nome = nome;
-    }
-
     public IntegerFilter getTamanho() {
         return tamanho;
+    }
+
+    public void setTamanho(IntegerFilter tamanho) {
+        this.tamanho = tamanho;
     }
 
     public Optional<IntegerFilter> optionalTamanho() {
@@ -121,12 +134,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return tamanho;
     }
 
-    public void setTamanho(IntegerFilter tamanho) {
-        this.tamanho = tamanho;
-    }
-
     public StringFilter getMassa() {
         return massa;
+    }
+
+    public void setMassa(StringFilter massa) {
+        this.massa = massa;
     }
 
     public Optional<StringFilter> optionalMassa() {
@@ -140,12 +153,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return massa;
     }
 
-    public void setMassa(StringFilter massa) {
-        this.massa = massa;
-    }
-
     public StringFilter getDescricao() {
         return descricao;
+    }
+
+    public void setDescricao(StringFilter descricao) {
+        this.descricao = descricao;
     }
 
     public Optional<StringFilter> optionalDescricao() {
@@ -159,12 +172,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return descricao;
     }
 
-    public void setDescricao(StringFilter descricao) {
-        this.descricao = descricao;
-    }
-
     public LongFilter getCuradoriaId() {
         return curadoriaId;
+    }
+
+    public void setCuradoriaId(LongFilter curadoriaId) {
+        this.curadoriaId = curadoriaId;
     }
 
     public Optional<LongFilter> optionalCuradoriaId() {
@@ -178,12 +191,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return curadoriaId;
     }
 
-    public void setCuradoriaId(LongFilter curadoriaId) {
-        this.curadoriaId = curadoriaId;
-    }
-
     public LongFilter getVersaoId() {
         return versaoId;
+    }
+
+    public void setVersaoId(LongFilter versaoId) {
+        this.versaoId = versaoId;
     }
 
     public Optional<LongFilter> optionalVersaoId() {
@@ -197,12 +210,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return versaoId;
     }
 
-    public void setVersaoId(LongFilter versaoId) {
-        this.versaoId = versaoId;
-    }
-
     public LongFilter getGeneId() {
         return geneId;
+    }
+
+    public void setGeneId(LongFilter geneId) {
+        this.geneId = geneId;
     }
 
     public Optional<LongFilter> optionalGeneId() {
@@ -216,12 +229,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return geneId;
     }
 
-    public void setGeneId(LongFilter geneId) {
-        this.geneId = geneId;
-    }
-
     public LongFilter getOrganismoId() {
         return organismoId;
+    }
+
+    public void setOrganismoId(LongFilter organismoId) {
+        this.organismoId = organismoId;
     }
 
     public Optional<LongFilter> optionalOrganismoId() {
@@ -235,12 +248,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return organismoId;
     }
 
-    public void setOrganismoId(LongFilter organismoId) {
-        this.organismoId = organismoId;
-    }
-
     public LongFilter getReferenciaId() {
         return referenciaId;
+    }
+
+    public void setReferenciaId(LongFilter referenciaId) {
+        this.referenciaId = referenciaId;
     }
 
     public Optional<LongFilter> optionalReferenciaId() {
@@ -254,12 +267,12 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return referenciaId;
     }
 
-    public void setReferenciaId(LongFilter referenciaId) {
-        this.referenciaId = referenciaId;
-    }
-
     public LongFilter getRecursoId() {
         return recursoId;
+    }
+
+    public void setRecursoId(LongFilter recursoId) {
+        this.recursoId = recursoId;
     }
 
     public Optional<LongFilter> optionalRecursoId() {
@@ -273,12 +286,69 @@ public class ProteinaCriteria implements Serializable, Criteria {
         return recursoId;
     }
 
-    public void setRecursoId(LongFilter recursoId) {
-        this.recursoId = recursoId;
+    public StringFilter getGeneNome() {
+        return geneNome;
+    }
+
+    public void setGeneNome(StringFilter nome) {
+        this.geneNome = nome;
+    }
+
+    public Optional<StringFilter> optionalGeneNome() {
+        return Optional.ofNullable(geneNome);
+    }
+
+    public StringFilter geneNome() {
+        if (geneNome == null) {
+            setGeneNome(new StringFilter());
+        }
+        return geneNome;
+    }
+
+    public StringFilter getOrganismoNome() {
+        return organismoNome;
+    }
+
+    public void setOrganismoNome(StringFilter nome) {
+        this.organismoNome = nome;
+    }
+
+    public Optional<StringFilter> optionalOrganismoNome() {
+        return Optional.ofNullable(organismoNome);
+    }
+
+    public StringFilter organismoNome() {
+        if (organismoNome == null) {
+            setOrganismoNome(new StringFilter());
+        }
+        return organismoNome;
+    }
+
+    public StringFilter getOrganismoSigla() {
+        return organismoSigla;
+    }
+
+    public void setOrganismoSigla(StringFilter sigla) {
+        this.organismoSigla = sigla;
+    }
+
+    public Optional<StringFilter> optionalOrganismoSigla() {
+        return Optional.ofNullable(organismoSigla);
+    }
+
+    public StringFilter organismoSigla() {
+        if (organismoSigla == null) {
+            setOrganismoSigla(new StringFilter());
+        }
+        return organismoSigla;
     }
 
     public Boolean getDistinct() {
         return distinct;
+    }
+
+    public void setDistinct(Boolean distinct) {
+        this.distinct = distinct;
     }
 
     public Optional<Boolean> optionalDistinct() {
@@ -290,10 +360,6 @@ public class ProteinaCriteria implements Serializable, Criteria {
             setDistinct(true);
         }
         return distinct;
-    }
-
-    public void setDistinct(Boolean distinct) {
-        this.distinct = distinct;
     }
 
     @Override
@@ -314,7 +380,10 @@ public class ProteinaCriteria implements Serializable, Criteria {
             Objects.equals(curadoriaId, that.curadoriaId) &&
             Objects.equals(versaoId, that.versaoId) &&
             Objects.equals(geneId, that.geneId) &&
+            Objects.equals(geneNome, that.geneNome) &&
             Objects.equals(organismoId, that.organismoId) &&
+            Objects.equals(organismoNome, that.organismoNome) &&
+            Objects.equals(organismoSigla, that.organismoSigla) &&
             Objects.equals(referenciaId, that.referenciaId) &&
             Objects.equals(recursoId, that.recursoId) &&
             Objects.equals(distinct, that.distinct)
@@ -332,7 +401,10 @@ public class ProteinaCriteria implements Serializable, Criteria {
             curadoriaId,
             versaoId,
             geneId,
+            geneNome,
             organismoId,
+            organismoNome,
+            organismoSigla,
             referenciaId,
             recursoId,
             distinct
@@ -351,10 +423,13 @@ public class ProteinaCriteria implements Serializable, Criteria {
             optionalCuradoriaId().map(f -> "curadoriaId=" + f + ", ").orElse("") +
             optionalVersaoId().map(f -> "versaoId=" + f + ", ").orElse("") +
             optionalGeneId().map(f -> "geneId=" + f + ", ").orElse("") +
+            optionalGeneNome().map(f -> "geneNome=" + f + ", ").orElse("") +
             optionalOrganismoId().map(f -> "organismoId=" + f + ", ").orElse("") +
+            optionalOrganismoNome().map(f -> "organismoNome=" + f + ", ").orElse("") +
+            optionalOrganismoSigla().map(f -> "organismoSigla=" + f + ", ").orElse("") +
             optionalReferenciaId().map(f -> "referenciaId=" + f + ", ").orElse("") +
             optionalRecursoId().map(f -> "recursoId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
-        "}";
+            "}";
     }
 }
