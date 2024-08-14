@@ -118,4 +118,8 @@ cp $DIR/semprotdb/target/semprotdb-*-SNAPSHOT.jar /usr/local/bin/semprotdb.jar &
 
 echo "... OK ..."
 echo
+echo
+sudo journalctl -u semprotdb.service | tail -50
+echo
+echo
 systemctl status semprotdb
