@@ -1,6 +1,40 @@
 # semprotdb
 
-This application was generated using JHipster 8.6.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.6.0](https://www.jhipster.tech/documentation-archive/v8.6.0).
+This application was generated using JHipster 8.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.4.0](https://www.jhipster.tech/documentation-archive/v8.4.0).
+
+- Desenvolvimento:
+
+```
+npm run dev
+```
+
+- Compilar:
+
+```
+./mvnw -Pprod clean verify -DskipTests=true
+```
+
+- Executar:
+
+```
+java -jar semprotdb-0.0.1-SNAPSHOT.jar --spring.datasource.password=`read -s X && echo $X && X=`
+```
+
+- Implantar:
+
+```
+->PEM
+->IP
+->PSW1 ******
+->PSW2 ******
+
+echo compilando... && ./mvnw -Pprod,https clean verify -DskipTests=true
+echo subindo... && scp -i PEM target/semprotdb-0.0.1-SNAPSHOT.jar admin@IP:
+echo reiniciando... && ssh admin@IP -i PEM sudo systemctl reboot ;
+echo aguardando... && sleep 60
+echo parando... && ssh -i PEM admin@IP sudo service apache2 stop
+echo implantando ... && ssh -i PEM admin@IP nohup sudo  java  -Dserver.ssl.key-store-password=PSW1 -Dspring.datasource.password='PSW2' -jar semprotdb-0.0.1-SNAPSHOT.jar
+```
 
 ## Project Structure
 

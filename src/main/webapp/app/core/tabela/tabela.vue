@@ -1,0 +1,209 @@
+<template>
+  <div class="row justify-content-between">
+    <div class="px- mx-2 bg-light p-2 m-2 border-left border-secondary" style="border-width: 12px !important ; max-height: 8rem">
+      <h1 class="display-3 text-primary">
+        <font-awesome-icon icon="dna"></font-awesome-icon>
+        Proteinas
+      </h1>
+    </div>
+
+    <div class="col-5 mx-2" v-if="versao_loaded">
+      <!--      <div class="row">-->
+      <b-form-group class="w-100" id="fieldset-2" :disabled="isFetching || queryPT2e.length < 1">
+        <b-input-group class="mt-3" size="sm">
+          <template #prepend>
+            <b-button variant="info" v-if="queryes.length > 0" @click="queryPT1 = queryPT1 === 'AND' ? 'OR' : 'AND'">
+              {{ queryPT1 }}
+            </b-button>
+            <b-dropdown :text="queryPT2" variant="secondary" size="sm">
+              <template v-for="entity of queryPT2e">
+                <b-dropdown-item
+                  @click="
+                    queryPT2 = entity;
+                    queryPT3 = (queryPT2n.includes(queryPT2) ? fOps2 : fOps)[0];
+                  "
+                  >{{ entity }}</b-dropdown-item
+                >
+              </template>
+            </b-dropdown>
+            <b-dropdown :text="queryPT3" variant="secondary" size="sm" v-model="queryPT3">
+              <b-dropdown-item v-for="filtOp of queryPT2n.includes(queryPT2) ? fOps2 : fOps" @click="queryPT3 = filtOp">{{
+                filtOp
+              }}</b-dropdown-item>
+            </b-dropdown>
+          </template>
+
+          <b-form-input id="search" disabled placeholder="filter bellow" type="text" v-model="query"></b-form-input>
+
+          <b-input-group-append>
+            <b-button
+              variant="primary"
+              :disabled="query.length < 1"
+              @click="
+                queryes.push(`${queryes.length > 0 ? queryPT1 : ''} ${queryPT2} ${queryPT3} ${query}`);
+                query = '';
+                queryPT2e = queryPT2e.filter(x => x !== queryPT2);
+                queryPT2 = queryPT2e.length > 0 ? queryPT2e[0] : 'Protein';
+                queryPT3 = (queryPT2n.includes(queryPT2) ? fOps2 : fOps)[0];
+              "
+            >
+              <font-awesome-icon icon="filter"></font-awesome-icon>
+            </b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-form-group>
+      <!--      </div>-->
+      <!--      <div class="row">-->
+      <b-form-group class="w-100" id="fieldset-1" label-for="search">
+        <b-input-group class="mt-3">
+          <b-form-input
+            id="search"
+            :disabled="isFetching || queryPT2e.length < 1"
+            :placeholder="queryes.length > 0 ? '...' : 'protein or gene name'"
+            type="text"
+            v-model="query"
+          ></b-form-input>
+
+          <template #append>
+            <b-button v-if="queryes.length > 0" variant="danger" @click="reset()" :disabled="isFetching">
+              <font-awesome-icon icon="x"></font-awesome-icon>
+            </b-button>
+            <b-button variant="primary" @click="search()" :disabled="isFetching">
+              <b-spinner v-if="isFetching" small label="Small Spinner"></b-spinner>
+              <font-awesome-icon v-else-if="queryes.length > 0" icon="check"></font-awesome-icon>
+              <font-awesome-icon v-else icon="search"></font-awesome-icon>
+            </b-button>
+          </template>
+        </b-input-group>
+      </b-form-group>
+      <!--      </div>-->
+
+      <b-form-group class="w-100" id="fieldset-3" v-if="queryes.length > 0">
+        <b-form-tags disabled placeholder="" input-id="tags-basic" v-model="queryes"></b-form-tags>
+      </b-form-group>
+    </div>
+  </div>
+
+  <div v-if="versao && versao_loaded && versao.id && versao.id > 0">
+    <div class="table-responsive-lg" v-if="proteinas && proteinas.length > 0">
+      <table class="table table-sm table-striped table-hover" aria-describedby="proteinas">
+        <thead class="bg-dark text-light">
+          <tr>
+            <th scope="row"></th>
+            <th scope="row" v-on:click="changeOrder('GeneOrganismoApelido')">
+              <span v-text="t$('Organimo')"></span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'GeneOrganismoApelido'"></jhi-sort-indicator>
+            </th>
+            <th scope="row" v-on:click="changeOrder('GeneNome')">
+              <span v-text="t$('Gene')"></span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'GeneNome'"></jhi-sort-indicator>
+            </th>
+            <th scope="row" v-on:click="changeOrder('nome')">
+              Protein
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'nome'"></jhi-sort-indicator>
+            </th>
+            <th scope="row" class="text-center" v-on:click="changeOrder('tamanho')">
+              <span v-text="t$('semprotdbApp.proteina.tamanho')"></span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'tamanho'"></jhi-sort-indicator>
+            </th>
+            <th scope="row" class="text-center" v-on:click="changeOrder('massa')">
+              <span v-text="t$('semprotdbApp.proteina.massa')"></span>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'massa'"></jhi-sort-indicator>
+            </th>
+            <th scope="row" class="text-center">
+              <span v-text="t$('Recurso')"></span>
+            </th>
+            <th scope="row" class="text-center">
+              <span v-text="t$('Referencia')"></span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr class="align-middle" v-for="proteina in proteinas" :key="proteina.id" data-cy="entityTable">
+            <td class="align-middle text-center">
+              <font-awesome-icon
+                :id="`${proteina.id}.${proteina.versao?.numero}`"
+                :icon="proteina.curadoria?.id ? 'shield' : 'tag'"
+                :class="(proteina.curadoria?.id ? 'text-success' : 'text-primary') + ' mr-2'"
+              ></font-awesome-icon>
+              <b-tooltip
+                placement="right"
+                :target="`${proteina.id}.${proteina.versao?.numero}`"
+                :title="`${proteina.id}.${proteina.versao?.numero}`"
+              ></b-tooltip>
+            </td>
+            <td class="align-middle">
+              <em> {{ proteina.gene?.organismo?.apelido }}</em>
+            </td>
+            <td class="align-middle">
+              <u>
+                <ins
+                  ><small style="letter-spacing: -0.05rem">{{ proteina.gene?.nome }}</small></ins
+                >
+              </u>
+            </td>
+            <td class="align-middle text-truncate" style="max-width: 20rem">
+              <strong>{{ proteina.descricao }}</strong>
+            </td>
+            <td class="align-middle text-right">{{ proteina.tamanho ? proteina.tamanho + 'aa' : 'Ø' }}</td>
+            <td class="align-middle text-center">{{ proteina.massa === 'UNDEFINED' ? 'Ø' : proteina.massa }}</td>
+
+            <td class="align-middle text-center">
+              <template v-if="proteina.recursos && proteina.recursos.length > 0">
+                <b-button v-if="proteina.recursos.length < 2" size="sm" :href="proteina.recursos[0].link || '#'" target="_blank"
+                  >{{ proteina.recursos[0].uid }}
+                </b-button>
+
+                <b-dropdown v-else id="dropdown-1" :text="`${proteina.recursos.length} Links`" size="sm" text="Small">
+                  <b-dropdown-item v-for="r in proteina.recursos" :href="r.link || '#'" target="_blank">{{ r.uid }} </b-dropdown-item>
+                </b-dropdown>
+              </template>
+            </td>
+
+            <td class="align-middle text-center">
+              <template v-if="proteina.referencias && proteina.referencias.length > 0">
+                <span class="text-capitalize">{{ proteina.referencias[0].citacao }}</span>
+                <span v-if="proteina.referencias.length > 1" class="badge bg-info float-md-right">
+                  +{{ proteina.referencias.length - 1 }}
+                </span>
+              </template>
+            </td>
+          </tr>
+        </tbody>
+        <span ref="infiniteScrollEl"></span>
+      </table>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center w-100" v-if="isFetching">
+      <strong role="status">
+        <template v-if="proteinas && proteinas.length > 0 && totalItems > 0">
+          Showing {{ proteinas.length }} of
+          {{ totalItems }}
+        </template>
+        <template v-else>Loading {{ itemsPerPage }}...</template>
+      </strong>
+      <div class="spinner-border ms-auto m-4" aria-hidden="true"></div>
+      <div class="btn-group">
+        <button class="btn btn-info btn-sm" :disabled="itemsPerPage === 20" @click="setPageSize(20)">20</button>
+        <button class="btn btn-info btn-sm" :disabled="itemsPerPage === 200" @click="setPageSize(200)">200</button>
+        <button class="btn btn-info btn-sm" :disabled="itemsPerPage === 2000" @click="setPageSize(2000)">2000</button>
+      </div>
+    </div>
+    <div v-else class="m-4">
+      <b-alert v-if="proteinas && proteinas.length > 0" variant="success" show>
+        <font-awesome-icon icon="check"></font-awesome-icon>
+        Total <strong>{{ proteinas.length }} proteins </strong> found.
+      </b-alert>
+      <b-alert v-else variant="warning" show>
+        <font-awesome-icon icon="triangle-exclamation"></font-awesome-icon>
+        <strong>Not found.</strong></b-alert
+      >
+    </div>
+    <b-button class="float-right" pill @click="toTop" v-if="proteinas.length > 20">
+      <font-awesome-icon icon="up-long"></font-awesome-icon>
+    </b-button>
+  </div>
+  <div v-else>Loading version...</div>
+</template>
+
+<script lang="ts" src="./tabela.component.ts"></script>
