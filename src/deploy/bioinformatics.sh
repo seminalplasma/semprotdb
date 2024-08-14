@@ -105,7 +105,7 @@ cp $DIR/application-prod.yml $DIR/semprotdb/src/main/resources/config/applicatio
 [ ! -d $DIR/semprotdb/ ] && \
    mkdir /home/semprodb/logs
 
-sed -i 's/Users\/miqueias\/ARQUIVOS/home\/semprodb\/logs/' src/main/resources/logback-spring.xml
+sed -i 's/Users\/miqueias\/ARQUIVOS/home\/semprodb\/logs/' $DIR/semprotdb/src/main/resources/logback-spring.xml
 
 ## compilar
 rm -rf $DIR/semprotdb/target
