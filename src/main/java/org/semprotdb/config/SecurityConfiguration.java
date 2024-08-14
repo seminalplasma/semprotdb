@@ -84,9 +84,11 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/proteinas/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/recursos/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/cargas/**")).permitAll()
+                    .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/db-config/**")).permitAll()
 
                     // Bloquear edicao para nao admins
                     .requestMatchers(mvc.pattern("/api/versaos/**")).hasAuthority(AuthoritiesConstants.ADMIN)
+                    .requestMatchers(mvc.pattern("/api/db-config/**")).hasAuthority(AuthoritiesConstants.ADMIN)
 
                     .requestMatchers(mvc.pattern("/api/**")).authenticated()
                     .requestMatchers(mvc.pattern("/v3/api-docs/**")).hasAuthority(AuthoritiesConstants.ADMIN)

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Implantando nova versao do SEMPRODB"
+
 DIR=/home/semprodb
 
 ## Postgres >=12
@@ -100,6 +102,10 @@ then
 fi
 
 cp $DIR/application-prod.yml $DIR/semprotdb/src/main/resources/config/application-prod.yml
+[ ! -d $DIR/semprotdb/ ] && \
+   mkdir /home/semprodb/logs
+
+sed -i 's/Users\/miqueias\/ARQUIVOS/home\/semprodb\/logs/' src/main/resources/logback-spring.xml
 
 ## compilar
 rm -rf $DIR/semprotdb/target
