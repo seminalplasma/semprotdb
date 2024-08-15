@@ -12,8 +12,15 @@
             <label for="id" v-text="t$('global.field.id')"></label>
             <input type="text" class="form-control" id="id" name="id" v-model="carga.id" readonly />
           </div>
+
           <div class="form-group my-4">
-            <b-form-checkbox @change="carga.tipo = modoRemoto ? 'REMOTO' : 'ARQUIVO'" v-model="modoRemoto" name="check-button" switch>
+            <b-form-checkbox
+              :disabled="isSaving"
+              @change="carga.tipo = modoRemoto ? 'REMOTO' : 'ARQUIVO'"
+              v-model="modoRemoto"
+              name="check-button"
+              switch
+            >
               Baixar dados remoto
             </b-form-checkbox>
           </div>
@@ -22,7 +29,7 @@
           <div class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.tipo')" for="carga-tipo"></label>
             <select
-              :disabled="!!carga.validado"
+              :disabled="!!carga.validado || isSaving"
               class="form-control"
               name="tipo"
               :class="{ valid: !v$.tipo.$invalid, invalid: v$.tipo.$invalid }"
@@ -44,6 +51,7 @@
           <div v-if="modoRemoto" class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.caminho')" for="carga-caminho"></label>
             <input
+              :disabled="isSaving"
               type="text"
               class="form-control"
               name="caminho"
@@ -68,6 +76,7 @@
                     carga.planilha = null;
                     carga.planilhaContentType = null;
                   "
+                  :disabled="isSaving"
                   class="btn btn-secondary btn-xs pull-right"
                 >
                   <font-awesome-icon icon="times"></font-awesome-icon>
@@ -75,6 +84,7 @@
               </div>
               <label for="file_planilha" v-text="t$('entity.action.addblob')" class="btn btn-primary pull-right"></label>
               <input
+                :disabled="isSaving"
                 type="file"
                 ref="file_planilha"
                 id="file_planilha"
@@ -103,6 +113,7 @@
               v-model="v$.planilha.$model"
             />
             <input
+              :disabled="isSaving"
               type="hidden"
               class="form-control"
               name="planilhaContentType"
@@ -123,6 +134,7 @@
               :class="{ valid: !v$.nome.$invalid, invalid: v$.nome.$invalid }"
               v-model="v$.nome.$model"
               required
+              :disabled="isSaving"
             />
             <div v-if="v$.nome.$anyDirty && v$.nome.$invalid">
               <small class="form-text text-danger" v-for="error of v$.nome.$errors" :key="error.$uid">{{ error.$message }}</small>
@@ -133,6 +145,7 @@
           <div :hidden="isNew" class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.carga.status')" for="carga-status"></label>
             <input
+              :disabled="isSaving"
               type="text"
               class="form-control"
               name="status"
@@ -274,7 +287,8 @@
             :disabled="v$.$invalid || isSaving"
             class="btn btn-primary mx-2"
           >
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
+            <b-spinner v-if="isSaving" small label="Small Spinner"></b-spinner>
+            <font-awesome-icon v-else icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
           </button>
         </div>
       </form>

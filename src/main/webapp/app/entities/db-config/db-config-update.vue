@@ -159,7 +159,7 @@
             id="save-entity"
             data-cy="entityCreateSaveButton"
             :disabled="v$.$invalid || isSaving"
-            class="btn btn-primary"
+            class="btn btn-primary mx-2"
           >
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
           </button>

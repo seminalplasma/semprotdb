@@ -308,7 +308,7 @@ public class VersaoService {
             log.info("Terminou a integracao de dados com {} proteinas processadas, A PERSISTIR ...", total);
         } catch (Exception e) {
             if (versao != null) versao.setLog(e.toString());
-            else log.error("Falhou ao processar versao: {} {}", versaoId, e);
+            else log.error("Falhou ao processar versao", e);
         } finally {
             if (versao != null) versaoRepository.save(versao.status(status));
             else log.error("Falhou ao encontrar versao: {}", versaoId);
@@ -398,7 +398,10 @@ public class VersaoService {
             Organismo o = p.getGene().getOrganismo();
             if (!O.containsKey(o.getNome())) {
                 o = organismoRepository.save(
-                    new Organismo().nome(o.getNome()).apelido(o.getNome().toUpperCase().charAt(0) + o.getNome().toLowerCase().substring(1))
+                    new Organismo()
+                        .nome(o.getNome())
+                        .apelido(o.getNome().toUpperCase().charAt(0) + o.getNome().toLowerCase().substring(1))
+                        .sigla(String.join("", Arrays.stream(o.getNome().toUpperCase().split(" ")).map(x -> x.substring(0, 1)).toList()))
                 );
                 O.put(o.getNome(), o);
                 log.info("NOVO organismo {}", o);
@@ -445,8 +448,8 @@ public class VersaoService {
                             X.put(recurso.getUid(), _r);
                         } else {
                             _r.addProteina(PROTEINA);
+                            recursoRepository.save(_r);
                         }
-                        recursoRepository.save(_r);
                     }
                 });
 

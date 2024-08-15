@@ -1,12 +1,12 @@
 <template>
   <div>
-    <b-dropdown-item to="/carga">
-      <font-awesome-icon icon="asterisk" />
-      <span v-text="t$('global.menu.entities.carga')"></span>
-    </b-dropdown-item>
-    <b-dropdown-item to="/versao">
+    <b-dropdown-item to="/versao" v-if="hasAnyAuthority('ROLE_ADMIN')">
       <font-awesome-icon icon="asterisk" />
       <span v-text="t$('global.menu.entities.versao')"></span>
+    </b-dropdown-item>
+    <b-dropdown-item to="/carga" v-if="hasAnyAuthority('ROLE_ADMIN')">
+      <font-awesome-icon icon="asterisk" />
+      <span v-text="t$('global.menu.entities.carga')"></span>
     </b-dropdown-item>
     <b-dropdown-item to="/referencia">
       <font-awesome-icon icon="asterisk" />
@@ -32,7 +32,7 @@
       <font-awesome-icon icon="asterisk" />
       <span v-text="t$('global.menu.entities.curadoria')"></span>
     </b-dropdown-item>
-    <b-dropdown-item to="/db-config">
+    <b-dropdown-item to="/db-config" v-if="hasAnyAuthority('ROLE_ADMIN')">
       <font-awesome-icon icon="asterisk" />
       <span v-text="t$('global.menu.entities.dbConfig')"></span>
     </b-dropdown-item>
