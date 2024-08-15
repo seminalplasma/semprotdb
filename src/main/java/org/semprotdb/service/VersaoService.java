@@ -370,6 +370,9 @@ public class VersaoService {
         recursoRepository.findAll().forEach(x -> X.put(x.getUid(), x));
         log.info("Total {} recursos serao reusadas de versoes anteriores", X.size());
 
+        AtomicInteger keg = new AtomicInteger();
+        AtomicInteger stg = new AtomicInteger();
+
         for (Proteina p : ptns) {
             String p_id = p.getGene().getOrganismo().getNome() + " > " + p.getGene().getNome() + " > " + p.getNome();
 
@@ -446,6 +449,8 @@ public class VersaoService {
                                 .link(recurso.getLink() == null ? BioDBParser.recurso2link(recurso) : recurso.getLink());
                             _r = recursoRepository.save(_r);
                             X.put(recurso.getUid(), _r);
+                            if (_r.getDb() == BioDB.KEGG) keg.getAndIncrement();
+                            else if (_r.getDb() == BioDB.STRINGDB) stg.getAndIncrement();
                         } else {
                             _r.addProteina(PROTEINA);
                             recursoRepository.save(_r);
@@ -465,10 +470,7 @@ public class VersaoService {
 
         log.info("Terminou com {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS ", R.size(), O.size(), G.size(), P.size(), X.size());
 
-        AtomicInteger str = new AtomicInteger();
-        AtomicInteger keg = new AtomicInteger();
-
-        log.info("Estendeu RECS: {} => STRING {} KEGG {} encontrados", X.size(), str.get(), keg.get());
+        log.info("Estendeu RECS: {} => STRING {} KEGG {} encontrados", X.size(), stg.get(), keg.get());
 
         versao.addLog(
             "Tentando persistir " +
@@ -494,12 +496,13 @@ public class VersaoService {
         longFilter.setSpecified(true).setEquals(versao.getId());
         proteinaCriteria.setVersaoId(longFilter);
 
-        List<Proteina> proteinas = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.unpaged(), null, null).stream().toList();
+        List<Proteina> proteinas = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.unpaged()).stream().toList();
         log.info("Gerando TSV para {} proteinas", proteinas.size());
 
         ArrayList<String> linhas = new ArrayList<>();
         linhas.add("#\tID\tORGANISM\tGENE\tPROTEIN\tLENGTH\tMASS\tREFERENCE\tENTRY\tCURATOR");
         int cont = 0;
+        String vid = "." + versao.getNumero();
         for (Proteina P : proteinas) {
             String proteina = P.getNome();
             String tamanho = P.getTamanho() == null ? "0" : P.getTamanho().toString();
@@ -508,11 +511,12 @@ public class VersaoService {
             String organismo = P.getGene().getOrganismo().getNome();
             String gene = P.getGene().getNome();
             String recursos = String.join(";", P.getRecursos().stream().sorted().map(Recurso::getUid).toList());
-            String curador = P.getCuradoria() == null ? "0" : P.getCuradoria().getId().toString();
+            String curador = P.getCuradoria() == null ? "∄" : P.getCuradoria().getId().toString();
             linhas.add(
                 ++cont +
                 "\t" +
                 P.getId() +
+                vid +
                 "\t" +
                 organismo.replaceAll("\t", " ") +
                 "\t" +
