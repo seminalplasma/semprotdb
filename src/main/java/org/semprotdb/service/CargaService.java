@@ -173,11 +173,11 @@ public class CargaService {
         try {
             //// verificar se é carga de dados
             DataModelTabela dataModelTabela = new DataModelTabela(carga);
-            if (dataModelTabela.validar(5) && !dataModelTabela.asProteinas().isEmpty()) return;
+            if (carga.validado(dataModelTabela.validar(5) && !dataModelTabela.asProteinas().isEmpty()).getValidado()) return;
 
             /// verificar se é carga de mapeamento
             DataModelUniprot dataModelUniprot = new DataModelUniprot(carga);
-            if (dataModelUniprot.validar(5) && !dataModelUniprot.asProteinas().isEmpty()) return;
+            if (carga.validado(dataModelUniprot.validar(5) && !dataModelUniprot.asProteinas().isEmpty()).getValidado()) return;
 
             carga.setLinhas(0);
             carga.setDestino(Destino.OUTRO);
@@ -186,8 +186,8 @@ public class CargaService {
             carga.setStatus("Arquivo desconhecido.");
             log.warn("Enviado CARGA de arquivo desconhecido: {}", carga);
         } catch (Exception e) {
-            carga.setStatus(e.getMessage().substring(0, 200));
-            log.error("Falhou ao validar CARGA: {}", e.getCause());
+            carga.validado(false).setStatus(e.getMessage().substring(0, 200));
+            log.error("Falhou ao validar CARGA " + carga.getId(), e);
         } finally {
             cargaRepository.save(carga);
             log.info("Finalizou validaçao CARGA: {}", carga);
