@@ -34,7 +34,7 @@ public class DataModelUniprot extends AbstractDataModel {
         return mapDataSet != null ? Destino.MAPEAR : Destino.OUTRO;
     }
 
-    public List<Proteina> toProteinas() throws Exception {
+    public List<Proteina> toProteinas(String carga) throws Exception {
         ArrayList<Proteina> ptnas = new ArrayList<>();
 
         int from_idx = mapDataSet.getColByName(ID_COL);
@@ -55,7 +55,7 @@ public class DataModelUniprot extends AbstractDataModel {
             String gene = gene_idx >= 0 && gene_idx < l.length ? l[gene_idx] : null;
             String massa = mass_idx >= 0 && mass_idx < l.length ? l[mass_idx] : null;
 
-            Proteina p = new RowPtn(ptna, gene, massa);
+            Proteina p = new RowPtn(carga, ptna, gene, massa);
 
             p.addRecurso(new Recurso().uid(acesso).db(db));
 

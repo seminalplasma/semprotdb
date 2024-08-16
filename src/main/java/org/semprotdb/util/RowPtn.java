@@ -11,12 +11,17 @@ public class RowPtn extends Proteina {
     private static final String NO_GENE = "UNKNOWN";
     private static final String NO_MASS = "UNDEFINED";
 
-    public RowPtn(String id, String ptna, String gene, String peso, Organismo organismo, Referencia referencia) throws Exception {
+    public RowPtn(String carga, String id, String ptna, String gene, String peso, Organismo organismo, Referencia referencia)
+        throws Exception {
         String _id = id;
         id = BioDBParser.acesso(id);
         ptna = limpar(ptna, id, false);
-        if (ptna.equals(BioDBParser.NO_ID)) throw new Exception("O id ou o nome da proteina deve ser informado para " + id + ".");
-        if (ptna.length() > 200) throw new Exception("O nome deve ter no MAX 200 carac, mas teve " + ptna.length() + " => " + ptna);
+        if (ptna.equals(BioDBParser.NO_ID)) throw new Exception(
+            "O id ou o nome da proteina deve ser informado para " + id + " em " + carga
+        );
+        if (ptna.length() > 200) throw new Exception(
+            "O nome deve ter no MAX 200 carac, mas teve " + ptna.length() + " em " + carga + " => " + ptna
+        );
         gene = limpar(gene, NO_GENE, true);
         peso = limpar(peso, NO_MASS, true);
         BioDB db = BioDBParser.acesso2db(id);
@@ -28,8 +33,8 @@ public class RowPtn extends Proteina {
         gene(new Gene().nome(gene).organismo(organismo));
     }
 
-    public RowPtn(String ptna, String gene, String peso) throws Exception {
-        this(null, ptna, gene, peso, null, null);
+    public RowPtn(String carga, String ptna, String gene, String peso) throws Exception {
+        this(carga, null, ptna, gene, peso, null, null);
     }
 
     private static String limpar(String s, String o, boolean up) {
