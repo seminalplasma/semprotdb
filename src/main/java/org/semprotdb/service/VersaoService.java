@@ -281,7 +281,7 @@ public class VersaoService {
                 c = cargaRepository.findById(c.getId()).orElseThrow();
                 log.info("Abrindo carga {}", c);
                 DataModelUniprot du = new DataModelUniprot(c);
-                List<Proteina> ptnas = du.toProteinas("[" + c.getId() + "]" + c.getNome());
+                List<Proteina> ptnas = du.asProteinas();
                 versao.addLog("Em " + c.getNome() + " foram encontrados " + ptnas.size() + " registros.");
                 log.info("Em {} foram encontrados {} registros", c, ptnas.size());
                 proteinas_map.addAll(ptnas);
@@ -322,7 +322,7 @@ public class VersaoService {
             cid = "[" + carga.getId() + "] " + carga.getNome();
             try {
                 DataModelTabela tabela = new DataModelTabela(carga);
-                proteinas.addAll(tabela.getProteinas("[" + carga.getId() + "]" + carga.getNome()));
+                proteinas.addAll(tabela.asProteinas());
             } catch (Exception e) {
                 log.warn("ERRO ao transformar carga {} em tabela", carga);
                 throw new Exception("Erro na carga " + cid + " => " + e.getMessage());

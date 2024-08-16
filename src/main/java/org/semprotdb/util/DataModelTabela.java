@@ -47,7 +47,7 @@ public class DataModelTabela extends AbstractDataModel {
         return dados != null && metadados != null ? Destino.DADOS : Destino.OUTRO;
     }
 
-    public List<Proteina> getProteinas(String carga) throws Exception {
+    public List<Proteina> asProteinas() throws Exception {
         if (organismo == null) {
             organismo = getOrganismo();
             referencia = getReferencia();
@@ -64,7 +64,7 @@ public class DataModelTabela extends AbstractDataModel {
                 String ptna = proteina_idx >= 0 && proteina_idx < l.length ? l[proteina_idx] : null;
                 String gene = gene_idx >= 0 && gene_idx < l.length ? l[gene_idx] : null;
                 String massa = massa_idx >= 0 && massa_idx < l.length ? l[massa_idx] : null;
-                proteinas.add(new RowPtn(carga, id, ptna, gene, massa, organismo, referencia));
+                proteinas.add(new RowPtn("[" + carga.getId() + "]" + carga.getNome(), id, ptna, gene, massa, organismo, referencia));
             }
         }
         return proteinas;

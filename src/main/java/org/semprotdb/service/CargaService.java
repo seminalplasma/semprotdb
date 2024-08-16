@@ -173,11 +173,11 @@ public class CargaService {
         try {
             //// verificar se é carga de dados
             DataModelTabela dataModelTabela = new DataModelTabela(carga);
-            if (dataModelTabela.validar(5)) return;
+            if (dataModelTabela.validar(5) && !dataModelTabela.asProteinas().isEmpty()) return;
 
             /// verificar se é carga de mapeamento
             DataModelUniprot dataModelUniprot = new DataModelUniprot(carga);
-            if (dataModelUniprot.validar(5)) return;
+            if (dataModelUniprot.validar(5) && !dataModelUniprot.asProteinas().isEmpty()) return;
 
             carga.setLinhas(0);
             carga.setDestino(Destino.OUTRO);

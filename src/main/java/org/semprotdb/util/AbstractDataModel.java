@@ -1,6 +1,8 @@
 package org.semprotdb.util;
 
+import java.util.List;
 import org.semprotdb.domain.Carga;
+import org.semprotdb.domain.Proteina;
 import org.semprotdb.domain.enumeration.Destino;
 import org.semprotdb.util.FileIO.AbstractTabela;
 import org.semprotdb.util.FileIO.Excel;
@@ -35,4 +37,6 @@ public abstract class AbstractDataModel {
     }
 
     public abstract Destino verificar();
+
+    public abstract List<Proteina> asProteinas() throws Exception;
 }
