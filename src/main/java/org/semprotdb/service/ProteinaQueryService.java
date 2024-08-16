@@ -42,6 +42,7 @@ public class ProteinaQueryService extends QueryService<Proteina> {
      */
     @Transactional(readOnly = true)
     public Page<Proteina> findByCriteria(ProteinaCriteria criteria, Pageable page, String qfirst, String qors) {
+        if (qfirst == null) return findByCriteria(criteria, page);
         log.debug("find by criteria LIGHT: {}, page: {} order: {}", criteria, page, qfirst);
         Specification<Proteina> spec = null;
         if (qfirst != null && qfirst.contains(",")) {
@@ -57,7 +58,7 @@ public class ProteinaQueryService extends QueryService<Proteina> {
 
     @Transactional(readOnly = true)
     public Page<Proteina> findByCriteria(ProteinaCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        log.debug("find by criteria : {}, page: {} NO FILTER", criteria, page);
         Specification<Proteina> spec = createSpecification(criteria);
         return proteinaRepository.fetchBagRelationships(proteinaRepository.findAll(spec, page));
     }

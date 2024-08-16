@@ -505,8 +505,8 @@ public class VersaoService {
             proteinas = pg.getContent();
             log.info(
                 "[" + "[{}/{}]Gerando TSV para {} proteinas de {}",
-                page + 1,
-                pg.getTotalPages(),
+                page,
+                pg.getTotalPages() + 1,
                 proteinas.size(),
                 pg.getTotalElements()
             );

@@ -53,9 +53,11 @@ export default defineComponent({
         const res = await proteinaService().retrieve(paginationQuery);
         totalItems.value = Number(res.headers['x-total-count']);
         queryCount.value = totalItems.value;
+        console.log(res.data);
         links.value = dataUtils.parseLinks(res.headers?.['link']);
         proteinas.value.push(...(res.data ?? []));
       } catch (err) {
+        console.log(err);
         alertService.showHttpError(err.response);
       } finally {
         isFetching.value = false;

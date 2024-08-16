@@ -38,7 +38,7 @@ public class ProteinaRepositoryWithBagRelationshipsImpl implements ProteinaRepos
         return result.referencias(
             entityManager
                 .createQuery(
-                    "select proteina.referencias from Proteina proteina left join fetch proteina.referencias where proteina.id = :id",
+                    "select proteina from Proteina proteina left join fetch proteina.referencias where proteina.id = :id",
                     Proteina.class
                 )
                 .setParameter(ID_PARAMETER, result.getId())
