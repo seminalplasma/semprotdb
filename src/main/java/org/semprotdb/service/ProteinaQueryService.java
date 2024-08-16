@@ -45,7 +45,7 @@ public class ProteinaQueryService extends QueryService<Proteina> {
         if (qfirst == null) return findByCriteria(criteria, page);
         log.debug("find by criteria LIGHT: {}, page: {} order: {}", criteria, page, qfirst);
         Specification<Proteina> spec = null;
-        if (qfirst != null && qfirst.contains(",")) {
+        if (qfirst.contains(",")) {
             for (String q : qfirst.split(",")) {
                 spec = createSpecification(criteria, qors, spec, q);
             }
