@@ -186,7 +186,7 @@ public class CargaService {
             carga.setStatus("Arquivo desconhecido.");
             log.warn("Enviado CARGA de arquivo desconhecido: {}", carga);
         } catch (Exception e) {
-            carga.setStatus(e.getMessage());
+            carga.setStatus(e.getMessage().substring(0, 200));
             log.error("Falhou ao validar CARGA: {}", e.getCause());
         } finally {
             cargaRepository.save(carga);
