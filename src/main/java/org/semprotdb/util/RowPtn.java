@@ -16,6 +16,7 @@ public class RowPtn extends Proteina {
         id = BioDBParser.acesso(id);
         ptna = limpar(ptna, id, false);
         if (ptna.equals(BioDBParser.NO_ID)) throw new Exception("O id ou o nome da proteina deve ser informado para " + id + ".");
+        if (ptna.length() > 200) throw new Exception("O nome deve ter no MAX 200 carac, mas teve " + ptna.length() + " => " + ptna);
         gene = limpar(gene, NO_GENE, true);
         peso = limpar(peso, NO_MASS, true);
         BioDB db = BioDBParser.acesso2db(id);

@@ -511,7 +511,7 @@ public class VersaoService {
             String organismo = P.getGene().getOrganismo().getNome();
             String gene = P.getGene().getNome();
             String recursos = String.join(";", P.getRecursos().stream().sorted().map(Recurso::getUid).toList());
-            String curador = P.getCuradoria() == null ? "∄" : P.getCuradoria().getId().toString();
+            String curador = P.getCuradoria() == null ? "X" : P.getCuradoria().getId().toString();
             linhas.add(
                 ++cont +
                 "\t" +
