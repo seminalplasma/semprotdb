@@ -19,6 +19,7 @@ import org.semprotdb.util.FileIO.TSV;
 import org.semprotdb.util.RowPtn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -493,51 +494,60 @@ public class VersaoService {
         longFilter.setSpecified(true).setEquals(versao.getId());
         proteinaCriteria.setVersaoId(longFilter);
 
-        List<Proteina> proteinas = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.unpaged()).stream().toList();
-        log.info("Gerando TSV para {} proteinas", proteinas.size());
-
         ArrayList<String> linhas = new ArrayList<>();
         linhas.add("#\tID\tORGANISM\tGENE\tPROTEIN\tLENGTH\tMASS\tREFERENCE\tENTRY\tCURATOR");
         int cont = 0;
+        int page = 0;
         String vid = "." + versao.getNumero();
-        for (Proteina P : proteinas) {
-            String proteina = P.getNome();
-            String tamanho = P.getTamanho() == null ? "0" : P.getTamanho().toString();
-            String massa = P.getMassa() == null ? "0" : P.getMassa();
-            String referencias = String.join(" & ", P.getReferencias().stream().sorted().map(Referencia::getCitacao).toList());
-            String organismo = P.getGene().getOrganismo().getNome();
-            String gene = P.getGene().getNome();
-            String recursos = String.join(";", P.getRecursos().stream().sorted().map(Recurso::getUid).toList());
-            String curador = P.getCuradoria() == null ? "X" : P.getCuradoria().getId().toString();
-            linhas.add(
-                ++cont +
-                "\t" +
-                P.getId() +
-                vid +
-                "\t" +
-                organismo.replaceAll("\t", " ") +
-                "\t" +
-                gene.replaceAll("\t", " ") +
-                "\t" +
-                proteina.replaceAll("\t", " ") +
-                "\t" +
-                tamanho.replaceAll("\t", " ") +
-                "\t" +
-                massa.replaceAll("\t", " ") +
-                "\t" +
-                referencias.replaceAll("\t", " ") +
-                "\t" +
-                recursos.replaceAll("\t", " ") +
-                "\t" +
-                curador
+        List<Proteina> proteinas;
+        do {
+            Page<Proteina> pg = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.ofSize(10000).withPage(page++));
+            proteinas = pg.getContent();
+            log.info(
+                "[" + "[{}/{}]Gerando TSV para {} proteinas de {}",
+                page + 1,
+                pg.getTotalPages(),
+                proteinas.size(),
+                pg.getTotalElements()
             );
-            if ((linhas.size() < 100) || ((linhas.size() % 100) == 0)) log.info(
-                "TOTAL {} registros processados de {} proteinas para o TSV.",
-                linhas.size(),
-                proteinas.size()
-            );
-        }
-
+            for (Proteina P : proteinas) {
+                String proteina = P.getNome();
+                String tamanho = P.getTamanho() == null ? "0" : P.getTamanho().toString();
+                String massa = P.getMassa() == null ? "0" : P.getMassa();
+                String referencias = String.join(" & ", P.getReferencias().stream().sorted().map(Referencia::getCitacao).toList());
+                String organismo = P.getGene().getOrganismo().getNome();
+                String gene = P.getGene().getNome();
+                String recursos = String.join(";", P.getRecursos().stream().sorted().map(Recurso::getUid).toList());
+                String curador = P.getCuradoria() == null ? "X" : P.getCuradoria().getId().toString();
+                linhas.add(
+                    ++cont +
+                    "\t" +
+                    P.getId() +
+                    vid +
+                    "\t" +
+                    organismo.replaceAll("\t", " ") +
+                    "\t" +
+                    gene.replaceAll("\t", " ") +
+                    "\t" +
+                    proteina.replaceAll("\t", " ") +
+                    "\t" +
+                    tamanho.replaceAll("\t", " ") +
+                    "\t" +
+                    massa.replaceAll("\t", " ") +
+                    "\t" +
+                    referencias.replaceAll("\t", " ") +
+                    "\t" +
+                    recursos.replaceAll("\t", " ") +
+                    "\t" +
+                    curador
+                );
+                if ((linhas.size() < 100) || ((linhas.size() % 100) == 0)) log.info(
+                    "TOTAL {} registros processados de {} proteinas para o TSV.",
+                    linhas.size(),
+                    proteinas.size()
+                );
+            }
+        } while (!proteinas.isEmpty());
         String dt = new SimpleDateFormat("yyMMdd").format(new Date());
         String f_name = "semprotdb_DEFAULT_V" + versao.getNumero() + "_" + dt + ".tsv";
         Carga file = new TSV(f_name, linhas).zip().toCarga(versao).destino(Destino.DOWNLOAD).ordem(3);
