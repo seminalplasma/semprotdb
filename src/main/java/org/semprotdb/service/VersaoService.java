@@ -431,8 +431,6 @@ public class VersaoService {
                 );
             }
 
-            proteinaRepository.save(PROTEINA);
-
             Set<Recurso> recursos = p.getRecursos();
             recursos.addAll(Arrays.stream(BioDBParser.recursos2recursos(p)).toList());
             recursos
@@ -445,16 +443,13 @@ public class VersaoService {
                             _r = new Recurso()
                                 .uid(recurso.getUid())
                                 .db(recurso.getDb())
-                                .addProteina(PROTEINA)
                                 .link(recurso.getLink() == null ? BioDBParser.recurso2link(recurso) : recurso.getLink());
                             _r = recursoRepository.save(_r);
                             X.put(recurso.getUid(), _r);
                             if (_r.getDb() == BioDB.KEGG) keg.getAndIncrement();
                             else if (_r.getDb() == BioDB.STRINGDB) stg.getAndIncrement();
-                        } else {
-                            _r.addProteina(PROTEINA);
-                            recursoRepository.save(_r);
                         }
+                        PROTEINA.addRecurso(_r);
                     }
                 });
 
@@ -466,6 +461,8 @@ public class VersaoService {
                 P.size(),
                 X.size()
             );
+
+            proteinaRepository.save(PROTEINA);
         }
 
         log.info("Terminou com {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS ", R.size(), O.size(), G.size(), P.size(), X.size());
@@ -496,11 +493,7 @@ public class VersaoService {
         longFilter.setSpecified(true).setEquals(versao.getId());
         proteinaCriteria.setVersaoId(longFilter);
 
-        List<Proteina> proteinas = proteinaQueryService
-            .findByCriteria(proteinaCriteria, Pageable.unpaged())
-            .stream()
-            .filter(x -> x.getId() < 0)
-            .toList();
+        List<Proteina> proteinas = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.unpaged()).stream().toList();
         log.info("Gerando TSV para {} proteinas", proteinas.size());
 
         ArrayList<String> linhas = new ArrayList<>();
