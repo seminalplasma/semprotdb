@@ -315,7 +315,7 @@ public class VersaoService {
 
             if (at < 1) {
                 log.warn("Falhou ao integrar dados de {} MAP_UNIPROT com {} DATA_PTNAS", proteinas_map.size(), proteinas.size());
-                versao.addLog("ERRO: Falhou ao juntar os dados.");
+                versao.addLog("ERRO: Falhou ao juntar os dados. Nenhum ID da carga corresponde a algum ID nos arquivos de mapeamento");
                 return;
             }
 
@@ -433,11 +433,23 @@ public class VersaoService {
 
             Organismo o = p.getGene().getOrganismo();
             if (!O.containsKey(o.getNome())) {
+                String s = String.join("", Arrays.stream(o.getNome().toUpperCase().split(" ")).map(x -> x.substring(0, 1)).toList());
                 o = organismoRepository.save(
                     new Organismo()
                         .nome(o.getNome())
                         .apelido(o.getNome().toUpperCase().charAt(0) + o.getNome().toLowerCase().substring(1))
-                        .sigla(String.join("", Arrays.stream(o.getNome().toUpperCase().split(" ")).map(x -> x.substring(0, 1)).toList()))
+                        .sigla(
+                            s
+                                .replace("CH", "CHX")
+                                .replace("EA", "EAI")
+                                .replace("BT", "BTA")
+                                .replace("SS", "SSC")
+                                .replace("CL", "CFA")
+                                .replace("EC", "ECB")
+                                .replace("OA", "OAS")
+                            ////Bubalos bubalis => not found
+                            /// https://www.genome.jp/dbget-bin/www_bfind_sub?mode=bfind&max_hit=1000&locale=en&serv=gn&dbkey=alldb&keywords=Bubalos+bubalis&page=1
+                        )
                 );
                 O.put(o.getNome(), o);
                 log.info("NOVO organismo {}", o);

@@ -65,6 +65,13 @@ public class BioDBParser {
     }
 
     public static Recurso recursos2kegg(final Proteina proteina) {
+        if (
+            proteina == null ||
+            proteina.getGene() == null ||
+            proteina.getGene().getOrganismo() == null ||
+            proteina.getGene().getOrganismo().getSigla() == null ||
+            proteina.getGene().getOrganismo().getSigla().length() != 3
+        ) return null;
         ///https://www.genome.jp/dbget-bin/www_bget?bta:286862
         for (Recurso recurso : proteina.getRecursos()) {
             if (Objects.requireNonNull(recurso.getDb()) == BioDB.GI) {
@@ -72,7 +79,12 @@ public class BioDBParser {
                     .addProteina(proteina)
                     .uid("Kegg:" + recurso.getUid())
                     .db(BioDB.KEGG)
-                    .link("https://www.genome.jp/dbget-bin/www_bget?bta:" + recurso.getUid());
+                    .link(
+                        "https://www.genome.jp/dbget-bin/www_bget?" +
+                        proteina.getGene().getOrganismo().getSigla().toLowerCase() +
+                        ":" +
+                        recurso.getUid()
+                    );
             }
         }
         return null;

@@ -234,7 +234,7 @@ export default defineComponent({
               }[f];
 
             /// "organism" => organismonome ou organismosigla
-            ent = ent.startsWith('Org') ? (q.split(',')[0].trim().length < 3 ? 'organismoSigla' : 'organismoNome') : ent;
+            ent = ent.startsWith('Org') ? (q.split(',')[0].trim().length < 4 ? 'organismoSigla' : 'organismoNome') : ent;
             // "gene", => genenome
             ent = ent.startsWith('Gen') ? 'geneNome' : ent;
             // "protein" => nome
