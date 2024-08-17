@@ -65,6 +65,7 @@ public class DataModelUniprot extends AbstractDataModel {
             if (db != BioDB.OUTRO) p.addRecurso(new Recurso().uid(acesso).db(db));
 
             String length = length_idx >= 0 && length_idx < l.length ? l[length_idx] : null;
+
             if (length != null && length.matches("^\\d+$")) p.tamanho(Integer.parseInt(length));
 
             ptnas.add(p);

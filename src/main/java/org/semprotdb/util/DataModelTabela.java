@@ -80,6 +80,7 @@ public class DataModelTabela extends AbstractDataModel {
         String org = metadados.getLinhas().get(0)[org_idx];
         if (org == null || org.isBlank()) throw new Exception("Erro nome de organismo invalido ou vazio");
         org = org.strip().replaceAll("\\s+", " ").toUpperCase();
+        if (org.length() > 100) org = org.substring(0, 100);
         return new Organismo().nome(org);
     }
 
@@ -93,6 +94,10 @@ public class DataModelTabela extends AbstractDataModel {
         String link = metadados.getLinhas().get(0)[link_idx];
         if (link == null || link.isBlank() || !link.contains("/")) link = "NULL";
         link = link.strip();
+
+        if (link.length() > 100) link = link.substring(0, 100);
+        if (ref.length() > 100) ref = ref.substring(0, 100);
+
         return new Referencia().citacao(ref).link(link);
     }
 }
