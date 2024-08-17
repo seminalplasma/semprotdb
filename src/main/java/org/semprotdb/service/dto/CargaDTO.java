@@ -2,6 +2,7 @@ package org.semprotdb.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Root;
 import org.semprotdb.domain.Carga;
@@ -54,7 +55,7 @@ public class CargaDTO extends Carga implements IDTO<CargaDTO> {
 
     @Override
     public Path[] getConstructorArgsPath(Root<CargaDTO> root) {
-        Join versao = root.join("versao");
+        Join versao = root.join("versao", JoinType.LEFT);
         return new Path[] {
             root.get("id"),
             root.get("ordem"),

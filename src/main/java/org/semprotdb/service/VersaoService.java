@@ -675,6 +675,7 @@ public class VersaoService {
 
     public void removeVersao(Versao versao) {
         try {
+            log.warn("REMOVENDO versao {}", versao);
             Thread.sleep(5000);
 
             Optional<Versao> _v = versaoRepository.findById(versao.getId());

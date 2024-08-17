@@ -1,5 +1,6 @@
 package org.semprotdb.service;
 
+import java.util.Objects;
 import java.util.Optional;
 import org.semprotdb.domain.Carga;
 import org.semprotdb.domain.enumeration.Destino;
@@ -158,7 +159,7 @@ public class CargaService {
         /// 8 -
         /// 9 -
 
-        if (carga.getVersao().getStatus().ordinal() >= Status.DISPONIVEL.ordinal()) {
+        if (null != carga.getVersao() && carga.getVersao().getStatus().ordinal() >= Status.DISPONIVEL.ordinal()) {
             log.info("Carga carga {} {} sera tratada como DOWNLOAD.", carga.getId(), carga.getNome());
             carga.setDestino(Destino.DOWNLOAD);
             carga.setValidado(true);
@@ -186,7 +187,8 @@ public class CargaService {
             carga.setStatus("Arquivo desconhecido.");
             log.warn("Enviado CARGA de arquivo desconhecido: {}", carga);
         } catch (Exception e) {
-            carga.validado(false).setStatus(e.getMessage().substring(0, 200));
+            String msg = e.getMessage();
+            carga.validado(false).setStatus(msg.length() > 200 ? msg.substring(0, 200) : msg);
             log.error("Falhou ao validar CARGA " + carga.getId(), e);
         } finally {
             cargaRepository.save(carga);
