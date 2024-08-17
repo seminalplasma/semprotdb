@@ -476,7 +476,7 @@ public class VersaoService {
                     }
                 });
 
-            if ((P.size() < 100) || ((P.size() % 100) == 0)) log.info(
+            if ((P.size() < 100) || ((P.size() % 100) == 0)) log.debug(
                 "Status {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS ",
                 R.size(),
                 O.size(),
@@ -525,13 +525,7 @@ public class VersaoService {
         do {
             pg = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.ofSize(10000).withPage(page++));
             List<Proteina> proteinas = pg.getContent();
-            log.info(
-                "[" + "[{}/{}]Gerando TSV para {} proteinas de {}",
-                page,
-                pg.getTotalPages() + 1,
-                proteinas.size(),
-                pg.getTotalElements()
-            );
+            log.info("[" + "[{}/{}]Gerando TSV para {} proteinas de {}", page, pg.getTotalPages(), proteinas.size(), pg.getTotalElements());
 
             for (Proteina P : proteinas) {
                 String proteina = P.getNome();
@@ -564,10 +558,10 @@ public class VersaoService {
                     "\t" +
                     curador
                 );
-                if ((linhas.size() < 100) || ((linhas.size() % 100) == 0)) log.info(
+                if ((linhas.size() < 100) || ((linhas.size() % 100) == 0)) log.debug(
                     "TOTAL {} registros processados de {} proteinas para o TSV.",
                     linhas.size(),
-                    proteinas.size()
+                    pg.getTotalElements()
                 );
             }
         } while (pg.hasNext());
@@ -655,18 +649,21 @@ public class VersaoService {
                         String D = "/home/semprodb/" + backp.getVstring();
                         File dir = new File(D);
                         if (!dir.exists()) dir.mkdir();
-                        boolean clear = Objects.requireNonNull(dir.list()).length < 1;
-                        tsvs.forEach((i, c) -> {
-                            try {
-                                if (clear || c.getValidado()) {
-                                    if (clear) log.info("Criando backup em {}/{} {}", D, backp.getVstring(), c);
-                                    File f = new File(D + "/" + c.getNome());
-                                    FileUtils.writeByteArrayToFile(f, c.getPlanilha());
+                        if (!dir.isDirectory()) log.error("ERRO ao gerar backup {} is NOT dir!!!", D);
+                        else {
+                            boolean clear = Objects.requireNonNull(dir.list()).length < 1;
+                            tsvs.forEach((i, c) -> {
+                                try {
+                                    if (clear || c.getValidado()) {
+                                        if (clear) log.info("Criando backup em {}/{} {}", D, backp.getVstring(), c);
+                                        File f = new File(D + "/" + c.getNome());
+                                        FileUtils.writeByteArrayToFile(f, c.getPlanilha());
+                                    }
+                                } catch (Exception e) {
+                                    log.error("ERRO AO SALVAR BACKUP " + c.toString(), e);
                                 }
-                            } catch (Exception e) {
-                                log.error("ERRO AO SALVAR BACKUP " + c.toString(), e);
-                            }
-                        });
+                            });
+                        }
                     } else {
                         log.warn("CONFIGURAR LOCAL DO BACKUP !!!");
                     }
