@@ -311,6 +311,7 @@ public class VersaoService {
             if (at < 1) {
                 log.warn("Falhou ao integrar dados de {} MAP_UNIPROT com {} DATA_PTNAS", proteinas_map.size(), proteinas.size());
                 versao.addLog("ERRO: Falhou ao juntar os dados.");
+                return;
             }
 
             versao.addLog("Total " + at + " proteinas atualizadas com dados do uniprot.");
@@ -393,7 +394,7 @@ public class VersaoService {
 
             if (!C.containsKey(p.getCuradoria().getEmail())) {
                 String curador = versao.getNome() + "_" + p.getCuradoria().getEmail();
-                Curadoria c = curadoriaRepository.save(new Curadoria().email(curador));
+                Curadoria c = curadoriaRepository.save(new Curadoria().email(curador).data(new Date().toInstant()));
                 C.put(p.getCuradoria().getEmail(), c);
             }
 
