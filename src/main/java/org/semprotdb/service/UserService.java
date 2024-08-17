@@ -330,6 +330,6 @@ public class UserService {
     }
 
     public boolean usuarioNAOLogado() {
-        return this.getUserWithAuthorities().isEmpty();
+        return !usuarioEstaLogado();
     }
 }

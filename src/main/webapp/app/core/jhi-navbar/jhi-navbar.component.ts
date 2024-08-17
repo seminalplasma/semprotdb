@@ -24,7 +24,7 @@ export default defineComponent({
 
     const versaoStore = useVersaoStore();
     const versao = computed(() => versaoStore.versao);
-    const versoes = computed(() => versaoStore.versoes);
+    const versoes = computed(() => versaoStore.visiveis);
     const vloaded = computed(() => versaoStore.carregado);
     const chooseVersao = versaoStore.chooseVersao;
 

@@ -18,6 +18,7 @@ public class DataModelTabela extends AbstractDataModel {
     private static final String PESO_COL = "PESO";
     private static final String PROTEINA_COL = "PROTEIN";
     private static final String GENE_COL = "GENE";
+    private static final String CURADOR_COL = "CURA";
 
     private DataSet dados;
     private DataSet metadados;
@@ -57,6 +58,7 @@ public class DataModelTabela extends AbstractDataModel {
             int proteina_idx = dados.getColByName(PROTEINA_COL); /// ID
             int gene_idx = dados.getColByName(GENE_COL); /// UNKNOWN
             int massa_idx = dados.getColByName(PESO_COL); /// UNDEFINED
+            int curador_idx = dados.getColByName(CURADOR_COL); /// UNSET
             if (massa_idx < 0) massa_idx = dados.getColByName("MASS");
 
             for (String[] l : dados.getLinhas()) {
@@ -64,7 +66,10 @@ public class DataModelTabela extends AbstractDataModel {
                 String ptna = proteina_idx >= 0 && proteina_idx < l.length ? l[proteina_idx] : null;
                 String gene = gene_idx >= 0 && gene_idx < l.length ? l[gene_idx] : null;
                 String massa = massa_idx >= 0 && massa_idx < l.length ? l[massa_idx] : null;
-                proteinas.add(new RowPtn("[" + carga.getId() + "]" + carga.getNome(), id, ptna, gene, massa, organismo, referencia));
+                String curador = curador_idx >= 0 && curador_idx < l.length ? l[curador_idx] : null;
+                proteinas.add(
+                    new RowPtn("[" + carga.getId() + "]" + carga.getNome(), id, ptna, gene, massa, organismo, referencia, curador)
+                );
             }
         }
         return proteinas;

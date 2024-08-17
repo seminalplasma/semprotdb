@@ -1,10 +1,12 @@
 package org.semprotdb.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 import org.semprotdb.domain.*;
 import org.semprotdb.domain.enumeration.BioDB;
 import org.semprotdb.domain.enumeration.Destino;
@@ -22,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.filter.LongFilter;
@@ -44,6 +47,8 @@ public class VersaoService {
     private final GeneRepository geneRepository;
     private final RecursoRepository recursoRepository;
     private final ProteinaQueryService proteinaQueryService;
+    private final CuradoriaRepository curadoriaRepository;
+    private final DBConfigRepository dbConfigRepository;
 
     public VersaoService(
         VersaoRepository versaoRepository,
@@ -54,7 +59,9 @@ public class VersaoService {
         ProteinaRepository proteinaRepository,
         GeneRepository geneRepository,
         RecursoRepository recursoRepository,
-        ProteinaQueryService proteinaQueryService
+        ProteinaQueryService proteinaQueryService,
+        CuradoriaRepository curadoriaRepository,
+        DBConfigRepository dbConfigRepository
     ) {
         this.versaoRepository = versaoRepository;
         this.cargaQueryService = cargaQueryService;
@@ -65,6 +72,8 @@ public class VersaoService {
         this.geneRepository = geneRepository;
         this.recursoRepository = recursoRepository;
         this.proteinaQueryService = proteinaQueryService;
+        this.curadoriaRepository = curadoriaRepository;
+        this.dbConfigRepository = dbConfigRepository;
     }
 
     /**
@@ -360,6 +369,7 @@ public class VersaoService {
         HashMap<String, Gene> G = new HashMap<>();
         HashMap<String, Recurso> X = new HashMap<>();
         HashMap<String, Proteina> P = new HashMap<>();
+        HashMap<String, Curadoria> C = new HashMap<>();
 
         //        As referencias, organismos e recursos de cada versao re-usados
         referenciaRepository.findAll().forEach(r -> R.put(r.getCitacao(), r));
@@ -377,10 +387,22 @@ public class VersaoService {
         for (Proteina p : ptns) {
             String p_id = p.getGene().getOrganismo().getNome() + " > " + p.getGene().getNome() + " > " + p.getNome();
 
+            if (!C.containsKey(p.getCuradoria().getEmail())) {
+                String curador = versao.getNome() + "_" + p.getCuradoria().getEmail();
+                Curadoria c = curadoriaRepository.save(new Curadoria().email(curador));
+                C.put(p.getCuradoria().getEmail(), c);
+            }
+
             if (!P.containsKey(p_id)) P.put(
                 p_id,
                 proteinaRepository.save(
-                    new Proteina().nome(p.getNome()).massa(p.getMassa()).tamanho(p.getTamanho()).descricao(p.getDescricao()).versao(versao)
+                    new Proteina()
+                        .nome(p.getNome())
+                        .massa(p.getMassa())
+                        .tamanho(p.getTamanho())
+                        .descricao(p.getDescricao())
+                        .versao(versao)
+                        .curadoria(C.get(p.getCuradoria().getEmail()))
                 )
             );
             else log.info("Proteina REDUNDANTE encontrada nas cargas {}", p);
@@ -486,7 +508,7 @@ public class VersaoService {
         return P.size();
     }
 
-    private void makeDownload(Versao versao) throws IOException {
+    private Carga makeDownload(Versao versao) throws IOException {
         log.info("Gerando DOWNLOAD para disponibilzar versao {}", versao.getNome());
 
         ProteinaCriteria proteinaCriteria = new ProteinaCriteria();
@@ -499,10 +521,10 @@ public class VersaoService {
         int cont = 0;
         int page = 0;
         String vid = "." + versao.getNumero();
-        List<Proteina> proteinas;
+        Page<Proteina> pg;
         do {
-            Page<Proteina> pg = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.ofSize(10000).withPage(page++));
-            proteinas = pg.getContent();
+            pg = proteinaQueryService.findByCriteria(proteinaCriteria, Pageable.ofSize(10000).withPage(page++));
+            List<Proteina> proteinas = pg.getContent();
             log.info(
                 "[" + "[{}/{}]Gerando TSV para {} proteinas de {}",
                 page,
@@ -510,12 +532,13 @@ public class VersaoService {
                 proteinas.size(),
                 pg.getTotalElements()
             );
+
             for (Proteina P : proteinas) {
                 String proteina = P.getNome();
                 String tamanho = P.getTamanho() == null ? "0" : P.getTamanho().toString();
                 String massa = P.getMassa() == null ? "0" : P.getMassa();
                 String referencias = String.join(" & ", P.getReferencias().stream().sorted().map(Referencia::getCitacao).toList());
-                String organismo = P.getGene().getOrganismo().getNome();
+                String organismo = P.getGene().getOrganismo().getApelido();
                 String gene = P.getGene().getNome();
                 String recursos = String.join(";", P.getRecursos().stream().sorted().map(Recurso::getUid).toList());
                 String curador = P.getCuradoria() == null ? "X" : P.getCuradoria().getId().toString();
@@ -547,18 +570,21 @@ public class VersaoService {
                     proteinas.size()
                 );
             }
-        } while (!proteinas.isEmpty());
+        } while (pg.hasNext());
         String dt = new SimpleDateFormat("yyMMdd").format(new Date());
         String f_name = "semprotdb_DEFAULT_V" + versao.getNumero() + "_" + dt + ".tsv";
         Carga file = new TSV(f_name, linhas).zip().toCarga(versao).destino(Destino.DOWNLOAD).ordem(3);
         cargaRepository.save(file);
         versao.addLog("Total " + cont + " registros exportados.");
         log.info("Arquivo TSV ZIP {} gerado para versao {} ! versao sera publicada com {} registros. ", file, versao.getNome(), cont);
+        return file;
     }
 
+    @Scheduled(cron = "1 * * * * FRI")
     public void atualizarDownloadFile() {
         log.info("Atualizando arquivos de DOWNLOAD");
 
+        HashMap<Long, Carga> tsvs = new HashMap<>();
         String v = "?";
         int totalc = 0;
         try {
@@ -571,7 +597,8 @@ public class VersaoService {
                 totalc += (int) versao.getCargas().stream().filter(c -> c.getDestino() == Destino.DOWNLOAD).count();
                 v = versao.identfy();
                 log.info("Gerar arquivos para versao {} de {} versoes", v, vs.size());
-                makeDownload(versao);
+                Carga c = makeDownload(versao);
+                tsvs.put(c.getId(), c);
             }
         } catch (Exception e) {
             log.error("ERRO ao tentar gerar DOWNLOAD para versao " + v, e.getCause());
@@ -604,6 +631,7 @@ public class VersaoService {
                 // apagar a que possui o maior nome
                 if (carga1.getNome().compareTo(carga2.getNome()) > 0) {
                     apagar.add(carga1);
+                    tsvs.get(carga1.getId()).validado(false);
                 }
             }
         }
@@ -613,6 +641,32 @@ public class VersaoService {
             cargaRepository.deleteAll(apagar);
         }
 
+        log.info("Salvar em disco.");
+        dbConfigRepository
+            .findDBConfigByKey("backup.path")
+            .ifPresentOrElse(
+                backp -> {
+                    if (backp.getHabilitado()) {
+                        File dir = new File(backp.getVstring());
+                        if (!dir.exists()) dir.mkdir();
+                        boolean clear = Objects.requireNonNull(dir.list()).length < 1;
+                        if (clear) log.info("Criando backup em {}", backp.getVstring());
+                        tsvs.forEach((i, c) -> {
+                            try {
+                                if (clear || c.getValidado()) {
+                                    File f = new File(backp.getVstring() + "/" + c.getNome());
+                                    FileUtils.writeByteArrayToFile(f, c.getPlanilha());
+                                }
+                            } catch (Exception e) {
+                                log.error("ERRO AO SALVAR BACKUP " + c.toString(), e);
+                            }
+                        });
+                    } else {
+                        log.warn("CONFIGURAR LOCAL DO BACKUP !!!");
+                    }
+                },
+                () -> dbConfigRepository.save(new DBConfig().key("backup.path").habilitado(false))
+            );
         log.info("Finalizado processamento.");
     }
 
@@ -643,13 +697,9 @@ public class VersaoService {
             );
             versaoRepository.save(versao.proteinas(Collections.emptySet()));
 
-            Set<Long> rec_vazio_ids = recursoRepository
-                .findAllByProteinasIsEmpty()
-                .stream()
-                .map(Recurso::getId)
-                .collect(Collectors.toSet());
+            List<Recurso> rec_vazio_ids = recursoRepository.findAllByProteinasIsEmpty();
             log.info("REMOVENDO {} recursos", rec_vazio_ids.size());
-            recursoRepository.deleteAllByIdInBatch(rec_vazio_ids);
+            recursoRepository.deleteAll(rec_vazio_ids);
 
             log.info("REMOVENDO {} proteinas", proteinas.size());
             proteinaRepository.saveAll(proteinas);
@@ -659,27 +709,19 @@ public class VersaoService {
             versaoRepository.delete(versao);
 
             /// remover genes nulos
-            Set<Long> gene_ids = geneRepository.findAllByProteinasIsEmpty().stream().map(Gene::getId).collect(Collectors.toSet());
-            log.info("REMOVENDO {} genes", gene_ids.size());
-            geneRepository.deleteAllByIdInBatch(gene_ids);
+            List<Gene> genes = geneRepository.findAllByProteinasIsEmpty();
+            log.info("REMOVENDO {} genes", genes.size());
+            geneRepository.deleteAll(genes);
 
             /// remover organismo nulos
-            Set<Long> organismos_vazios = organismoRepository
-                .findAllByGenesIsEmpty()
-                .stream()
-                .map(Organismo::getId)
-                .collect(Collectors.toSet());
+            List<Organismo> organismos_vazios = organismoRepository.findAllByGenesIsEmpty();
             log.info("REMOVENDO {} organismos", organismos_vazios.size());
-            organismoRepository.deleteAllByIdInBatch(organismos_vazios);
+            organismoRepository.deleteAll(organismos_vazios);
 
             /// remover referencias nulos
-            Set<Long> referencias_vazios = referenciaRepository
-                .findAllByProteinasIsEmpty()
-                .stream()
-                .map(Referencia::getId)
-                .collect(Collectors.toSet());
+            List<Referencia> referencias_vazios = referenciaRepository.findAllByProteinasIsEmpty();
             log.info("REMOVENDO {} referencias", referencias_vazios.size());
-            referenciaRepository.deleteAllByIdInBatch(referencias_vazios);
+            referenciaRepository.deleteAll(referencias_vazios);
         } catch (Exception e) {
             log.error("FALHA REMOVENDO {} {} ", versao.identfy(), e.toString());
         } finally {

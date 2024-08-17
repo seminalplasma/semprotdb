@@ -10,9 +10,18 @@ public class RowPtn extends Proteina {
 
     private static final String NO_GENE = "UNKNOWN";
     private static final String NO_MASS = "UNDEFINED";
+    private static final String NO_CURATOR = "X";
 
-    public RowPtn(String carga, String id, String ptna, String gene, String peso, Organismo organismo, Referencia referencia)
-        throws Exception {
+    public RowPtn(
+        String carga,
+        String id,
+        String ptna,
+        String gene,
+        String peso,
+        Organismo organismo,
+        Referencia referencia,
+        String curador
+    ) throws Exception {
         String _id = id;
         id = BioDBParser.acesso(id);
         ptna = limpar(ptna, id, false);
@@ -29,10 +38,12 @@ public class RowPtn extends Proteina {
         addRecurso(new Recurso().uid(db == BioDB.OUTRO ? _id : id).db(db));
         if (referencia != null) addReferencia(referencia);
         gene(new Gene().nome(gene).organismo(organismo));
+        setCuradoria(new Curadoria().email(curador == null ? NO_CURATOR : curador));
     }
 
+    /// essa funcao é para ser usada na importacao da ptna do uniprot map ids
     public RowPtn(String carga, String ptna, String gene, String peso) throws Exception {
-        this(carga, null, ptna, gene, peso, null, null);
+        this(carga, null, ptna, gene, peso, null, null, null);
     }
 
     private static String limpar(String s, String o, boolean up) {

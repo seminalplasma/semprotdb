@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia';
 import { Versao } from '@/shared/model/versao.model';
+import { Status } from '@/shared/model/enumerations/status.model';
 
 export interface IVersaoStoreState {
   selecionada: Versao;
   carregado: boolean;
   disponiveis: Array<Versao>;
+  liberadas: Array<Versao>;
   carregadas: Array<Versao>;
 }
 
@@ -12,6 +14,7 @@ export const initialState: IVersaoStoreState = {
   selecionada: undefined,
   carregado: false,
   disponiveis: new Array<Versao>(),
+  liberadas: new Array<Versao>(),
   carregadas: new Array<Versao>(),
 };
 
@@ -21,6 +24,7 @@ export const useVersaoStore = defineStore('versaoStore', {
   getters: {
     versao: state => state.selecionada,
     versoes: state => state.disponiveis,
+    visiveis: state => state.disponiveis.filter(v => v.status === Status.DISPONIVEL),
     esta_carregada: state => state.carregadas.includes(state.selecionada),
   },
 
