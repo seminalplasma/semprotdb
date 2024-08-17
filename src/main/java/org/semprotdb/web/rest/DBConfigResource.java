@@ -7,8 +7,10 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.semprotdb.domain.DBConfig;
 import org.semprotdb.repository.DBConfigRepository;
+import org.semprotdb.service.UserService;
 import org.semprotdb.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +33,16 @@ public class DBConfigResource {
     private static final Logger log = LoggerFactory.getLogger(DBConfigResource.class);
 
     private static final String ENTITY_NAME = "dBConfig";
+    private final UserService userService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
     private final DBConfigRepository dBConfigRepository;
 
-    public DBConfigResource(DBConfigRepository dBConfigRepository) {
+    public DBConfigResource(DBConfigRepository dBConfigRepository, UserService userService) {
         this.dBConfigRepository = dBConfigRepository;
+        this.userService = userService;
     }
 
     /**
@@ -162,6 +166,10 @@ public class DBConfigResource {
         );
     }
 
+    private boolean is_pub(DBConfig dbc) {
+        return dbc.getHabilitado() && dbc.getKey().contains(".pub.");
+    }
+
     /**
      * {@code GET  /db-configs} : get all the dBConfigs.
      *
@@ -170,7 +178,11 @@ public class DBConfigResource {
     @GetMapping("")
     public List<DBConfig> getAllDBConfigs() {
         log.debug("REST request to get all DBConfigs");
-        return dBConfigRepository.findAllLight(Pageable.unpaged()).toList();
+        List<DBConfig> list = dBConfigRepository.findAllLight(Pageable.unpaged()).toList();
+        if (userService.usuarioNAOLogado()) {
+            list = list.stream().filter(this::is_pub).toList();
+        }
+        return list;
     }
 
     /**
@@ -182,7 +194,7 @@ public class DBConfigResource {
     @GetMapping("/{id}")
     public ResponseEntity<DBConfig> getDBConfig(@PathVariable("id") Long id) {
         log.debug("REST request to get DBConfig : {}", id);
-        Optional<DBConfig> dBConfig = dBConfigRepository.findById(id);
+        Optional<DBConfig> dBConfig = dBConfigRepository.findById(id).filter(x -> userService.usuarioEstaLogado() || is_pub(x));
         return ResponseUtil.wrapOrNotFound(dBConfig);
     }
 

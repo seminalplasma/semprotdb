@@ -574,7 +574,7 @@ public class VersaoService {
         return file;
     }
 
-    @Scheduled(cron = "1 * * * * FRI")
+    @Scheduled(cron = "0 0 23 * * FRI")
     public void atualizarDownloadFileBackup() {
         log.info("Atualizando BACKUP dos arquivos de DOWNLOAD");
         atualizarDownloadFile(true);
