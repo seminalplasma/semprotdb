@@ -213,7 +213,7 @@ public class VersaoService {
                 status = Status.PROCESSADO;
                 versao.addLog("Gerando novo arquivo de DOWNLOAD da versao.");
                 log.info("Gerando novo arquivo de DOWNLOAD da versao {}", versao);
-                atualizarDownloadFile();
+                atualizarDownloadFile(false);
                 return;
             }
 
@@ -581,7 +581,12 @@ public class VersaoService {
     }
 
     @Scheduled(cron = "1 * * * * FRI")
-    public void atualizarDownloadFile() {
+    public void atualizarDownloadFileBackup() {
+        log.info("Atualizando BACKUP dos arquivos de DOWNLOAD");
+        atualizarDownloadFile(true);
+    }
+
+    public void atualizarDownloadFile(boolean all) {
         log.info("Atualizando arquivos de DOWNLOAD");
 
         HashMap<Long, Carga> tsvs = new HashMap<>();
@@ -591,7 +596,7 @@ public class VersaoService {
             Set<Versao> vs = versaoRepository
                 .findAll()
                 .stream()
-                .filter(_v -> _v.getStatus() == Status.PROCESSADO)
+                .filter(_v -> all ? (_v.getStatus().ordinal() >= Status.PROCESSADO.ordinal()) : (_v.getStatus() == Status.PROCESSADO))
                 .collect(Collectors.toSet());
             for (Versao versao : vs) {
                 totalc += (int) versao.getCargas().stream().filter(c -> c.getDestino() == Destino.DOWNLOAD).count();
@@ -647,14 +652,15 @@ public class VersaoService {
             .ifPresentOrElse(
                 backp -> {
                     if (backp.getHabilitado()) {
-                        File dir = new File(backp.getVstring());
+                        String D = "/home/semprodb/" + backp.getVstring();
+                        File dir = new File(D);
                         if (!dir.exists()) dir.mkdir();
                         boolean clear = Objects.requireNonNull(dir.list()).length < 1;
-                        if (clear) log.info("Criando backup em {}", backp.getVstring());
                         tsvs.forEach((i, c) -> {
                             try {
                                 if (clear || c.getValidado()) {
-                                    File f = new File(backp.getVstring() + "/" + c.getNome());
+                                    if (clear) log.info("Criando backup em {}/{} {}", D, backp.getVstring(), c);
+                                    File f = new File(D + "/" + c.getNome());
                                     FileUtils.writeByteArrayToFile(f, c.getPlanilha());
                                 }
                             } catch (Exception e) {
