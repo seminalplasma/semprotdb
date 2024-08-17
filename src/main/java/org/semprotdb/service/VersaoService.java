@@ -87,7 +87,11 @@ public class VersaoService {
 
         versao.setStatus(Status.CRIADO);
         versao.setRelease(versao.getRelease() == null ? new Date().toInstant() : versao.getRelease());
-        versao.setTexto(versao.getDetalhes() == null ? versao.toString() : versao.getTexto());
+        versao.setTexto(
+            versao.getDetalhes() == null
+                ? ("<p class='text-center'>Versao " + versao.getNumero() + " : <b>" + versao.getNome() + "</b><p>")
+                : versao.getTexto()
+        );
 
         return versaoRepository.save(versao);
     }
