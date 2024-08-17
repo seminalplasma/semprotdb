@@ -316,10 +316,8 @@ public class VersaoService {
             if (at < 1) {
                 log.warn("Falhou ao integrar dados de {} MAP_UNIPROT com {} DATA_PTNAS", proteinas_map.size(), proteinas.size());
                 versao.addLog("ERRO: Falhou ao juntar os dados. Nenhum ID da carga corresponde a algum ID nos arquivos de mapeamento");
-                return;
-            }
+            } else versao.addLog("Total " + at + " proteinas atualizadas com dados do uniprot.");
 
-            versao.addLog("Total " + at + " proteinas atualizadas com dados do uniprot.");
             int total = storePtnas(proteinas, versao);
             status = Status.PROCESSADO;
             versao.addLog("Terminou o processamento das " + total + " proteinas, " + "Gerando o arquivo de download dessa nova versao.");
