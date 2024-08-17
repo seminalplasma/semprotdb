@@ -106,6 +106,7 @@ public class VersaoService {
         log.debug("Request to update Versao : {}", versao);
         Optional<Versao> atual = versaoRepository.findById(versao.getId());
         versao.setStatus(changeStatus(atual.orElseThrow(), versao.getStatus()));
+        log.info("STATUS => {}", versao.getStatus());
         return versaoRepository.save(versao);
     }
 
@@ -135,6 +136,7 @@ public class VersaoService {
                 }
                 if (versao.getStatus() != null) {
                     existingVersao.setStatus(changeStatus(existingVersao, versao.getStatus()));
+                    log.info("NOVO STATUS => {}", versao.getStatus());
                 }
                 if (versao.getNumero() != null) {
                     existingVersao.setNumero(versao.getNumero());
@@ -185,6 +187,7 @@ public class VersaoService {
 
     private Status changeStatus(Versao atual, Status statusNovo) {
         Status statusAtual = atual.getStatus();
+        log.info("Tentando atualizar STATUS : {} => {}", atual.getStatus(), statusNovo);
 
         /// informando que todos arquivos foram carregados
         if (statusAtual == Status.CRIADO) {
@@ -205,6 +208,7 @@ public class VersaoService {
 
     @Async
     public void processarVersaoasync(Long versaoId) {
+        log.info("Processando versao => {}", versaoId);
         Versao versao = null;
         Status status = Status.INVALIDO;
         try {
@@ -224,6 +228,7 @@ public class VersaoService {
             if (versao.getStatus() != Status.CARREGADO) return;
 
             status = Status.CRIADO;
+            log.info("Processando versao => {} MODO publicar", versao.identfy());
 
             CargaCriteria cargaCriteria = new CargaCriteria();
             LongFilter longFilter = new LongFilter();
