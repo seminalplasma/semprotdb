@@ -22,14 +22,14 @@
                     queryPT2 = entity;
                     queryPT3 = (queryPT2n.includes(queryPT2) ? fOps2 : fOps)[0];
                   "
-                  >{{ entity }}</b-dropdown-item
-                >
+                  >{{ entity }}
+                </b-dropdown-item>
               </template>
             </b-dropdown>
             <b-dropdown :text="queryPT3" variant="secondary" size="sm" v-model="queryPT3">
-              <b-dropdown-item v-for="filtOp of queryPT2n.includes(queryPT2) ? fOps2 : fOps" @click="queryPT3 = filtOp">{{
-                filtOp
-              }}</b-dropdown-item>
+              <b-dropdown-item v-for="filtOp of queryPT2n.includes(queryPT2) ? fOps2 : fOps" @click="queryPT3 = filtOp">
+                {{ filtOp }}
+              </b-dropdown-item>
             </b-dropdown>
           </template>
 
@@ -89,31 +89,35 @@
       <table class="table table-sm table-striped table-hover" aria-describedby="proteinas">
         <thead class="bg-dark text-light">
           <tr>
-            <th scope="row"></th>
-            <th scope="row" v-on:click="changeOrder('GeneOrganismoApelido')">
-              <span v-text="t$('Organimo')"></span>
+            <th scope="row" class="text-success align-middle text-center">
+              <b-button variant="outline-success" size="sm" pill :pressed="curado" @click="changeCur">
+                <font-awesome-icon class="m-0 p-0" icon="shield"></font-awesome-icon>
+              </b-button>
+            </th>
+            <th class="align-middle text-center" scope="row" v-on:click="changeOrder('GeneOrganismoApelido')">
+              <span v-text="t$('Organismo')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'GeneOrganismoApelido'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('GeneNome')">
+            <th class="align-middle" scope="row" v-on:click="changeOrder('GeneNome')">
               <span v-text="t$('Gene')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'GeneNome'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('nome')">
+            <th class="align-middle" scope="row" v-on:click="changeOrder('nome')">
               Protein
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'nome'"></jhi-sort-indicator>
             </th>
-            <th scope="row" class="text-center" v-on:click="changeOrder('tamanho')">
+            <th class="align-middle text-center" scope="row" v-on:click="changeOrder('tamanho')">
               <span v-text="t$('semprotdbApp.proteina.tamanho')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'tamanho'"></jhi-sort-indicator>
             </th>
-            <th scope="row" class="text-center" v-on:click="changeOrder('massa')">
+            <th class="align-middle text-center" scope="row" v-on:click="changeOrder('massa')">
               <span v-text="t$('semprotdbApp.proteina.massa')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'massa'"></jhi-sort-indicator>
             </th>
-            <th scope="row" class="text-center">
+            <th class="align-middle text-center" scope="row">
               <span v-text="t$('Recurso')"></span>
             </th>
-            <th scope="row" class="text-center">
+            <th class="align-middle text-center" scope="row">
               <span v-text="t$('Referencia')"></span>
             </th>
           </tr>
@@ -121,18 +125,32 @@
         <tbody class="table-group-divider">
           <tr class="align-middle" v-for="proteina in proteinas" :key="proteina.id" data-cy="entityTable">
             <td class="align-middle text-center">
-              <font-awesome-icon
-                :id="`${proteina.id}.${proteina.versao?.numero}`"
-                :icon="proteina.curadoria?.id ? 'shield' : 'tag'"
-                :class="(proteina.curadoria?.id ? 'text-success' : 'text-primary') + ' mr-2'"
-              ></font-awesome-icon>
+              <template v-if="authenticated">
+                <router-link :to="{ name: 'ProteinaEdit', params: { proteinaId: proteina.id } }" custom v-slot="{ navigate }">
+                  <b-button
+                    @click="navigate"
+                    size="sm"
+                    :variant="proteina.curadoria?.id ? 'success' : 'secondary'"
+                    :id="`${proteina.id}.${proteina.versao?.numero}`"
+                  >
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
+                  </b-button>
+                </router-link>
+              </template>
+              <template v-else>
+                <font-awesome-icon
+                  :id="`${proteina.id}.${proteina.versao?.numero}`"
+                  :icon="proteina.curadoria?.id ? 'shield' : 'tag'"
+                  :class="(proteina.curadoria?.id ? 'text-success' : 'text-primary') + ' mr-2'"
+                ></font-awesome-icon>
+              </template>
               <b-tooltip
                 placement="right"
                 :target="`${proteina.id}.${proteina.versao?.numero}`"
                 :title="`${proteina.id}.${proteina.versao?.numero}`"
               ></b-tooltip>
             </td>
-            <td class="align-middle">
+            <td class="align-middle text-center">
               <em> {{ proteina.gene?.organismo?.apelido }}</em>
             </td>
             <td class="align-middle">
@@ -195,9 +213,16 @@
         Total <strong>{{ proteinas.length }} proteins </strong> found.
       </b-alert>
       <b-alert v-else variant="warning" show>
-        <font-awesome-icon icon="triangle-exclamation"></font-awesome-icon>
-        <strong>Not found.</strong></b-alert
-      >
+        <span>
+          <font-awesome-icon icon="triangle-exclamation"></font-awesome-icon>
+          <strong>Not found.</strong>
+        </span>
+
+        <b-button class="mx-4" @click="reset()">
+          <font-awesome-icon icon="eraser"></font-awesome-icon>
+          Remove all filters
+        </b-button>
+      </b-alert>
     </div>
     <b-button class="float-right" pill @click="toTop" v-if="proteinas.length > 20">
       <font-awesome-icon icon="up-long"></font-awesome-icon>

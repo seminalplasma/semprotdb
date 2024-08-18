@@ -43,7 +43,7 @@ public class RowPtn extends Proteina {
         addRecurso(new Recurso().uid(db == BioDB.OUTRO ? _id : id).db(db));
         if (referencia != null) addReferencia(referencia);
         gene(new Gene().nome(gene).organismo(organismo));
-        setCuradoria(new Curadoria().email(curador == null ? NO_CURATOR : curador));
+        if (curador != null) setCuradoria(new Curadoria().email(curador));
     }
 
     /// essa funcao é para ser usada na importacao da ptna do uniprot map ids

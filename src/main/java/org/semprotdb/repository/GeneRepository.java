@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface GeneRepository extends JpaRepository<Gene, Long>, JpaSpecificationExecutor<Gene> {
+public interface GeneRepository extends JpaRepository<Gene, Long>, JpaSpecificationExecutor<Gene>, GeneDTORepository {
     List<Gene> findAllByProteinasIsEmpty();
 }

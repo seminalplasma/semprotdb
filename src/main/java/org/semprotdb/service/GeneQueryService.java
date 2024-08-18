@@ -42,7 +42,7 @@ public class GeneQueryService extends QueryService<Gene> {
     public Page<Gene> findByCriteria(GeneCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Gene> specification = createSpecification(criteria);
-        return geneRepository.findAll(specification, page);
+        return geneRepository.findAllLight(specification, page);
     }
 
     /**
@@ -70,27 +70,35 @@ public class GeneQueryService extends QueryService<Gene> {
                 specification = specification.and(distinct(criteria.getDistinct()));
             }
             if (criteria.getId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getId(), Gene_.id));
+                specification = specification.or(buildRangeSpecification(criteria.getId(), Gene_.id));
             }
             if (criteria.getNome() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNome(), Gene_.nome));
+                specification = specification.or(buildStringSpecification(criteria.getNome(), Gene_.nome));
             }
             if (criteria.getDescricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getDescricao(), Gene_.descricao));
+                specification = specification.or(buildStringSpecification(criteria.getDescricao(), Gene_.descricao));
             }
             if (criteria.getCuradoriaId() != null) {
-                specification = specification.and(
+                specification = specification.or(
                     buildSpecification(criteria.getCuradoriaId(), root -> root.join(Gene_.curadoria, JoinType.LEFT).get(Curadoria_.id))
                 );
             }
             if (criteria.getOrganismoId() != null) {
-                specification = specification.and(
+                specification = specification.or(
                     buildSpecification(criteria.getOrganismoId(), root -> root.join(Gene_.organismo, JoinType.LEFT).get(Organismo_.id))
                 );
             }
             if (criteria.getProteinaId() != null) {
-                specification = specification.and(
+                specification = specification.or(
                     buildSpecification(criteria.getProteinaId(), root -> root.join(Gene_.proteinas, JoinType.LEFT).get(Proteina_.id))
+                );
+            }
+            if (criteria.getVersaoId() != null) {
+                specification = specification.and(
+                    buildSpecification(
+                        criteria.getVersaoId(),
+                        root -> root.join(Gene_.proteinas, JoinType.LEFT).get(Proteina_.versao).get(Versao_.id)
+                    )
                 );
             }
         }

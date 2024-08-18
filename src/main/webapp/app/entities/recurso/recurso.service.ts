@@ -7,10 +7,10 @@ import { type IRecurso } from '@/shared/model/recurso.model';
 const baseApiUrl = 'api/recursos';
 
 export default class RecursoService {
-  public find(id: number): Promise<IRecurso> {
+  public find(id: number | string, create = false): Promise<IRecurso> {
     return new Promise<IRecurso>((resolve, reject) => {
       axios
-        .get(`${baseApiUrl}/${id}`)
+        .get(`${baseApiUrl}${create ? '/uid/' : '/'}${id}`)
         .then(res => {
           resolve(res.data);
         })

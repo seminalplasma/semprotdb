@@ -2,6 +2,7 @@ package org.semprotdb.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Root;
 import java.util.HashSet;
@@ -22,6 +23,8 @@ public class GeneDTO extends Gene implements IDTO<GeneDTO> {
     private CuradoriaDTO curadoria;
     private OrganismoDTO organismo;
 
+    public GeneDTO() {}
+
     public GeneDTO(Long id, String nome, Long curadoriaID, Long organismoID, String organismoAPELIDO, String organismoSIGLA) {
         setId(id);
         setNome(nome);
@@ -31,8 +34,8 @@ public class GeneDTO extends Gene implements IDTO<GeneDTO> {
 
     @Override
     public Path[] getConstructorArgsPath(Root<GeneDTO> root) {
-        Join curadoria = root.join("curadoria");
-        Join organismo = root.join("organismo");
+        Join curadoria = root.join("curadoria", JoinType.LEFT);
+        Join organismo = root.join("organismo", JoinType.LEFT);
         return new Path[] {
             root.get("id"),
             root.get("nome"),

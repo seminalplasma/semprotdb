@@ -1,6 +1,7 @@
 package org.semprotdb.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.semprotdb.domain.Recurso;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,4 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecursoRepository extends JpaRepository<Recurso, Long> {
     List<Recurso> findAllByProteinasIsEmpty();
+
+    Optional<Recurso> findByUid(String uid);
 }

@@ -18,11 +18,17 @@ import { type IReferencia } from '@/shared/model/referencia.model';
 import RecursoService from '@/entities/recurso/recurso.service';
 import { type IRecurso } from '@/shared/model/recurso.model';
 import { type IProteina, Proteina } from '@/shared/model/proteina.model';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { useStore } from '@/store';
 
 export default defineComponent({
+  components: { FontAwesomeIcon },
   compatConfig: { MODE: 3 },
   name: 'ProteinaUpdate',
   setup() {
+    const store = useStore();
+    const account = computed(() => store.account);
+
     const proteinaService = inject('proteinaService', () => new ProteinaService());
     const alertService = inject('alertService', () => useAlertService(), true);
 
@@ -40,6 +46,9 @@ export default defineComponent({
 
     const genes: Ref<IGene[]> = ref([]);
 
+    const geneQ: Ref<string> = ref('');
+    const linkQ: Ref<string> = ref('');
+
     const referenciaService = inject('referenciaService', () => new ReferenciaService());
 
     const referencias: Ref<IReferencia[]> = ref([]);
@@ -48,6 +57,7 @@ export default defineComponent({
 
     const recursos: Ref<IRecurso[]> = ref([]);
     const isSaving = ref(false);
+    const isCurar = ref(false);
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
 
     const route = useRoute();
@@ -55,10 +65,16 @@ export default defineComponent({
 
     const previousState = () => router.go(-1);
 
+    const toGene = g => router.push({ path: `/gene/${g.id}/view` });
+    const toLink = l => router.push({ path: `/recurso/${l.id}/view` });
+
     const retrieveProteina = async proteinaId => {
       try {
         const res = await proteinaService().find(proteinaId);
         proteina.value = res;
+        if (res.gene) {
+          res.gene.descricao = geneQ.value = res.gene?.id + ' - ' + res.gene?.nome;
+        }
       } catch (error) {
         alertService.showHttpError(error.response);
       }
@@ -70,9 +86,9 @@ export default defineComponent({
 
     const initRelationships = () => {
       curadoriaService()
-        .retrieve()
+        .retrieve({ size: 100 })
         .then(res => {
-          curadorias.value = res.data;
+          curadorias.value = res.data.filter(c => c.email === account.value.email);
         });
       versaoService()
         .retrieve()
@@ -82,10 +98,16 @@ export default defineComponent({
       geneService()
         .retrieve()
         .then(res => {
-          genes.value = res.data;
+          genes.value = [proteina.value.gene]
+            .concat(res.data)
+            .filter(g => g && g.id && g.nome)
+            .map(g => {
+              g.descricao = g.id + ' - ' + g.nome;
+              return g;
+            });
         });
       referenciaService()
-        .retrieve()
+        .retrieve({ size: 80 })
         .then(res => {
           referencias.value = res.data;
         });
@@ -104,13 +126,26 @@ export default defineComponent({
       nome: {
         required: validations.required(t$('entity.validation.required').toString()),
       },
-      tamanho: {},
-      massa: {},
-      descricao: {},
+      tamanho: {
+        required: validations.required(t$('entity.validation.required').toString()),
+        // integer: validations.integer(t$('entity.validation.integer').toString()),
+        // minValue: validations.minValue("Digite um valor maior que zero", 0),
+      },
+      massa: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+      descricao: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
       curadoria: {},
       versao: {},
-      gene: {},
-      referencias: {},
+      gene: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+      referencias: {
+        required: validations.required(t$('entity.validation.required').toString()),
+        // minLength: validations.minLength('Insira pelo menos uma referencia', 1),
+      },
       recursos: {},
     };
     const v$ = useVuelidate(validationRules, proteina as any);
@@ -130,6 +165,13 @@ export default defineComponent({
       recursos,
       v$,
       t$,
+      geneService,
+      geneQ,
+      toGene,
+      linkQ,
+      recursoService,
+      toLink,
+      isCurar,
     };
   },
   created(): void {
@@ -137,6 +179,37 @@ export default defineComponent({
     this.proteina.recursos = [];
   },
   methods: {
+    setGene() {
+      const idg = (this.geneQ + '').trim();
+      console.log(idg);
+      if (idg.length < 2) return;
+      this.proteina.gene = null;
+      const q = { 'versaoId.equals': this.proteina.versao?.id };
+      if (idg?.match(/^\d+$/)) q['id.equals'] = parseInt(idg);
+      else q['nome.contains'] = idg;
+      this.isSaving = true;
+      this.geneService()
+        .retrieve(q)
+        .then(gs => {
+          this.genes = gs.data.map(g => {
+            g.descricao = g.id + ' - ' + g.nome;
+            return g;
+          });
+          this.proteina.gene = this.genes[0];
+        })
+        .finally(() => (this.isSaving = false));
+    },
+
+    setLink() {
+      this.isSaving = true;
+      this.recursoService()
+        .find(this.linkQ, true)
+        .then(link => {
+          this.proteina.recursos?.push(link);
+        })
+        .finally(() => (this.isSaving = false));
+    },
+
     save(): void {
       this.isSaving = true;
       if (this.proteina.id) {

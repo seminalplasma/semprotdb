@@ -4,11 +4,15 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.semprotdb.domain.Proteina;
 import org.semprotdb.domain.Recurso;
 import org.semprotdb.repository.ProteinaRepository;
 import org.semprotdb.repository.RecursoRepository;
+import org.semprotdb.util.BioDBParser;
 import org.semprotdb.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +40,10 @@ public class RecursoResource {
 
     private static final String ENTITY_NAME = "recurso";
     private final ProteinaRepository proteinaRepository;
+    private final RecursoRepository recursoRepository;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final RecursoRepository recursoRepository;
 
     public RecursoResource(RecursoRepository recursoRepository, ProteinaRepository proteinaRepository) {
         this.recursoRepository = recursoRepository;
@@ -69,7 +72,7 @@ public class RecursoResource {
     /**
      * {@code PUT  /recursos/:id} : Updates an existing recurso.
      *
-     * @param id the id of the recurso to save.
+     * @param id      the id of the recurso to save.
      * @param recurso the recurso to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated recurso,
      * or with status {@code 400 (Bad Request)} if the recurso is not valid,
@@ -102,7 +105,7 @@ public class RecursoResource {
     /**
      * {@code PATCH  /recursos/:id} : Partial updates given fields of an existing recurso, field will ignore if it is null
      *
-     * @param id the id of the recurso to save.
+     * @param id      the id of the recurso to save.
      * @param recurso the recurso to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated recurso,
      * or with status {@code 400 (Bad Request)} if the recurso is not valid,
@@ -174,6 +177,21 @@ public class RecursoResource {
     public ResponseEntity<Recurso> getRecurso(@PathVariable("id") Long id) {
         log.debug("REST request to get Recurso : {}", id);
         Optional<Recurso> recurso = recursoRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(recurso);
+    }
+
+    @GetMapping("/uid/{uid}")
+    public ResponseEntity<Recurso> getRecursoByUID(@PathVariable("uid") String uid) {
+        log.debug("REST request to get Recurso BY UID: {}", uid);
+        Optional<Recurso> recurso = recursoRepository.findByUid(uid);
+
+        if (recurso.isEmpty()) {
+            Recurso r = BioDBParser.acesso2recurso(uid);
+            if (r != null) {
+                recurso = Optional.of(recursoRepository.save(r));
+            }
+        }
+
         return ResponseUtil.wrapOrNotFound(recurso);
     }
 

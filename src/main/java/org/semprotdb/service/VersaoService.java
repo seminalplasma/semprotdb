@@ -395,8 +395,13 @@ public class VersaoService {
         for (Proteina p : ptns) {
             String p_id = p.getGene().getOrganismo().getNome() + " > " + p.getGene().getNome() + " > " + p.getNome();
 
-            if (!C.containsKey(p.getCuradoria().getEmail())) {
-                String curador = versao.getNome() + "_" + p.getCuradoria().getEmail();
+            if (
+                p.getCuradoria() != null &&
+                p.getCuradoria().getEmail() != null &&
+                p.getCuradoria().getEmail().trim().isEmpty() &&
+                !C.containsKey(p.getCuradoria().getEmail())
+            ) {
+                String curador = versao.getNome() + "_" + p.getCuradoria().getEmail().trim();
                 Curadoria c = curadoriaRepository.save(new Curadoria().email(curador).data(new Date().toInstant()));
                 C.put(p.getCuradoria().getEmail(), c);
             }
@@ -410,7 +415,11 @@ public class VersaoService {
                         .tamanho(p.getTamanho())
                         .descricao(p.getDescricao())
                         .versao(versao)
-                        .curadoria(C.get(p.getCuradoria().getEmail()))
+                        .curadoria(
+                            p.getCuradoria() != null && C.get(p.getCuradoria().getEmail()) != null
+                                ? C.get(p.getCuradoria().getEmail())
+                                : null
+                        )
                 )
             );
             else log.info("Proteina REDUNDANTE encontrada nas cargas {}", p);

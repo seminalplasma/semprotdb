@@ -32,6 +32,8 @@ public class GeneCriteria implements Serializable, Criteria {
 
     private LongFilter organismoId;
 
+    private LongFilter versaoId;
+
     private LongFilter proteinaId;
 
     private Boolean distinct;
@@ -45,6 +47,7 @@ public class GeneCriteria implements Serializable, Criteria {
         this.curadoriaId = other.optionalCuradoriaId().map(LongFilter::copy).orElse(null);
         this.organismoId = other.optionalOrganismoId().map(LongFilter::copy).orElse(null);
         this.proteinaId = other.optionalProteinaId().map(LongFilter::copy).orElse(null);
+        this.versaoId = other.optionalVersaoId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -108,6 +111,25 @@ public class GeneCriteria implements Serializable, Criteria {
 
     public void setDescricao(StringFilter descricao) {
         this.descricao = descricao;
+    }
+
+    public LongFilter getVersaoId() {
+        return versaoId;
+    }
+
+    public Optional<LongFilter> optionalVersaoId() {
+        return Optional.ofNullable(versaoId);
+    }
+
+    public LongFilter versaoId() {
+        if (versaoId == null) {
+            setVersaoId(new LongFilter());
+        }
+        return versaoId;
+    }
+
+    public void setVersaoId(LongFilter versaoId) {
+        this.versaoId = versaoId;
     }
 
     public LongFilter getCuradoriaId() {
@@ -202,13 +224,14 @@ public class GeneCriteria implements Serializable, Criteria {
             Objects.equals(curadoriaId, that.curadoriaId) &&
             Objects.equals(organismoId, that.organismoId) &&
             Objects.equals(proteinaId, that.proteinaId) &&
+            Objects.equals(versaoId, that.versaoId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, descricao, curadoriaId, organismoId, proteinaId, distinct);
+        return Objects.hash(id, nome, descricao, curadoriaId, organismoId, proteinaId, versaoId, distinct);
     }
 
     // prettier-ignore
@@ -220,6 +243,7 @@ public class GeneCriteria implements Serializable, Criteria {
             optionalDescricao().map(f -> "descricao=" + f + ", ").orElse("") +
             optionalCuradoriaId().map(f -> "curadoriaId=" + f + ", ").orElse("") +
             optionalOrganismoId().map(f -> "organismoId=" + f + ", ").orElse("") +
+            optionalVersaoId().map(f -> "versaoId=" + f + ", ").orElse("") +
             optionalProteinaId().map(f -> "proteinaId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";

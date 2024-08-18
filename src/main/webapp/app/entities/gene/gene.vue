@@ -54,7 +54,7 @@
             <td>{{ gene.nome }}</td>
             <td>{{ gene.descricao }}</td>
             <td>
-              <div v-if="gene.curadoria">
+              <div v-if="gene.curadoria?.id">
                 <router-link :to="{ name: 'CuradoriaView', params: { curadoriaId: gene.curadoria.id } }">{{
                   gene.curadoria.id
                 }}</router-link>

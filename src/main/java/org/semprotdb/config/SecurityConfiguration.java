@@ -83,7 +83,7 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/organismos/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/genes/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/proteinas/**")).permitAll()
-                    .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/recursos/**")).permitAll()
+//                    .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/recursos/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/cargas/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/db-configs/**")).permitAll()
 

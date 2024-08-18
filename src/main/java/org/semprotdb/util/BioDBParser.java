@@ -16,7 +16,7 @@ public class BioDBParser {
 
     public static String acesso(final String id) {
         String acesso = NO_ID;
-        if (id != null && !id.isBlank()) {
+        if (id != null && !id.trim().isBlank()) {
             acesso = id.trim().toUpperCase();
             MatchResult matchResult = p_rs
                 .matcher(acesso)
@@ -31,11 +31,21 @@ public class BioDBParser {
     }
 
     public static BioDB acesso2db(final String acesso) {
-        if (acesso == null || acesso.isBlank() || acesso.equals(NO_ID)) return BioDB.OUTRO;
+        if (acesso == null || acesso.trim().isBlank() || acesso.equals(NO_ID)) return BioDB.OUTRO;
         if (p_rs.matcher(acesso).matches()) return BioDB.REFSEQ;
         if (p_gi.matcher(acesso).matches()) return BioDB.GI;
         if (p_up.matcher(acesso).matches()) return BioDB.UNIPROT;
         return BioDB.OUTRO;
+    }
+
+    public static Recurso acesso2recurso(final String uid) {
+        String acesso = acesso(uid);
+        if (acesso == null || acesso.isBlank() || acesso.equals(NO_ID)) return null;
+        BioDB db = acesso2db(acesso);
+        if (db == null || db == BioDB.OUTRO) return null;
+        Recurso r = new Recurso().uid(acesso).db(db);
+        r.setLink(recurso2link(r));
+        return r;
     }
 
     public static String recurso2link(final Recurso recurso) {

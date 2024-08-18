@@ -58,6 +58,8 @@ import { faUpLong } from '@fortawesome/free-solid-svg-icons/faUpLong';
 import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 import { faX } from '@fortawesome/free-solid-svg-icons/faX';
+import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
+import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt';
 
 const datetimeFormats: IntlDateTimeFormats = {
   en: {
@@ -174,6 +176,8 @@ export function initFortAwesome(vue) {
     faCog,
     faFilter,
     faX,
+    faEraser,
+    faBolt,
   );
 }
 

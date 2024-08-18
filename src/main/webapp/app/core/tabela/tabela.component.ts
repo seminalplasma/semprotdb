@@ -7,21 +7,25 @@ import ProteinaService from '@/entities/proteina/proteina.service';
 import { type IProteina } from '@/shared/model/proteina.model';
 import useDataUtils from '@/shared/data/data-utils.service';
 import { useAlertService } from '@/shared/alert/alert.service';
-import { useVersaoStore } from '@/store';
+import { useStore, useVersaoStore } from '@/store';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'Tabela',
   setup() {
+    const store = useStore();
+
     const { t: t$ } = useI18n();
     const dataUtils = useDataUtils();
     const proteinaService = inject('proteinaService', () => new ProteinaService());
     const alertService = inject('alertService', () => useAlertService(), true);
-
+    const authenticated = computed(() => store.authenticated);
     const route = useRoute();
     const versaoStore = useVersaoStore();
     const versao = computed(() => versaoStore.versao);
     const versao_loaded = computed(() => versaoStore.esta_carregada);
+
+    const curado = ref(false);
 
     const queryPT1: Ref<string> = ref('AND');
     const queryPT2: Ref<string> = ref('Protein');
@@ -90,7 +94,15 @@ export default defineComponent({
 
         if (route.query?.organismId) paginationQuery['organismoId.equals'] = parseInt(route.query.organismId);
 
-        paginationQuery['qfirst'] = (filters.value['qfirst'] ? filters.value['qfirst'] + ',' : '') + 'versaoId';
+        if (!paginationQuery['qfirst'] || !paginationQuery['qfirst'].includes('versaoId'))
+          paginationQuery['qfirst'] = (filters.value['qfirst'] ? filters.value['qfirst'] + ',' : '') + 'versaoId';
+
+        if (curado.value) {
+          paginationQuery['qfirst'] += ',' + 'curadoriaId';
+          paginationQuery['curadoriaId.specified'] = true;
+        } else {
+          paginationQuery['curadoriaId.specified'] = false;
+        }
 
         const res = await proteinaService().retrieve(paginationQuery);
 
@@ -185,15 +197,25 @@ export default defineComponent({
       filters,
       queryPT2n,
       alertService,
+      curado,
+      authenticated,
+      route,
     };
   },
 
   methods: {
+    changeCur() {
+      this.curado = !this.curado;
+      this.clear();
+    },
     reset() {
+      if (this.route.query?.organismId) {
+        this.route.query.organismId = null;
+      }
+      this.curado = false;
       this.queryes = [];
       this.queryPT2 = 'Protein';
       this.queryPT2e = ['Organism', 'Gene', 'Protein', 'Tamanho'];
-      console.log(this.filters);
       if (Object.keys(this.filters).some(x => x.includes('.'))) {
         this.filters = {};
         this.clear();
@@ -204,7 +226,6 @@ export default defineComponent({
       this.clear();
     },
     toTop: () => {
-      ///if (window && window.scroll)
       window.scroll({ top: 0, behavior: 'smooth' });
     },
     search() {

@@ -22,7 +22,7 @@
             <span v-text="t$('semprotdbApp.recurso.link')"></span>
           </dt>
           <dd>
-            <span>{{ recurso.link }}</span>
+            <a :href="recurso.link" target="_blank">{{ recurso.link }}</a>
           </dd>
           <dt>
             <span v-text="t$('semprotdbApp.recurso.proteina')"></span>
@@ -38,7 +38,7 @@
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.back')"></span>
         </button>
         <router-link v-if="recurso.id" :to="{ name: 'RecursoEdit', params: { recursoId: recurso.id } }" custom v-slot="{ navigate }">
-          <button @click="navigate" class="btn btn-primary">
+          <button @click="navigate" class="btn btn-primary mx-2">
             <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.edit')"></span>
           </button>
         </router-link>
