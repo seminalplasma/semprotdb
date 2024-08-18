@@ -482,6 +482,7 @@ public class VersaoService {
                     p
                 );
             }
+            p.setGene(PROTEINA.getGene());
 
             Set<Recurso> recursos = p.getRecursos();
             recursos.addAll(Arrays.stream(BioDBParser.recursos2recursos(p)).toList());
