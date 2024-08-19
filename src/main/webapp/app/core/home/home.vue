@@ -19,7 +19,7 @@
                 <img
                   v-if="o.silhueta"
                   t
-                  :class="{ 'imgorg shadow': 1, 'img-fluid rounded-circle': o?.pos?.includes('R') }"
+                  :class="{ imgorg: 1, 'shadow img-fluid rounded-circle': o?.pos?.includes('R') }"
                   v-bind:src="'data:' + o.silhuetaContentType + ';base64,' + o.silhueta"
                   :alt="o.nome"
                   width="80px"
@@ -114,11 +114,6 @@
   width: 100%;
   display: block;
   height: 4rem;
-}
-
-.organismos {
-  width: 80%;
-  margin-left: 10%;
 }
 
 .imgorg:hover {

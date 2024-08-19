@@ -89,7 +89,7 @@ public class BioDBParser {
                     .addProteina(proteina)
                     .uid("Kegg:" + recurso.getUid())
                     .db(BioDB.KEGG)
-                    .link(
+                    .link( ////https://www.genome.jp/dbget-bin/www_bget?mmu:235674
                         "https://www.genome.jp/dbget-bin/www_bget?" +
                         proteina.getGene().getOrganismo().getSigla().toLowerCase() +
                         ":" +

@@ -180,7 +180,7 @@
 
             <td class="align-middle text-center">
               <template v-if="proteina.referencias && proteina.referencias.length > 0">
-                <span class="text-capitalize">{{ proteina.referencias[0].citacao }}</span>
+                <a class="text-capitalize" :href="proteina.referencias[0].link + '?'">{{ proteina.referencias[0].citacao }}</a>
                 <span v-if="proteina.referencias.length > 1" class="badge bg-info float-md-right">
                   +{{ proteina.referencias.length - 1 }}
                 </span>
