@@ -1,9 +1,10 @@
 package org.semprotdb.util.FileIO;
 
+import static java.nio.file.Files.readAllBytes;
+
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import org.apache.commons.io.FileUtils;
 import org.semprotdb.domain.Carga;
 import org.semprotdb.domain.Versao;
 import org.semprotdb.domain.enumeration.Formato;
@@ -36,7 +37,7 @@ public class TSV extends AbstractTabela {
         ByteArrayInputStream bais = null;
         switch (tipo) {
             case ARQUIVO -> bais = new ByteArrayInputStream(dados);
-            case CAMINHO -> bais = new ByteArrayInputStream(FileUtils.readFileToByteArray(new File(caminho)));
+            case CAMINHO -> bais = new ByteArrayInputStream(readAllBytes(new File(caminho).toPath()));
             case REMOTO -> bais = new ByteArrayInputStream(new URL(caminho).openStream().readAllBytes());
         }
         if (bais != null && nome.endsWith(".zip")) bais = new ByteArrayInputStream(Zip.unzip(bais));
