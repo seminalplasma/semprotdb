@@ -53,7 +53,7 @@ public class RowPtn extends Proteina {
 
     private static String limpar(String s, String o, boolean up) {
         if (s == null) return o;
-        s = s.strip().replaceAll("\\s+", " ");
+        s = s.strip().replaceAll("\\s+", " ").replace("---", "");
         s = up ? s.toUpperCase() : s;
         return !s.isEmpty() ? s : o;
     }
