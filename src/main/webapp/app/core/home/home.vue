@@ -47,7 +47,7 @@
     </div>
   </div>
 
-  <div class="row content-center mt-4">
+  <div class="row justify-content-center mt-4">
     <img width="300px" v-if="versao && versao.imagem" v-bind:src="'data:' + versao.imagemContentType + ';base64,' + versao.imagem" />
   </div>
 
