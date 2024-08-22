@@ -155,7 +155,7 @@ public class CargaService {
         /// 4 - upload
         /// 5 - dados, metadata
         /// 6 - restore
-        /// 7 -
+        /// 7 - Consolidado
         /// 8 -
         /// 9 -
 

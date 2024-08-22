@@ -23,6 +23,7 @@ public class BioDBParser {
                 .results()
                 .findFirst()
                 .orElse(p_gi.matcher(acesso).results().findFirst().orElse(p_up.matcher(acesso).results().findFirst().orElse(null)));
+
             acesso = matchResult == null ? NO_ID : matchResult.group();
 
             if (acesso.matches("^GI\\|?\\d+$")) acesso = acesso.replaceAll("\\D", "");

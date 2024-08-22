@@ -191,6 +191,11 @@ public class VersaoService {
             return Status.CARREGADO;
         }
 
+        ///deixar voltar se der erro
+        if (statusAtual.ordinal() <= Status.CARREGADO.ordinal() && statusNovo == Status.CRIADO) {
+            return Status.CRIADO;
+        }
+
         /// alterando status da versao processada
         if (
             statusAtual.ordinal() >= Status.PROCESSADO.ordinal() &&
@@ -287,7 +292,7 @@ public class VersaoService {
                 /// gerar aquivos de ids para mapear
                 Set<Carga> carga_upload = cargas.stream().filter(c -> c.getDestino() == Destino.UPLOAD).collect(Collectors.toSet());
                 if (carga_upload.size() < 4) {
-                    List<Proteina> ptnas = cargas2ptnas(carga_dados);
+                    List<Proteina> ptnas = cargas2ptnas(carga_dados, versao);
                     log.info("Gerando arquivo de UPLOAD para de IDS proteinas: {}", ptnas.size());
 
                     for (BioDB db : new BioDB[] { BioDB.UNIPROT, BioDB.REFSEQ, BioDB.GI, BioDB.OUTRO }) {
@@ -321,7 +326,7 @@ public class VersaoService {
             }
 
             log.info("A integrar {} arquivos de DADOS encontrados", carga_dados.size());
-            List<Proteina> proteinas = cargas2ptnas(carga_dados);
+            List<Proteina> proteinas = cargas2ptnas(carga_dados, null);
             log.info("A integrar {} proteinas", proteinas.size());
 
             versao.addLog("A integrar " + proteinas.size() + " com " + proteinas_map.size() + " proteinas.");
@@ -347,18 +352,46 @@ public class VersaoService {
         }
     }
 
-    private List<Proteina> cargas2ptnas(final Set<Carga> cargas) throws Exception {
+    private List<Proteina> cargas2ptnas(final Set<Carga> cargas, Versao versao) throws Exception {
         ArrayList<Proteina> proteinas = new ArrayList<>();
         String cid;
+        ArrayList<String> consolidado = new ArrayList<>();
         for (Carga carga : cargas) {
             cid = "[" + carga.getId() + "] " + carga.getNome();
             try {
                 DataModelTabela tabela = new DataModelTabela(carga);
-                proteinas.addAll(tabela.asProteinas());
+                List<Proteina> ptnas = tabela.asProteinas();
+                proteinas.addAll(ptnas);
+                if (versao != null) ptnas.forEach(
+                    p ->
+                        p
+                            .getReferencias()
+                            .forEach(
+                                r ->
+                                    consolidado.add(
+                                        String.join(
+                                            "\t",
+                                            new String[] {
+                                                carga.getNome(),
+                                                r.getCitacao(),
+                                                p.getGene().getOrganismo().getNome(),
+                                                p.getGene().getNome(),
+                                                p.getNome(),
+                                                p.getDescricao(),
+                                            }
+                                        )
+                                    )
+                            )
+                );
             } catch (Exception e) {
                 log.warn("ERRO ao transformar carga {} em tabela", carga);
                 throw new Exception("Erro na carga " + cid + " => " + e.getMessage());
             }
+        }
+        if (versao != null) {
+            Carga file = new TSV("Consolidado.tsv", consolidado).toCarga(versao).status("OK").ordem(7).destino(Destino.DOWNLOAD);
+            log.info("Persistindo CONSOLIDADO {}", file);
+            cargaRepository.save(file);
         }
         return proteinas;
     }
@@ -412,7 +445,7 @@ public class VersaoService {
             String p_id = p.getNome(); /// p.getGene().getOrganismo().getNome() + " > " + p.getGene().getNome() + " > " + p.getNome();
 
             if (p_id == null || p_id.isEmpty() || p_id.equals(BioDBParser.NO_ID)) {
-                log.warn("Total {} Proteina com ID invalido {} => {} ", invalidas++, p_id, p.getNome());
+                log.warn("Total {} Proteina com ID invalido {} => {} ", invalidas++, p_id, p.getDescricao());
                 continue;
             }
 
@@ -425,6 +458,7 @@ public class VersaoService {
                 String curador = versao.getNome() + "_" + p.getCuradoria().getEmail().trim();
                 Curadoria c = curadoriaRepository.save(new Curadoria().email(curador).data(new Date().toInstant()));
                 C.put(p.getCuradoria().getEmail(), c);
+                log.info("NOVO curador {}", c.getEmail());
             }
 
             Proteina PROTEINA = P.get(p_id);
@@ -445,14 +479,16 @@ public class VersaoService {
                             )
                     )
                 );
+                log.info("{} > NOVA proteina {}", P.size(), p_id);
             } else {
                 /// ja tem essa ptna
                 /// nome deve ser o menor
-                PROTEINA.setNome(
-                    ((p.getNome().length() > 1) && (p.getDescricao().length() < PROTEINA.getDescricao().length()))
-                        ? p.getNome()
-                        : PROTEINA.getNome()
+                PROTEINA.setDescricao(
+                    ((p.getDescricao().length() > 1) && (p.getDescricao().length() < PROTEINA.getDescricao().length()))
+                        ? p.getDescricao()
+                        : PROTEINA.getDescricao()
                 );
+                log.debug("{} descricao: ", p_id, p.getDescricao());
                 /// referencia deve ser add
                 handleREF(p, R, PROTEINA);
                 proteinaRepository.save(PROTEINA);
@@ -504,6 +540,7 @@ public class VersaoService {
                                     p.getCuradoria().getEmail(),
                                     curadoriaRepository.save(new Curadoria().email(curador).data(new Date().toInstant()))
                                 );
+                                log.info("NOVO curador {} para os genes", p.getCuradoria().getEmail());
                             }
                         }
                     }
