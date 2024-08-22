@@ -259,7 +259,7 @@ export default defineComponent({
             // "gene", => genenome
             ent = ent.startsWith('Gen') ? 'geneNome' : ent;
             // "protein" => nome
-            ent = ent.startsWith('Prot') ? 'nome' : ent;
+            ent = ent.startsWith('Prot') ? 'descricao' : ent;
             // "Tamanho" => tamanho
             ent = ent.startsWith('Tam') ? 'tamanho' : ent;
 
@@ -285,10 +285,10 @@ export default defineComponent({
         /// modo ptna ou gene  ptna.nome contain or gene nome contais
         ///curl '... api/proteinas?nome.contains=AQN&geneNome.contains=AQN&qors=nome,geneNome'
         this.filters = {
-          'nome.contains': this.query,
+          'descricao.contains': this.query,
           'geneNome.contains': this.query,
-          qors: 'nome,geneNome',
-          qfirst: 'nome,geneNome',
+          qors: 'descricao,geneNome',
+          qfirst: 'nodescricaome,geneNome',
         };
       }
 
