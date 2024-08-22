@@ -87,7 +87,7 @@ public class DataModelTabela extends AbstractDataModel {
     private Referencia getReferencia() throws Exception {
         int ref_idx = metadados.getColByName(REFERENCIA_COL);
         String ref = metadados.getLinhas().get(0)[ref_idx];
-        if (ref == null || ref.isBlank()) ref = "NONE";
+        if (ref == null || ref.isBlank()) throw new Exception("A REFERENCIA deve ser informada em " + carga.getNome()); ///ref = "NONE";
         ref = ref.strip().replaceAll("\\s+", " ").toUpperCase();
 
         int link_idx = metadados.getColByName(LINK_COL);

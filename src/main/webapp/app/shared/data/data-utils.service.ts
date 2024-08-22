@@ -90,7 +90,7 @@ const useDataUtils = () => ({
     return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' bytes';
   },
 
-  setFileData(event, entity, field, isImage, field_name, res = (a: string, b: string) => {}) {
+  setFileData(event, entity, field, isImage, field_name = null, res = (a: string, b: string) => {}) {
     if (event && event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       if (isImage && !/^image\//.test(file.type)) {

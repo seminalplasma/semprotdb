@@ -6,6 +6,7 @@ import org.semprotdb.domain.Carga;
 import org.semprotdb.domain.enumeration.Destino;
 import org.semprotdb.domain.enumeration.Status;
 import org.semprotdb.repository.CargaRepository;
+import org.semprotdb.util.DataModelRecover;
 import org.semprotdb.util.DataModelTabela;
 import org.semprotdb.util.DataModelUniprot;
 import org.slf4j.Logger;
@@ -141,7 +142,6 @@ public class CargaService {
         cargaRepository.deleteById(id);
     }
 
-    ///@Scheduled(cron = "1 * * * * ?")
     @Async
     public void processarCarga(Long cargaId) {
         Carga carga = findOne(cargaId).orElse(null);
@@ -154,7 +154,7 @@ public class CargaService {
         /// 3 - downloads
         /// 4 - upload
         /// 5 - dados, metadata
-        /// 6 -
+        /// 6 - restore
         /// 7 -
         /// 8 -
         /// 9 -
@@ -179,6 +179,10 @@ public class CargaService {
             /// verificar se é carga de mapeamento
             DataModelUniprot dataModelUniprot = new DataModelUniprot(carga);
             if (carga.validado(dataModelUniprot.validar(5) && !dataModelUniprot.asProteinas().isEmpty()).getValidado()) return;
+
+            /// verificar se é carga de backup
+            DataModelRecover dataModelRecover = new DataModelRecover(carga);
+            if (carga.validado(dataModelRecover.validar(6) && !dataModelRecover.asProteinas().isEmpty()).getValidado()) return;
 
             carga.setLinhas(0);
             carga.setDestino(Destino.OUTRO);

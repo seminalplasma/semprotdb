@@ -1,13 +1,7 @@
 <template>
   <div class="p-5 text-center main px-4">
     <span class="mt-5" style="position: absolute">
-      <img
-        width="300px"
-        style="margin-left: -150px; margin-top: -4rem"
-        v-if="versao && versao.imagem"
-        v-bind:src="'data:' + versao.imagemContentType + ';base64,' + versao.imagem"
-      />
-      <img width="300px" style="margin-left: -150px; margin-top: -4rem" v-else src="/content/images/logo-semprotdb.png" />
+      <img width="400px" style="margin-left: -200px; margin-top: -4rem" src="/content/images/semprot-logo2.svg" />
     </span>
 
     <div class="d-none d-md-block w-100 container text-center pt-5">
@@ -51,6 +45,10 @@
       <!--      </button>-->
       <!--    </div>-->
     </div>
+  </div>
+
+  <div class="row content-center mt-4">
+    <img width="300px" v-if="versao && versao.imagem" v-bind:src="'data:' + versao.imagemContentType + ';base64,' + versao.imagem" />
   </div>
 
   <div class="home row">

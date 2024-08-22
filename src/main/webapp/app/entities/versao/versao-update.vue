@@ -116,7 +116,7 @@
                 <span class="pull-left">{{ versao.imagemContentType }}, {{ byteSize(versao.imagem) }}</span>
                 <button
                   type="button"
-                  v-on:click="clearInputImage('imagem', 'imagemContentType', 'file_imagem')"
+                  v-on:click="clearInputImage2('imagem', 'imagemContentType', 'file_imagem')"
                   class="btn btn-secondary btn-xs pull-right"
                 >
                   <font-awesome-icon icon="times"></font-awesome-icon>

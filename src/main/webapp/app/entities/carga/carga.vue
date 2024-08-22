@@ -115,7 +115,7 @@
             <td class="text-right text-monospace">{{ carga.linhas }}</td>
             <!--            <td>{{ carga.checksum }}</td>-->
             <td>
-              <div v-if="carga.versao">
+              <div v-if="carga.versao && carga.versao.id">
                 <router-link :to="{ name: 'VersaoView', params: { versaoId: carga.versao.id } }">{{ carga.versao.nome }} </router-link>
               </div>
             </td>

@@ -9,5 +9,7 @@ export enum Destino {
 
   DOWNLOAD = 'DOWNLOAD',
 
+  RESTORE = 'RESTORE',
+
   OUTRO = 'OUTRO',
 }

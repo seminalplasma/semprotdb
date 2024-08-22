@@ -37,9 +37,9 @@ public class RowPtn extends Proteina {
         if (peso.length() > 200) peso = peso.substring(0, 200);
 
         BioDB db = BioDBParser.acesso2db(id);
-        nome(ptna.toUpperCase());
+        nome(id);
         massa(peso);
-        descricao(ptna);
+        descricao(("" + ptna).trim());
         addRecurso(new Recurso().uid(db == BioDB.OUTRO ? _id : id).db(db));
         if (referencia != null) addReferencia(referencia);
         gene(new Gene().nome(gene).organismo(organismo));
@@ -55,7 +55,7 @@ public class RowPtn extends Proteina {
         if (s == null) return o;
         s = s.strip().replaceAll("\\s+", " ");
         s = up ? s.toUpperCase() : s;
-        return s.length() > 0 ? s : o;
+        return !s.isEmpty() ? s : o;
     }
 
     public static int join(Iterable<Proteina> dados, Iterable<Proteina> map) {

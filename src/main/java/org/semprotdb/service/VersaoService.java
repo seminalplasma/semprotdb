@@ -14,11 +14,8 @@ import org.semprotdb.domain.enumeration.Status;
 import org.semprotdb.repository.*;
 import org.semprotdb.service.criteria.CargaCriteria;
 import org.semprotdb.service.criteria.ProteinaCriteria;
-import org.semprotdb.util.BioDBParser;
-import org.semprotdb.util.DataModelTabela;
-import org.semprotdb.util.DataModelUniprot;
+import org.semprotdb.util.*;
 import org.semprotdb.util.FileIO.TSV;
-import org.semprotdb.util.RowPtn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -252,6 +249,23 @@ public class VersaoService {
                 return;
             }
 
+            ///verificar se tem arquivo de restaurar
+            Set<Carga> restaurar = cargas.stream().filter(c -> c.getDestino() == Destino.RESTORE).collect(Collectors.toSet());
+            if (!restaurar.isEmpty()) {
+                log.info("Restaurando versao com {} cargas", restaurar.size());
+                for (Carga c : restaurar) {
+                    c = cargaRepository.findById(c.getId()).orElseThrow(() -> new Exception("Carga invalida"));
+                    log.info("Restaurando carga {}", c);
+                    storePtnas(new DataModelRecover(c).asProteinas(), versao, false);
+                }
+                log.info("Terminou restauracao das {} cargas", restaurar.size());
+                status = Status.PROCESSADO;
+                log.info("Terminou restauracao VERSAO {}", versao.identfy());
+                makeDownload(versao);
+                versao.setLog("Versao restaurada com sucesso.");
+                return;
+            }
+
             /// verificar se tem arquivos de dados
             Set<Carga> carga_dados = cargas.stream().filter(c -> c.getDestino() == Destino.DADOS).collect(Collectors.toSet());
             if (carga_dados.isEmpty()) {
@@ -318,7 +332,7 @@ public class VersaoService {
                 versao.addLog("ERRO: Falhou ao juntar os dados. Nenhum ID da carga corresponde a algum ID nos arquivos de mapeamento");
             } else versao.addLog("Total " + at + " proteinas atualizadas com dados do uniprot.");
 
-            int total = storePtnas(proteinas, versao);
+            int total = storePtnas(proteinas, versao, true);
             status = Status.PROCESSADO;
             versao.addLog("Terminou o processamento das " + total + " proteinas, " + "Gerando o arquivo de download dessa nova versao.");
 
@@ -369,7 +383,7 @@ public class VersaoService {
         versao.setLog("Total " + ids.size() + " ids tipo " + db + " exportados.");
     }
 
-    private int storePtnas(List<Proteina> ptns, Versao versao) {
+    private int storePtnas(List<Proteina> ptns, Versao versao, boolean extend) throws Exception {
         log.info("Iniciou persistir {} proteinas da versao {} {}", ptns.size(), versao.getId(), versao.getNome());
 
         HashMap<String, Referencia> R = new HashMap<>();
@@ -386,14 +400,21 @@ public class VersaoService {
         organismoRepository.findAll().forEach(o -> O.put(o.getNome(), o));
         log.info("Total {} organismos serao reusadas de versoes anteriores", O.size());
 
-        recursoRepository.findAll().forEach(x -> X.put(x.getUid(), x));
+        recursoRepository.findAllLight(Pageable.unpaged()).getContent().forEach(x -> X.put(x.getUid(), x));
         log.info("Total {} recursos serao reusadas de versoes anteriores", X.size());
 
         AtomicInteger keg = new AtomicInteger();
         AtomicInteger stg = new AtomicInteger();
+        int invalidas = 0;
+        int puladas = 0;
 
         for (Proteina p : ptns) {
-            String p_id = p.getGene().getOrganismo().getNome() + " > " + p.getGene().getNome() + " > " + p.getNome();
+            String p_id = p.getNome(); /// p.getGene().getOrganismo().getNome() + " > " + p.getGene().getNome() + " > " + p.getNome();
+
+            if (p_id == null || p_id.isEmpty() || p_id.equals(BioDBParser.NO_ID)) {
+                log.warn("Total {} Proteina com ID invalido {} => {} ", invalidas++, p_id, p.getNome());
+                continue;
+            }
 
             if (
                 p.getCuradoria() != null &&
@@ -406,37 +427,41 @@ public class VersaoService {
                 C.put(p.getCuradoria().getEmail(), c);
             }
 
-            if (!P.containsKey(p_id)) P.put(
-                p_id,
-                proteinaRepository.save(
-                    new Proteina()
-                        .nome(p.getNome())
-                        .massa(p.getMassa())
-                        .tamanho(p.getTamanho())
-                        .descricao(p.getDescricao())
-                        .versao(versao)
-                        .curadoria(
-                            p.getCuradoria() != null && C.get(p.getCuradoria().getEmail()) != null
-                                ? C.get(p.getCuradoria().getEmail())
-                                : null
-                        )
-                )
-            );
-            else log.info("Proteina REDUNDANTE encontrada nas cargas {}", p);
-
             Proteina PROTEINA = P.get(p_id);
-
-            Referencia r = p.getReferencias().iterator().next();
-            if (R.containsKey(r.getCitacao())) {
-                if (PROTEINA.getReferencias().stream().noneMatch(_r -> _r.getCitacao().equals(r.getCitacao()))) PROTEINA.addReferencia(
-                    R.get(r.getCitacao())
+            if (PROTEINA == null) {
+                P.put(
+                    p_id,
+                    proteinaRepository.save(
+                        new Proteina()
+                            .nome(p.getNome())
+                            .massa(p.getMassa())
+                            .tamanho(p.getTamanho())
+                            .descricao(p.getDescricao())
+                            .versao(versao)
+                            .curadoria(
+                                p.getCuradoria() != null && C.get(p.getCuradoria().getEmail()) != null
+                                    ? C.get(p.getCuradoria().getEmail())
+                                    : null
+                            )
+                    )
                 );
             } else {
-                Referencia _r = referenciaRepository.save(new Referencia().citacao(r.getCitacao()).link(r.getLink()));
-                R.put(r.getCitacao(), _r);
-                PROTEINA.addReferencia(_r);
-                log.info("NOVA referencia {}", _r);
+                /// ja tem essa ptna
+                /// nome deve ser o menor
+                PROTEINA.setNome(
+                    ((p.getNome().length() > 1) && (p.getDescricao().length() < PROTEINA.getDescricao().length()))
+                        ? p.getNome()
+                        : PROTEINA.getNome()
+                );
+                /// referencia deve ser add
+                handleREF(p, R, PROTEINA);
+                proteinaRepository.save(PROTEINA);
+                puladas++;
+                continue;
             }
+
+            PROTEINA = P.get(p_id);
+            handleREF(p, R, PROTEINA);
 
             Organismo o = p.getGene().getOrganismo();
             if (!O.containsKey(o.getNome())) {
@@ -464,10 +489,25 @@ public class VersaoService {
             o = O.get(o.getNome());
 
             if (PROTEINA.getGene() == null) {
+                if (p.getGene() == null) throw new Exception("Proteina " + p + " sem gene.");
                 Gene g = p.getGene();
                 String g_id = g.getOrganismo().getNome() + " > " + g.getNome();
                 if (!G.containsKey(g_id)) {
-                    g = geneRepository.save(new Gene().nome(g.getNome()).organismo(o));
+                    String _c = null;
+                    if (g.getCuradoria() != null) {
+                        String curador = g.getCuradoria().getEmail();
+                        curador = curador == null ? "" : curador.trim();
+                        if (curador.length() > 2) {
+                            _c = curador = versao.getNome() + "_" + p.getCuradoria().getEmail().trim();
+                            if (!C.containsKey(curador)) {
+                                C.put(
+                                    p.getCuradoria().getEmail(),
+                                    curadoriaRepository.save(new Curadoria().email(curador).data(new Date().toInstant()))
+                                );
+                            }
+                        }
+                    }
+                    g = geneRepository.save(new Gene().nome(g.getNome()).organismo(o).curadoria(C.get(_c)));
                     G.put(g_id, g);
                 } else {
                     g = G.get(g_id);
@@ -485,18 +525,27 @@ public class VersaoService {
             p.setGene(PROTEINA.getGene());
 
             Set<Recurso> recursos = p.getRecursos();
-            recursos.addAll(Arrays.stream(BioDBParser.recursos2recursos(p)).toList());
-            recursos
-                .stream()
-                .filter(Objects::nonNull)
-                .forEach(recurso -> {
+
+            if (extend) recursos.addAll(Arrays.stream(BioDBParser.recursos2recursos(p)).toList());
+
+            for (Recurso recurso : recursos) {
+                if (recurso != null) {
                     if (recurso.getDb() != BioDB.OUTRO) {
                         Recurso _r = X.get(recurso.getUid());
                         if (_r == null) {
                             _r = new Recurso()
                                 .uid(recurso.getUid())
                                 .db(recurso.getDb())
-                                .link(recurso.getLink() == null ? BioDBParser.recurso2link(recurso) : recurso.getLink());
+                                .link(
+                                    recurso.getLink() == null
+                                        ? BioDBParser.recurso2link(
+                                            recurso,
+                                            p.getGene().getOrganismo().getSigla() == null
+                                                ? null
+                                                : p.getGene().getOrganismo().getSigla().toLowerCase()
+                                        )
+                                        : recurso.getLink()
+                                );
                             _r = recursoRepository.save(_r);
                             X.put(recurso.getUid(), _r);
                             if (_r.getDb() == BioDB.KEGG) keg.getAndIncrement();
@@ -504,7 +553,8 @@ public class VersaoService {
                         }
                         PROTEINA.addRecurso(_r);
                     }
-                });
+                }
+            }
 
             if ((P.size() < 100) || ((P.size() % 100) == 0)) log.debug(
                 "Status {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS ",
@@ -519,8 +569,8 @@ public class VersaoService {
         }
 
         log.info("Terminou com {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS ", R.size(), O.size(), G.size(), P.size(), X.size());
-
-        log.info("Estendeu RECS: {} => STRING {} KEGG {} encontrados", X.size(), stg.get(), keg.get());
+        log.info("Total {} Proteinas redundantes", puladas);
+        log.info("{} RECS: {} => STRING {} KEGG {} encontrados", extend ? "Extend" : "", X.size(), stg.get(), keg.get());
 
         versao.addLog(
             "Tentando persistir " +
@@ -536,6 +586,21 @@ public class VersaoService {
             " proteinas."
         );
         return P.size();
+    }
+
+    private void handleREF(Proteina p, HashMap<String, Referencia> R, Proteina PROTEINA) throws Exception {
+        if (p.getReferencias().isEmpty()) throw new Exception("Proteina " + p + " sem referencias.");
+        Referencia r = p.getReferencias().iterator().next();
+        if (R.containsKey(r.getCitacao())) {
+            if (PROTEINA.getReferencias().stream().noneMatch(_r -> _r.getCitacao().equals(r.getCitacao()))) PROTEINA.addReferencia(
+                R.get(r.getCitacao())
+            );
+        } else {
+            Referencia _r = referenciaRepository.save(new Referencia().citacao(r.getCitacao()).link(r.getLink()));
+            R.put(r.getCitacao(), _r);
+            PROTEINA.addReferencia(_r);
+            log.info("NOVA referencia {}", _r);
+        }
     }
 
     private Carga makeDownload(Versao versao) throws IOException {
@@ -566,6 +631,8 @@ public class VersaoService {
                 String gene = P.getGene().getNome();
                 String recursos = String.join(";", P.getRecursos().stream().sorted().map(Recurso::getUid).toList());
                 String curador = P.getCuradoria() == null ? "X" : P.getCuradoria().getId().toString();
+                curador += P.getGene().getCuradoria() == null ? "" : ("G" + P.getGene().getCuradoria().getId().toString());
+
                 linhas.add(
                     ++cont +
                     "\t" +
@@ -590,7 +657,7 @@ public class VersaoService {
                 );
                 if ((linhas.size() < 100) || ((linhas.size() % 100) == 0)) log.debug(
                     "TOTAL {} registros processados de {} proteinas para o TSV.",
-                    linhas.size(),
+                    linhas.size() - 1,
                     pg.getTotalElements()
                 );
             }

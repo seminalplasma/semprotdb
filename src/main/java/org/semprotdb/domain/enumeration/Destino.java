@@ -9,5 +9,6 @@ public enum Destino {
     UPLOAD,
     MAPEAR,
     DOWNLOAD,
+    RESTORE,
     OUTRO,
 }

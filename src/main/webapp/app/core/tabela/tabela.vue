@@ -150,21 +150,21 @@
                 :title="`${proteina.id}.${proteina.versao?.numero}`"
               ></b-tooltip>
             </td>
-            <td class="align-middle text-center">
+            <td class="align-middle text-center text-dark">
               <em> {{ proteina.gene?.organismo?.apelido }}</em>
             </td>
-            <td class="align-middle">
+            <td class="align-middle text-dark">
               <u>
                 <ins
                   ><small style="letter-spacing: -0.05rem">{{ proteina.gene?.nome }}</small></ins
                 >
               </u>
             </td>
-            <td class="align-middle text-truncate" style="max-width: 20rem">
+            <td class="align-middle text-truncate text-dark" style="max-width: 20rem">
               <strong>{{ proteina.descricao }}</strong>
             </td>
-            <td class="align-middle text-right">{{ proteina.tamanho ? proteina.tamanho + 'aa' : 'Ø' }}</td>
-            <td class="align-middle text-center">{{ proteina.massa === 'UNDEFINED' ? 'Ø' : proteina.massa }}</td>
+            <td class="align-middle text-right text-dark">{{ proteina.tamanho ? proteina.tamanho + 'aa' : 'Ø' }}</td>
+            <td class="align-middle text-center text-dark">{{ proteina.massa === 'UNDEFINED' ? 'Ø' : proteina.massa }}</td>
 
             <td class="align-middle text-center">
               <template v-if="proteina.recursos && proteina.recursos.length > 0">
@@ -180,10 +180,22 @@
 
             <td class="align-middle text-center">
               <template v-if="proteina.referencias && proteina.referencias.length > 0">
-                <a class="text-capitalize" :href="proteina.referencias[0].link + '?'">{{ proteina.referencias[0].citacao }}</a>
-                <span v-if="proteina.referencias.length > 1" class="badge bg-info float-md-right">
-                  +{{ proteina.referencias.length - 1 }}
-                </span>
+                <a
+                  v-for="(referencia, idx) in proteina.referencias.sort(r => r.ano)"
+                  :href="referencia.link + '?'"
+                  class="autores text-black-50"
+                  target="_blank"
+                >
+                  {{ referencia.autores ?? referencia.citacao }}, {{ referencia.ano }}
+                  {{ proteina.referencias.length > 1 && idx + 1 < proteina.referencias.length ? ' • ' : '' }}
+                </a>
+
+                <!--                <a -->
+                <!--                  class="text-capitalize" -->
+                <!--                  :href="proteina.referencias[0].link + '?'">{{ proteina.referencias[0].citacao }}</a>-->
+                <!--                <span v-if="proteina.referencias.length > 1" class="badge bg-info float-md-right">-->
+                <!--                  +{{ proteina.referencias.length - 1 }}-->
+                <!--                </span>-->
               </template>
             </td>
           </tr>
@@ -230,5 +242,11 @@
   </div>
   <div v-else>Loading version...</div>
 </template>
+
+<style scoped>
+.autores {
+  font-size: xx-small;
+}
+</style>
 
 <script lang="ts" src="./tabela.component.ts"></script>

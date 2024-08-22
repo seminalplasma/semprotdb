@@ -44,15 +44,17 @@ public class BioDBParser {
         BioDB db = acesso2db(acesso);
         if (db == null || db == BioDB.OUTRO) return null;
         Recurso r = new Recurso().uid(acesso).db(db);
-        r.setLink(recurso2link(r));
+        r.setLink(recurso2link(r, null));
         return r;
     }
 
-    public static String recurso2link(final Recurso recurso) {
+    public static String recurso2link(final Recurso recurso, final String sigla) {
         return switch (recurso.getDb()) {
             case GI -> "https://www.ncbi.nlm.nih.gov/gene/" + recurso.getUid(); ////286862
             case REFSEQ -> "https://www.ncbi.nlm.nih.gov/protein/" + recurso.getUid(); ///NP_777218.2
             case UNIPROT -> "https://www.uniprot.org/uniprotkb/" + recurso.getUid() + "/entry"; ///A7Z057
+            case KEGG -> sigla == null ? null : ("https://www.genome.jp/dbget-bin/www_bget?" + sigla + ":" + recurso.getUid());
+            case STRINGDB -> "https://string-db.org/cgi/network?identifier=" + recurso.getUid();
             default -> null;
         };
     }

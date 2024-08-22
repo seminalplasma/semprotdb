@@ -271,7 +271,7 @@
                 v-for="versaoOption in versaos"
                 :key="versaoOption.id"
               >
-                {{ versaoOption.id }}
+                {{ versaoOption.id }} - {{ versaoOption.nome }}
               </option>
             </select>
           </div>

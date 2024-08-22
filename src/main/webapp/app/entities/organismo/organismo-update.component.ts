@@ -106,7 +106,7 @@ export default defineComponent({
       }
     },
 
-    clearInputImage(field, fieldContentType, idInput): void {
+    clearInputImage2(field, fieldContentType, idInput): void {
       if (this.organismo && field && fieldContentType) {
         if (Object.prototype.hasOwnProperty.call(this.organismo, field)) {
           this.organismo[field] = null;

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface RecursoRepository extends JpaRepository<Recurso, Long> {
+public interface RecursoRepository extends JpaRepository<Recurso, Long>, RecursoDTORepository {
     List<Recurso> findAllByProteinasIsEmpty();
 
     Optional<Recurso> findByUid(String uid);

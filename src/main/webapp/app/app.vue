@@ -28,7 +28,7 @@
 }
 
 .conteudo {
-  background-image: url('/content/images/background.png');
+  //background-image: url('/content/images/background.png');
   background-color: #f8f8f8;
   background-repeat: no-repeat;
 }

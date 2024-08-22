@@ -10,7 +10,6 @@ import { useAlertService } from '@/shared/alert/alert.service';
 
 import { type IVersao, Versao } from '@/shared/model/versao.model';
 import { Status } from '@/shared/model/enumerations/status.model';
-import type AccountService from '@/account/account.service';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
@@ -127,7 +126,12 @@ export default defineComponent({
       }
     },
 
-    clearInputImage(field, fieldContentType, idInput): void {
+    teste(): void {
+      console.log('removendOKo...');
+    },
+
+    clearInputImage2(field, fieldContentType, idInput): void {
+      console.log('removendo...');
       if (this.versao && field && fieldContentType) {
         if (Object.prototype.hasOwnProperty.call(this.versao, field)) {
           this.versao[field] = null;

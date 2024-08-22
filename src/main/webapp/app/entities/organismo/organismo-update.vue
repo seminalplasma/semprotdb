@@ -65,7 +65,7 @@
                 <span class="pull-left">{{ organismo.silhuetaContentType }}, {{ byteSize(organismo.silhueta) }}</span>
                 <button
                   type="button"
-                  v-on:click="clearInputImage('silhueta', 'silhuetaContentType', 'file_silhueta')"
+                  v-on:click="clearInputImage2('silhueta', 'silhuetaContentType', 'file_silhueta')"
                   class="btn btn-secondary btn-xs pull-right"
                 >
                   <font-awesome-icon icon="times"></font-awesome-icon>

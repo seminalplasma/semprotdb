@@ -129,10 +129,10 @@
 }
 .app-loading .lds-pacman > div:nth-child(1) div {
   position: absolute;
-  top: 97px;
-  left: -8px;
-  width: 24px;
-  height: 10px;
+  top: 85px;
+  left: -12px;
+  width: 40px;
+  height: 40px;
   background-image: url('/content/images/logo-semprotdb.png');
   background-size: contain;
   -webkit-animation: lds-pacman-3 1s linear infinite;

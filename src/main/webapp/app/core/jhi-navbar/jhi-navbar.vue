@@ -218,10 +218,11 @@
 
 .logo-img {
   height: 100%;
-  background: url('/content/images/logo-semprotdb.png') no-repeat center center;
+  background: url('/content/images/semprot-logo.png') no-repeat center center;
   background-size: contain;
   width: 100%;
   filter: drop-shadow(0 0 0.05rem white);
   margin: 0 5px;
+  border-radius: 0.6rem;
 }
 </style>
