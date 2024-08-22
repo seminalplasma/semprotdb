@@ -285,10 +285,11 @@ export default defineComponent({
         /// modo ptna ou gene  ptna.nome contain or gene nome contais
         ///curl '... api/proteinas?nome.contains=AQN&geneNome.contains=AQN&qors=nome,geneNome'
         this.filters = {
+          'nome.contains': this.query,
           'descricao.contains': this.query,
           'geneNome.contains': this.query,
-          qors: 'descricao,geneNome',
-          qfirst: 'descricao,geneNome',
+          qors: 'nome,descricao,geneNome',
+          qfirst: 'nome,descricao,geneNome',
         };
       }
 
