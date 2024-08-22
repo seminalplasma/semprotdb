@@ -288,7 +288,7 @@ export default defineComponent({
           'descricao.contains': this.query,
           'geneNome.contains': this.query,
           qors: 'descricao,geneNome',
-          qfirst: 'nodescricaome,geneNome',
+          qfirst: 'descricao,geneNome',
         };
       }
 
