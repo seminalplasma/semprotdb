@@ -55,7 +55,7 @@ public class DataModelUniprot extends AbstractDataModel {
             String gene = gene_idx >= 0 && gene_idx < l.length ? l[gene_idx] : null;
             String massa = mass_idx >= 0 && mass_idx < l.length ? l[mass_idx] : null;
 
-            Proteina p = new RowPtn("[" + carga.getId() + "]" + carga.getNome(), ptna, gene, massa);
+            Proteina p = new RowPtn("[" + carga.getId() + "]" + carga.getNome(), id, ptna, gene, massa, null, null, null);
 
             p.addRecurso(new Recurso().uid(acesso).db(db));
 

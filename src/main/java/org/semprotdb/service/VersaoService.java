@@ -479,7 +479,7 @@ public class VersaoService {
                             )
                     )
                 );
-                log.info("{} > NOVA proteina {}", P.size(), p_id);
+                log.debug("{} > NOVA proteina {}", P.size(), p_id);
             } else {
                 /// ja tem essa ptna
                 /// nome deve ser o menor
@@ -488,7 +488,7 @@ public class VersaoService {
                         ? p.getDescricao()
                         : PROTEINA.getDescricao()
                 );
-                log.debug("{} descricao: ", p_id, p.getDescricao());
+                log.debug("{} descricao: {}", p_id, p.getDescricao());
                 /// referencia deve ser add
                 handleREF(p, R, PROTEINA);
                 proteinaRepository.save(PROTEINA);

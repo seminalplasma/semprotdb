@@ -47,9 +47,9 @@ public class RowPtn extends Proteina {
     }
 
     /// essa funcao é para ser usada na importacao da ptna do uniprot map ids
-    public RowPtn(String carga, String ptna, String gene, String peso) throws Exception {
-        this(carga, null, ptna, gene, peso, null, null, null);
-    }
+    //    public RowPtn(String carga, String ptna, String gene, String peso) throws Exception {
+    //        this(carga, null, ptna, gene, peso, null, null, null);
+    //    }
 
     private static String limpar(String s, String o, boolean up) {
         if (s == null) return o;
@@ -73,14 +73,14 @@ public class RowPtn extends Proteina {
             /// se a ptna nao tem nome vem o acesso
             uids.add(d.getNome());
 
-            uids.addAll(d.getRecursos().stream().filter(r -> r.getDb() != BioDB.OUTRO).map(r -> r.getUid()).collect(Collectors.toSet()));
+            uids.addAll(d.getRecursos().stream().filter(r -> r.getDb() != BioDB.OUTRO).map(Recurso::getUid).collect(Collectors.toSet()));
 
             for (String uid : uids) {
                 Proteina p_uniprot = M.get(uid);
                 /// resgatar do uniprot
                 if (p_uniprot != null) {
                     /// nome da ptna
-                    if (d.getNome().equals(uid)) d.setNome(p_uniprot.getNome());
+                    if (d.getDescricao().length() < 3) d.setDescricao(p_uniprot.getDescricao());
 
                     /// nome do gene
                     if (d.getGene().getNome().equals(NO_GENE)) d.getGene().setNome(p_uniprot.getGene().getNome());
