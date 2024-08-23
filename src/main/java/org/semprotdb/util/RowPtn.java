@@ -80,7 +80,7 @@ public class RowPtn extends Proteina {
                 /// resgatar do uniprot
                 if (p_uniprot != null) {
                     /// nome da ptna
-                    if (d.getDescricao().length() < 3) d.setDescricao(p_uniprot.getDescricao());
+                    if (p_uniprot.getDescricao().length() > 3) d.setDescricao(p_uniprot.getDescricao());
 
                     /// nome do gene
                     if (d.getGene().getNome().equals(NO_GENE)) d.getGene().setNome(p_uniprot.getGene().getNome());
