@@ -102,9 +102,9 @@
               <span v-text="t$('Gene')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'GeneNome'"></jhi-sort-indicator>
             </th>
-            <th class="align-middle" scope="row" v-on:click="changeOrder('nome')">
+            <th class="align-middle" scope="row" v-on:click="changeOrder('descricao')">
               Protein
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'nome'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'descricao'"></jhi-sort-indicator>
             </th>
             <th class="align-middle text-center" scope="row" v-on:click="changeOrder('tamanho')">
               <span v-text="t$('semprotdbApp.proteina.tamanho')"></span>

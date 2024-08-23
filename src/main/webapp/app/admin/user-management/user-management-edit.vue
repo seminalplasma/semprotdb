@@ -130,7 +130,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label v-text="t$('userManagement.profiles')"></label>
+            <label v-text="t$('userManagement.profiles')"></label> (Os admins tambem precisam ter ROLE_USER)
             <select class="form-control" multiple name="authority" v-model="userAccount.authorities">
               <option v-for="authority of authorities" :value="authority" :key="authority">{{ authority }}</option>
             </select>
