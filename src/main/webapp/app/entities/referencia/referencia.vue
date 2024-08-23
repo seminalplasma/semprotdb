@@ -36,10 +36,10 @@
               <span v-text="t$('semprotdbApp.referencia.citacao')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'citacao'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('link')">
-              <span v-text="t$('semprotdbApp.referencia.link')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'link'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('link')">-->
+            <!--              <span v-text="t$('semprotdbApp.referencia.link')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'link'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row" v-on:click="changeOrder('ano')">
               <span v-text="t$('semprotdbApp.referencia.ano')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'ano'"></jhi-sort-indicator>
@@ -56,8 +56,10 @@
             <td>
               <router-link :to="{ name: 'ReferenciaView', params: { referenciaId: referencia.id } }">{{ referencia.id }}</router-link>
             </td>
-            <td>{{ referencia.citacao }}</td>
-            <td>{{ referencia.link }}</td>
+            <td>
+              <a :href="referencia.link ?? '?'" target="_blank">{{ referencia.citacao }}</a>
+            </td>
+            <!--            <td>{{ referencia.link }}</td>-->
             <td>{{ referencia.ano }}</td>
             <td>{{ referencia.autores }}</td>
             <td class="text-right">

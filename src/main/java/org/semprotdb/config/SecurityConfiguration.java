@@ -76,16 +76,17 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern("/api/account/reset-password/finish")).permitAll()
                     .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
 
-
                     // Permitir o acesso publico à API
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/versaos/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/referencias/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/organismos/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/genes/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/proteinas/**")).permitAll()
-//                    .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/recursos/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/cargas/**")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/db-configs/**")).permitAll()
+
+                    // Permitir postagem de feedbacks anonimo
+                    .requestMatchers(mvc.pattern(HttpMethod.POST,"/feedbacks")).permitAll()
 
                     // Bloquear edicao para nao admins
                     .requestMatchers(mvc.pattern("/api/versaos/**")).hasAuthority(AuthoritiesConstants.ADMIN)

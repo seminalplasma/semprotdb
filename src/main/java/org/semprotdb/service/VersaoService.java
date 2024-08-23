@@ -445,7 +445,7 @@ public class VersaoService {
             String p_id = p.getNome(); /// p.getGene().getOrganismo().getNome() + " > " + p.getGene().getNome() + " > " + p.getNome();
 
             if (p_id == null || p_id.isEmpty() || p_id.equals(BioDBParser.NO_ID)) {
-                log.warn("Total {} Proteina com ID invalido {} => {} ", invalidas++, p_id, p.getDescricao());
+                log.warn("Total {} Proteina com ID invalido {} => {} ", ++invalidas, p_id, p.getDescricao());
                 continue;
             }
 

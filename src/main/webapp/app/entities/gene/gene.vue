@@ -31,10 +31,10 @@
               <span v-text="t$('semprotdbApp.gene.nome')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'nome'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('descricao')">
-              <span v-text="t$('semprotdbApp.gene.descricao')"></span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'descricao'"></jhi-sort-indicator>
-            </th>
+            <!--            <th scope="row" v-on:click="changeOrder('descricao')">-->
+            <!--              <span v-text="t$('semprotdbApp.gene.descricao')"></span>-->
+            <!--              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'descricao'"></jhi-sort-indicator>-->
+            <!--            </th>-->
             <th scope="row" v-on:click="changeOrder('curadoria.id')">
               <span v-text="t$('semprotdbApp.gene.curadoria')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'curadoria.id'"></jhi-sort-indicator>
@@ -52,7 +52,7 @@
               <router-link :to="{ name: 'GeneView', params: { geneId: gene.id } }">{{ gene.id }}</router-link>
             </td>
             <td>{{ gene.nome }}</td>
-            <td>{{ gene.descricao }}</td>
+            <!--            <td>{{ gene.descricao }}</td>-->
             <td>
               <div v-if="gene.curadoria?.id">
                 <router-link :to="{ name: 'CuradoriaView', params: { curadoriaId: gene.curadoria.id } }">{{

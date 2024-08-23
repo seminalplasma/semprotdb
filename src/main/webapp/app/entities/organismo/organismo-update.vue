@@ -99,7 +99,7 @@
               v-model="organismo.silhuetaContentType"
             />
           </div>
-          <div class="form-group">
+          <div class="form-group d-none">
             <label class="form-control-label" v-text="t$('semprotdbApp.organismo.icone')" for="organismo-icone"></label>
             <input
               type="text"
@@ -123,7 +123,7 @@
               v-model="v$.pos.$model"
             />
           </div>
-          <div class="form-group">
+          <div class="form-group d-none">
             <label class="form-control-label" v-text="t$('semprotdbApp.organismo.imagem')" for="organismo-imagem"></label>
             <input
               type="text"
@@ -135,7 +135,7 @@
               v-model="v$.imagem.$model"
             />
           </div>
-          <div class="form-group">
+          <div class="form-group d-none">
             <label class="form-control-label" v-text="t$('semprotdbApp.organismo.descricao')" for="organismo-descricao"></label>
             <input
               type="text"
@@ -157,7 +157,7 @@
             id="save-entity"
             data-cy="entityCreateSaveButton"
             :disabled="v$.$invalid || isSaving"
-            class="btn btn-primary"
+            class="btn btn-primary mx-2"
           >
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
           </button>
