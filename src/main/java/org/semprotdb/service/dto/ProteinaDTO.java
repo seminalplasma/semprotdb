@@ -31,6 +31,7 @@ public class ProteinaDTO extends Proteina implements IDTO<ProteinaDTO> {
         Integer versaoNUMERO,
         Long geneID,
         String geneNOME,
+        String geneDESCRICAO,
         Long gene_curadoriaID,
         Long gene_organismoID,
         String gene_organismoAPELIDO,
@@ -42,7 +43,9 @@ public class ProteinaDTO extends Proteina implements IDTO<ProteinaDTO> {
         setDescricao(descricao);
         setCuradoria(new CuradoriaDTO(curadoriaID));
         setVersao(new VersaoDTO.VersaoDTOmin(versaoID, versaoNOME, versaoNUMERO));
-        setGene(new GeneDTO(geneID, geneNOME, gene_curadoriaID, gene_organismoID, gene_organismoAPELIDO, gene_organismoSIGLA));
+        setGene(
+            new GeneDTO(geneID, geneNOME, geneDESCRICAO, gene_curadoriaID, gene_organismoID, gene_organismoAPELIDO, gene_organismoSIGLA)
+        );
     }
 
     @Override
@@ -64,6 +67,7 @@ public class ProteinaDTO extends Proteina implements IDTO<ProteinaDTO> {
             versao.get("numero"),
             gene.get("id"),
             gene.get("nome"),
+            gene.get("descricao"),
             gene_curadoria.get("id"),
             organismo.get("id"),
             organismo.get("apelido"),

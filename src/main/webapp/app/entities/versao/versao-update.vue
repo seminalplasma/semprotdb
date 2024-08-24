@@ -13,6 +13,10 @@
             <input type="text" class="form-control" id="id" name="id" v-model="versao.id" readonly />
           </div>
 
+          <b-alert variant="warning" show
+            >Nao recomendo <b>alterar o nome ou numero</b> apos a versao estar disponivel para o usuario.</b-alert
+          >
+
           <!--          NOME-->
           <div class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.versao.nome')" for="versao-nome"></label>

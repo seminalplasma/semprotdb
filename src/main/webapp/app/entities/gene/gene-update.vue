@@ -12,6 +12,9 @@
             <label for="id" v-text="t$('global.field.id')"></label>
             <input type="text" class="form-control" id="id" name="id" v-model="gene.id" readonly />
           </div>
+
+          <b-alert variant="warning" show>Nao recomendo <b>alterar o nome</b>, use o campo DESCRICAO para ajustar o nome do gene.</b-alert>
+
           <div class="form-group">
             <label class="form-control-label" v-text="t$('semprotdbApp.gene.nome')" for="gene-nome"></label>
             <input

@@ -156,7 +156,7 @@
             <td class="align-middle text-dark">
               <u>
                 <ins
-                  ><small style="letter-spacing: -0.05rem">{{ proteina.gene?.nome }}</small></ins
+                  ><small style="letter-spacing: -0.05rem">{{ proteina.gene?.descricao ?? proteina.gene?.nome }}</small></ins
                 >
               </u>
             </td>

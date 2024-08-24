@@ -6,6 +6,7 @@
           :class="`row justify-content-${organismos.some(z => z.pos?.startsWith(i) && z.pos?.includes('L')) ? 'end' : organismos.some(z => z.pos?.startsWith(i) && z.pos?.includes('C')) ? 'center' : 'between'} my-${organismos
             .filter(z => z.pos?.startsWith(i))
             .map(z => (z.pos + '').split('Y').length - 1)
+            .concat([0])
             .reduce((a, b) => a + b)}`"
           :style="' width: ' + i + '% ; margin-left: ' + (100 - i) / 2 + '%;'"
         >

@@ -17,17 +17,23 @@ public class GeneDTO extends Gene implements IDTO<GeneDTO> {
     @JsonIgnore
     private final Set<Proteina> proteinas = new HashSet<>();
 
-    @JsonIgnore
-    private String descricao;
-
     private CuradoriaDTO curadoria;
     private OrganismoDTO organismo;
 
     public GeneDTO() {}
 
-    public GeneDTO(Long id, String nome, Long curadoriaID, Long organismoID, String organismoAPELIDO, String organismoSIGLA) {
+    public GeneDTO(
+        Long id,
+        String nome,
+        String descricao,
+        Long curadoriaID,
+        Long organismoID,
+        String organismoAPELIDO,
+        String organismoSIGLA
+    ) {
         setId(id);
         setNome(nome);
+        setDescricao(descricao);
         setCuradoria(new CuradoriaDTO(curadoriaID));
         setOrganismo(new OrganismoDTO(organismoID, organismoAPELIDO, organismoSIGLA));
     }
@@ -39,6 +45,7 @@ public class GeneDTO extends Gene implements IDTO<GeneDTO> {
         return new Path[] {
             root.get("id"),
             root.get("nome"),
+            root.get("descricao"),
             curadoria.get("id"),
             organismo.get("id"),
             organismo.get("apelido"),

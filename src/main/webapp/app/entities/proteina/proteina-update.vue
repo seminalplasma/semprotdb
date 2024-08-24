@@ -48,6 +48,10 @@
             </select>
           </div>
 
+          <b-alert variant="warning" show
+            >Nao recomendo <b>alterar o nome</b>, use o campo <code>DESCRICAO</code> para ajustar o nome da proteina.</b-alert
+          >
+
           <!--NOME-->
           <div class="form-group">
             <label class="form-control-label font-weight-bold h6" v-text="t$('semprotdbApp.proteina.nome')" for="proteina-nome"></label>

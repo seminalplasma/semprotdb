@@ -28,9 +28,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BZR0VWWYJD"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
+
       function gtag() {
         dataLayer.push(arguments);
       }
+
       gtag('js', new Date());
 
       gtag('config', 'G-BZR0VWWYJD');
@@ -49,20 +51,20 @@
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
+    <noscript>
+      <iframe
         src="https://www.googletagmanager.com/ns.html?id=GTM-WJJZ8B4W"
         height="0"
         width="0"
         style="display: none; visibility: hidden"
-      ></iframe
-    ></noscript>
+      ></iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <!--[if lt IE 9]>
       <p class="browserupgrade">
-        You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve
-        your experience.
+        You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a>
+        to improve your experience.
       </p>
     <![endif]-->
     <div id="app">
@@ -151,7 +153,17 @@
       // show an error message if the app loading takes more than 4 sec
       window.onload = function () {
         setTimeout(showError, 4000);
+
+        if (localStorage.getItem('semprotdb-cookies') === 'OK') {
+          closemsg();
+        }
       };
+
+      function closemsg() {
+        localStorage.setItem('semprotdb-cookies', 'OK');
+        document.getElementById('msg_cookies').style.display = 'none';
+      }
+
       function showError() {
         var errorElm = document.getElementById('jhipster-error');
         if (errorElm?.style) {
@@ -159,5 +171,17 @@
         }
       }
     </script>
+
+    <div
+      id="msg_cookies"
+      style="position: fixed; left: 5rem; bottom: 2rem; border-radius: 1rem; background-color: #bbcedd; margin: 1rem; padding: 1rem"
+    >
+      <h3><i>🍪 Cookies</i></h3>
+      <h5>Respeitando sua privacidade, esse site <b>utiliza cookies</b> para melhorar sua experiencia.</h5>
+      <p>Ao navegar no site voce concorda com os termos de uso.</p>
+      <p style="text-align: right">
+        <button class="btn btn-outline-dark" onclick="closemsg()">OK</button>
+      </p>
+    </div>
   </body>
 </html>

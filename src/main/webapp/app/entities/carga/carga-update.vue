@@ -276,6 +276,11 @@
             </select>
           </div>
         </div>
+
+        <b-alert variant="warning" :show="isSaving"
+          >Caso demore mais que 1 minuto para validar <b> reinicie a pagina</b> e veja se a carga foi salva.</b-alert
+        >
+
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>

@@ -25,6 +25,11 @@
     <div class="alert alert-warning" v-if="!isFetching && versaos && versaos.length === 0">
       <span v-text="t$('semprotdbApp.versao.home.notFound')"></span>
     </div>
+
+    <b-alert variant="warning" dismissible :show="versaos && versaos.some(v => [Status.CARREGADO, Status.INVALIDO].includes(v.status))"
+      >Processar ou remover uma versao pode <b>levar horas</b> dependendo da quantidade de registros. Consulte os logs.</b-alert
+    >
+
     <div class="table-responsive" v-if="versaos && versaos.length > 0">
       <table class="table table-striped" aria-describedby="versaos">
         <thead>
