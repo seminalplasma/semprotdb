@@ -60,6 +60,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 import { faX } from '@fortawesome/free-solid-svg-icons/faX';
 import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
 import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt';
+import { faCommentDots } from '@fortawesome/free-solid-svg-icons/faCommentDots';
 
 const datetimeFormats: IntlDateTimeFormats = {
   en: {
@@ -178,6 +179,7 @@ export function initFortAwesome(vue) {
     faX,
     faEraser,
     faBolt,
+    faCommentDots,
   );
 }
 

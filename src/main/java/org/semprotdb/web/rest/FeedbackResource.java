@@ -1,13 +1,9 @@
 package org.semprotdb.web.rest;
 
 import jakarta.validation.Valid;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
-import org.hibernate.annotations.Target;
 import org.semprotdb.domain.DBConfig;
 import org.semprotdb.domain.User;
 import org.semprotdb.repository.DBConfigRepository;
@@ -29,7 +25,7 @@ import tech.jhipster.web.util.HeaderUtil;
 //}
 
 @RestController
-@RequestMapping("/feedbacks")
+@RequestMapping("/api/feedbacks")
 @Transactional
 public class FeedbackResource {
 
@@ -57,10 +53,10 @@ public class FeedbackResource {
             .vstring(userService.getUserWithAuthorities().map(User::getEmail).orElse("ANONIMO"));
 
         log.info("Novo feedback: {}", dbc);
-
+        dbc.setHabilitado(true);
         dbc = dBConfigRepository.save(dbc);
         return ResponseEntity.created(new URI("/semprotdb"))
             .headers(HeaderUtil.createEntityCreationAlert("SemprotDB", true, "Feedback", dbc.getId().toString()))
-            .body(dBConfig);
+            .body(dbc);
     }
 }

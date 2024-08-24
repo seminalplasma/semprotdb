@@ -44,10 +44,10 @@ export default class DBConfigService {
     });
   }
 
-  public create(entity: IDBConfig): Promise<IDBConfig> {
+  public create(entity: IDBConfig, feedback = false): Promise<IDBConfig> {
     return new Promise<IDBConfig>((resolve, reject) => {
       axios
-        .post(`${baseApiUrl}`, entity)
+        .post(feedback ? baseApiUrl.replace('db-configs', 'feedbacks') : `${baseApiUrl}`, entity)
         .then(res => {
           resolve(res.data);
         })

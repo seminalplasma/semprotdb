@@ -15,8 +15,20 @@
         <!--        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>-->
         <!--        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>-->
       </ul>
-      <p class="text-center text-body-secondary">&copy; 2024 Semprotdb</p>
+      <p class="text-center text-body-secondary">
+        &copy; 2024 Semprotdb
+        <b-button pill size="sm" variant="light" class="mx-4" v-b-modal.modal-1>
+          <font-awesome-icon icon="comment-dots"></font-awesome-icon>
+        </b-button>
+      </p>
     </footer>
+
+    <b-modal id="modal-1" title="Feedbacks" @ok="feedback">
+      <div class="row m-2">
+        <label for="exampleFormControlTextarea1" class="form-label">Digite aqui sua sugestão</label>
+        <textarea v-model="dbc.vtext" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="..."></textarea>
+      </div>
+    </b-modal>
   </div>
 </template>
 
