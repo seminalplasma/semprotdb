@@ -1,12 +1,14 @@
 <template>
-  <div class="p-5 text-center main px-4">
-    <span class="mt-5" style="position: absolute">
-      <img width="400px" style="margin-left: -200px; margin-top: -4rem" src="/content/images/semprot-logo2.svg" />
-    </span>
-
-    <div class="d-none d-md-block w-100 container text-center pt-5">
-      <template v-for="i in [80, 60, 40]">
-        <div class="row justify-content-between" :style="'min-height: 120px; width: ' + i + '% ; margin-left: ' + (100 - i) / 2 + '%;'">
+  <div class="p-5 text-center main px-4 gota">
+    <div class="d-none d-md-block w-100 container text-center">
+      <template v-for="i in new Array(...new Set(organismos.map(o => o.pos?.split('.')[0]))).sort().reverse()">
+        <div
+          :class="`row justify-content-${organismos.some(z => z.pos?.startsWith(i) && z.pos?.includes('L')) ? 'end' : organismos.some(z => z.pos?.startsWith(i) && z.pos?.includes('C')) ? 'center' : 'between'} my-${organismos
+            .filter(z => z.pos?.startsWith(i))
+            .map(z => (z.pos + '').split('Y').length - 1)
+            .reduce((a, b) => a + b)}`"
+          :style="' width: ' + i + '% ; margin-left: ' + (100 - i) / 2 + '%;'"
+        >
           <template v-for="j in [1, 2]">
             <template v-for="o in organismos">
               <router-link :to="{ path: '/tabela', query: { organismId: o.id } }" v-if="o?.pos?.includes(`${i}.${j}`)">
@@ -19,7 +21,7 @@
                   width="80px"
                 />
                 <br />
-                <i>{{ o.apelido || o.nome }}</i>
+                <i>{{ o.pos }} {{ o.apelido || o.nome }}</i>
               </router-link>
             </template>
           </template>
@@ -100,6 +102,13 @@
 <script lang="ts" src="./home.component.ts"></script>
 
 <style scoped>
+.gota {
+  background-image: url('/content/images/semprot-logo2.svg');
+  background-size: 40%;
+  background-position: top;
+  background-repeat: no-repeat;
+}
+
 .main {
   background-color: rgba(255, 255, 255, 0.81);
   border-radius: 1rem;
