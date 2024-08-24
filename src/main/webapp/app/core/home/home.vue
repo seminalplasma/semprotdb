@@ -14,7 +14,6 @@
               <router-link :to="{ path: '/tabela', query: { organismId: o.id } }" v-if="o?.pos?.includes(`${i}.${j}`)">
                 <img
                   v-if="o.silhueta"
-                  t
                   :class="{ imgorg: 1, 'shadow img-fluid rounded-circle': o?.pos?.includes('R') }"
                   v-bind:src="'data:' + o.silhuetaContentType + ';base64,' + o.silhueta"
                   :alt="o.nome"
