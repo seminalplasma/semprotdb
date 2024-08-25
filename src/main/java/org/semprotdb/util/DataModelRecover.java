@@ -68,18 +68,16 @@ public class DataModelRecover extends AbstractDataModel {
             HashSet<Referencia> refs = new HashSet<>();
             for (String ref : reference.trim().split("&")) {
                 String r = ref.strip();
-                if (
-                    r.length() > 3
-                ) refs.add(new Referencia().citacao(r.toUpperCase()).id(ids.getAndIncrement())); /// YU2010
+                if (r.length() > 3) refs.add(new Referencia().citacao(r.toUpperCase()).id(ids.getAndIncrement())); /// YU2010
             }
 
             String organismo = row.length > oIDX ? row[oIDX] : null;
             if (organismo == null || organismo.trim().isEmpty()) continue;
-            Organismo org = new Organismo().nome(organismo.toUpperCase());
+            Organismo org = new Organismo().nome(organismo.toUpperCase()).apelido(organismo);
 
             String g = row.length > gIDX ? row[gIDX] : null;
             if (g == null || g.trim().isEmpty()) continue;
-            Gene gene = new Gene().nome(g.toUpperCase()).organismo(org);
+            Gene gene = new Gene().nome(g.toUpperCase()).descricao(g).organismo(org);
 
             String curator = row.length > cIDX ? row[cIDX] : null;
             if (curator == null || curator.trim().isEmpty()) continue;
@@ -104,6 +102,7 @@ public class DataModelRecover extends AbstractDataModel {
             proteinas.add(
                 new Proteina()
                     .nome(protein.toUpperCase())
+                    .descricao(protein)
                     .gene(gene)
                     .massa(mass)
                     .tamanho(tamanho)

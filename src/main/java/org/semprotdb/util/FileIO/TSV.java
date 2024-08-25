@@ -5,32 +5,27 @@ import static java.nio.file.Files.readAllBytes;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import org.semprotdb.domain.Carga;
-import org.semprotdb.domain.Versao;
 import org.semprotdb.domain.enumeration.Formato;
 import org.semprotdb.domain.enumeration.Tipo;
 import org.semprotdb.util.DataSet;
-import org.springframework.util.DigestUtils;
 
 public class TSV extends AbstractTabela {
 
-    private int linhas = 0;
-    private String formato = "text/plain";
-    private String md5 = null;
+    public static final Formato formato = Formato.TSV;
+    public static final String ctype = "text/plain";
 
     public TSV(String nome, Tipo tipo, String caminho, byte[] dados) throws Exception {
         super(nome, tipo, caminho, parseBytes(nome, tipo, caminho, dados));
     }
 
     public TSV(String nome, Iterable<String> linhas) throws IOException {
-        super(nome);
+        super(nome, formato, ctype);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         for (String line : linhas) {
             bos.write((line + "\n").getBytes());
-            this.linhas++;
+            super.linhas++;
         }
-        this.dados = bos.toByteArray();
-        this.md5 = DigestUtils.md5DigestAsHex(dados);
+        setDados(bos.toByteArray());
     }
 
     private static byte[] parseBytes(String nome, Tipo tipo, String caminho, byte[] dados) throws Exception {
@@ -42,14 +37,6 @@ public class TSV extends AbstractTabela {
         }
         if (bais != null && nome.endsWith(".zip")) bais = new ByteArrayInputStream(Zip.unzip(bais));
         return bais == null ? null : bais.readAllBytes();
-    }
-
-    public TSV zip() throws IOException {
-        this.dados = Zip.bytes(this.nome, this.dados);
-        this.md5 += "|" + DigestUtils.md5DigestAsHex(dados);
-        this.nome += ".zip";
-        this.formato = "application/zip";
-        return this;
     }
 
     @Override
@@ -70,19 +57,5 @@ public class TSV extends AbstractTabela {
             else linhas.add(line.split("\t"));
         }
         return new DataSet[] { new DataSet(colunas, linhas) };
-    }
-
-    public Carga toCarga(Versao versao) {
-        return new Carga()
-            .versao(versao)
-            .nome(this.nome)
-            .tipo(Tipo.ARQUIVO)
-            .formato(Formato.TSV)
-            .planilhaContentType(this.formato)
-            .validado(true)
-            .planilha(this.dados)
-            .linhas(this.linhas)
-            .checksum(this.md5)
-            .status("OK");
     }
 }

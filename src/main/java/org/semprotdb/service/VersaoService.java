@@ -15,6 +15,7 @@ import org.semprotdb.repository.*;
 import org.semprotdb.service.criteria.CargaCriteria;
 import org.semprotdb.service.criteria.ProteinaCriteria;
 import org.semprotdb.util.*;
+import org.semprotdb.util.FileIO.Excel;
 import org.semprotdb.util.FileIO.TSV;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -660,16 +661,17 @@ public class VersaoService {
             log.info("[" + "[{}/{}]Gerando TSV para {} proteinas de {}", page, pg.getTotalPages(), proteinas.size(), pg.getTotalElements());
 
             for (Proteina P : proteinas) {
-                String proteina = P.getNome();
+                String proteina = P.getDescricao() == null ? P.getNome() : P.getDescricao();
                 String tamanho = P.getTamanho() == null ? "0" : P.getTamanho().toString();
                 String massa = P.getMassa() == null ? "0" : P.getMassa();
                 String referencias = String.join(" & ", P.getReferencias().stream().sorted().map(Referencia::getCitacao).toList());
-                String organismo = P.getGene().getOrganismo().getApelido();
-                String gene = P.getGene().getNome();
+                String organismo = P.getGene().getOrganismo().getApelido() == null
+                    ? P.getGene().getOrganismo().getNome()
+                    : P.getGene().getOrganismo().getApelido();
+                String gene = P.getGene().getDescricao() == null ? P.getGene().getNome() : P.getGene().getDescricao();
                 String recursos = String.join(";", P.getRecursos().stream().sorted().map(Recurso::getUid).toList());
                 String curador = P.getCuradoria() == null ? "X" : P.getCuradoria().getId().toString();
                 curador += P.getGene().getCuradoria() == null ? "" : ("G" + P.getGene().getCuradoria().getId().toString());
-
                 linhas.add(
                     ++cont +
                     "\t" +
@@ -699,19 +701,55 @@ public class VersaoService {
                 );
             }
         } while (pg.hasNext());
-        String dt = new SimpleDateFormat("yyMMdd").format(new Date());
-        String f_name = "semprotdb_DEFAULT_V" + versao.getNumero() + "_" + dt + ".tsv";
-        Carga file = new TSV(f_name, linhas).zip().toCarga(versao).destino(Destino.DOWNLOAD).ordem(3);
+
+        String f_name = fname(versao, "DEFAULT", "tsv");
+        Carga file = new TSV(f_name, linhas).zip().toCarga(versao).ordem(3);
         cargaRepository.save(file);
         versao.addLog("Total " + cont + " registros exportados.");
         log.info("Arquivo TSV ZIP {} gerado para versao {} ! versao sera publicada com {} registros. ", file, versao.getNome(), cont);
         return file;
     }
 
+    private String fname(Versao versao, String tipo, String sfx) {
+        String dt = new SimpleDateFormat("yyMMdd").format(new Date());
+        return "semprotdb_" + tipo + "_V" + versao.getNumero() + "_" + dt + "." + sfx;
+    }
+
     @Scheduled(cron = "0 0 23 * * ?")
     public void atualizarDownloadFileBackup() {
         log.info("Atualizando BACKUP dos arquivos de DOWNLOAD");
         atualizarDownloadFile(true);
+    }
+
+    public void gerarXLSXorganismos(Carga c) throws Exception {
+        log.info("Gerar arquivos de DOWNLOAD por organismo para carga {}", c);
+
+        List<Proteina> proteinas = new DataModelRecover(c).asProteinas();
+        HashMap<String, DataSet> sheets = new HashMap<>();
+        String[] cols = new String[] { "GENE", "PROTEIN", "MASS", "LENGTH", "REFERENCE", "LINKS", "CURATOR" };
+        int[] sizes = new int[] { Excel.W_PQ, Excel.W_XLG, Excel.W_PQ, Excel.W_PQ, Excel.W_MD, Excel.W_MD, Excel.W_PQ };
+
+        for (Proteina P : proteinas) {
+            String org = P.getGene().getOrganismo().getApelido();
+            if (!sheets.containsKey(org)) sheets.put(org, new DataSet(cols, new ArrayList<>()));
+            sheets
+                .get(org)
+                .getLinhas()
+                .add(
+                    new String[] {
+                        P.getGene().getNome(),
+                        P.getDescricao(),
+                        P.getMassa(),
+                        P.getTamanho() == null ? "0" : P.getTamanho().toString(),
+                        String.join(" & ", P.getReferencias().stream().map(Referencia::getCitacao).toList()),
+                        String.join(" ; ", P.getRecursos().stream().map(Recurso::getUid).toList()),
+                        P.getCuradoria() == null ? "X" : P.getCuradoria().getEmail(),
+                    }
+                );
+        }
+        log.debug("Persistir arquivos de DOWNLOAD por ORGANISMO para carga {}", c);
+        Carga byo = new Excel(fname(c.getVersao(), "byOrganism", "xlsx"), sheets, sizes).toCarga(c.getVersao());
+        cargaRepository.save(byo);
     }
 
     public void atualizarDownloadFile(boolean all) {
@@ -752,13 +790,13 @@ public class VersaoService {
                     !carga1.getVersao().getId().equals(carga2.getVersao().getId()) ||
                     carga1.getNome() == null ||
                     carga2.getNome() == null ||
-                    carga1.getStatus() == null ||
+                    carga1.getChecksum() == null ||
                     !carga1.getChecksum().contains("|") ||
-                    carga2.getStatus() == null ||
+                    carga2.getChecksum() == null ||
                     !carga2.getStatus().contains("|")
                 ) continue;
-                String c1MD5 = carga1.getStatus().split("\\|")[0];
-                String c2MD5 = carga2.getStatus().split("\\|")[0];
+                String c1MD5 = carga1.getChecksum().split("\\|")[0];
+                String c2MD5 = carga2.getChecksum().split("\\|")[0];
                 if (!c1MD5.equals(c2MD5)) continue; /// MD5 == MD5
                 // duas cargas com conteudo igual
                 // apagar a que possui o maior nome
@@ -780,7 +818,7 @@ public class VersaoService {
             .ifPresentOrElse(
                 backp -> {
                     if (backp.getHabilitado()) {
-                        String D = "/home/semprodb/" + backp.getVstring();
+                        String D = (backp.getVstring().startsWith("/") ? "" : "/home/semprodb/") + backp.getVstring();
                         File dir = new File(D);
                         if (!dir.exists()) dir.mkdir();
                         if (!dir.isDirectory()) log.error("ERRO ao gerar backup {} is NOT dir!!!", D);
@@ -792,6 +830,7 @@ public class VersaoService {
                                         if (clear) log.info("Criando backup em {}/{} {}", D, backp.getVstring(), c);
                                         File f = new File(D + "/" + c.getNome());
                                         FileUtils.writeByteArrayToFile(f, c.getPlanilha());
+                                        gerarXLSXorganismos(c);
                                     }
                                 } catch (Exception e) {
                                     log.error("ERRO AO SALVAR BACKUP " + c.toString(), e);
