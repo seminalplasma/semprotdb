@@ -185,8 +185,8 @@ jhipster:
   clientApp:
     name: 'semprotdbApp'
   # By default CORS is disabled. Uncomment to enable.
-  cors:
-    allowed-origins: 'https://semprotdb.org'
+  # cors:
+  #   allowed-origins: 'https://semprotdb.org,http://bioinformatics.icb.ufmg.br/semprotdb'
   #   allowed-methods: "*"
   #   allowed-headers: "*"
   #   exposed-headers: "Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params"
