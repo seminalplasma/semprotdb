@@ -6,9 +6,11 @@ import account from '@/router/account';
 import admin from '@/router/admin';
 import entities from '@/router/entities';
 import pages from '@/router/pages';
+import { Authority } from '@/shared/security/authority';
 
 const Tabela = () => import('@/core/tabela/tabela.vue');
 const Downloads = () => import('@/core/downloads/downloads.component.vue');
+const Feedbacks = () => import('@/core/feedbacks/feedback.vue');
 
 export const createRouter = () =>
   createVueRouter({
@@ -28,6 +30,12 @@ export const createRouter = () =>
         path: '/downloads',
         name: 'Downloads',
         component: Downloads,
+      },
+      {
+        path: '/feedbacks',
+        name: 'Feedbacks',
+        component: Feedbacks,
+        meta: { authorities: [Authority.ADMIN] },
       },
       {
         path: '/forbidden',

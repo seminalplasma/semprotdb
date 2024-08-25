@@ -4,25 +4,22 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.List;
 import org.semprotdb.domain.DBConfig;
 import org.semprotdb.domain.User;
 import org.semprotdb.repository.DBConfigRepository;
+import org.semprotdb.security.RateLimitingAspect.RateLimitedByIP;
 import org.semprotdb.service.UserService;
+import org.semprotdb.service.dto.DBConfigDTO;
+import org.semprotdb.service.dto.FeedbackDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
-
-///https://levelup.gitconnected.com/rate-limiting-in-spring-boot-52220ba272c6
-//@Retention(RetentionPolicy.RUNTIME)
-//@Target(ElementType.METHOD)
-//public @interface WithRateLimitProtection {
-//}
 
 @RestController
 @RequestMapping("/api/feedbacks")
@@ -39,8 +36,9 @@ public class FeedbackResource {
         this.userService = userService;
     }
 
-    @PostMapping("")
-    public ResponseEntity<DBConfig> createDBConfig(@Valid @RequestBody DBConfig dBConfig) throws URISyntaxException {
+    @PostMapping
+    @RateLimitedByIP
+    public ResponseEntity<DBConfig> createFeedback(@Valid @RequestBody DBConfig dBConfig) throws URISyntaxException {
         log.debug("REST request to register FEEDBACK: {}", dBConfig);
 
         String txt = dBConfig.getVtext() != null ? dBConfig.getVtext() : "";
@@ -58,5 +56,10 @@ public class FeedbackResource {
         return ResponseEntity.created(new URI("/semprotdb"))
             .headers(HeaderUtil.createEntityCreationAlert("SemprotDB", true, "Feedback", dbc.getId().toString()))
             .body(dbc);
+    }
+
+    @GetMapping
+    List<FeedbackDTO> getFeedbacks() {
+        return dBConfigRepository.findFirst100ByHabilitadoIsTrueAndAndKeyIsOrderByVdateDesc("feedbacks");
     }
 }

@@ -114,6 +114,10 @@
             <font-awesome-icon icon="tasks" />
             <span v-text="t$('global.menu.admin.logs')"></span>
           </b-dropdown-item>
+          <b-dropdown-item to="/feedbacks" active-class="active">
+            <font-awesome-icon icon="comment-dots" />
+            <span>Feedbacks</span>
+          </b-dropdown-item>
           <b-dropdown-item v-if="openAPIEnabled" to="/admin/docs" active-class="active">
             <font-awesome-icon icon="book" />
             <span v-text="t$('global.menu.admin.apidocs')"></span>

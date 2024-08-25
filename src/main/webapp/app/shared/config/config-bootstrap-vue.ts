@@ -33,6 +33,8 @@ import {
   BSkeletonTable,
   BInputGroupAppend,
   BFormTags,
+  BCard,
+  BCardGroup,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -71,4 +73,6 @@ export function initBootstrapVue(vue) {
   vue.component('b-skeleton-table', BSkeletonTable);
   vue.component('b-tooltip', BTooltip);
   vue.component('b-form-tags', BFormTags);
+  vue.component('b-card', BCard);
+  vue.component('b-card-group', BCardGroup);
 }

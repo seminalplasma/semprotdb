@@ -87,6 +87,7 @@ public class SecurityConfiguration {
 
                     // Permitir postagem de feedbacks anonimo
                     .requestMatchers(mvc.pattern(HttpMethod.POST,"/api/feedbacks")).permitAll()
+                    .requestMatchers(mvc.pattern(HttpMethod.GET,"/api/feedbacks")).hasAuthority(AuthoritiesConstants.ADMIN)
 
                     // Bloquear edicao para nao admins
                     .requestMatchers(mvc.pattern("/api/versaos/**")).hasAuthority(AuthoritiesConstants.ADMIN)

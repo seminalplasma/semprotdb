@@ -18,10 +18,10 @@ export default class DBConfigService {
     });
   }
 
-  public retrieve(): Promise<any> {
+  public retrieve(feedback = false): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
-        .get(baseApiUrl)
+        .get(feedback ? baseApiUrl.replace('db-configs', 'feedbacks') : `${baseApiUrl}`)
         .then(res => {
           resolve(res);
         })
