@@ -101,7 +101,7 @@ public class DataModelRecover extends AbstractDataModel {
             if (protein == null || protein.trim().isEmpty()) continue;
             proteinas.add(
                 new Proteina()
-                    .nome(protein.toUpperCase())
+                    .nome(proteinas.size() + "> " + protein.toUpperCase())
                     .descricao(protein)
                     .gene(gene)
                     .massa(mass)
@@ -115,15 +115,15 @@ public class DataModelRecover extends AbstractDataModel {
                             .map(r -> r.trim().toUpperCase().split(":"))
                             .map(r -> {
                                 if ("String-db".toUpperCase().equals(r[0])) return new Recurso()
-                                    .uid(r[1])
+                                    .uid("String-db:" + r[1].trim())
                                     .db(BioDB.STRINGDB)
                                     .id(ids.getAndIncrement());
                                 if ("Kegg".toUpperCase().equals(r[0])) return new Recurso()
-                                    .uid(r[1])
+                                    .uid("Kegg:" + r[1].trim())
                                     .db(BioDB.KEGG)
                                     .id(ids.getAndIncrement());
                                 BioDB db = BioDBParser.acesso2db(r[0]);
-                                if (db != BioDB.OUTRO) return new Recurso().uid(r[0]).db(db).id(ids.getAndIncrement());
+                                if (db != BioDB.OUTRO) return new Recurso().uid(r[0].trim()).db(db).id(ids.getAndIncrement());
                                 return null;
                             })
                             .filter(Objects::nonNull)

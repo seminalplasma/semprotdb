@@ -79,6 +79,15 @@ public class RowPtn extends Proteina {
                 Proteina p_uniprot = M.get(uid);
                 /// resgatar do uniprot
                 if (p_uniprot != null) {
+                    ///se mapear no uniprtot substituir o uid pelo do uniprot para n ficar redundandte
+                    p_uniprot
+                        .getRecursos()
+                        .stream()
+                        .filter(r -> "ENTRY".equals(r.getLink()))
+                        .map(Recurso::getUid)
+                        .findAny()
+                        .ifPresent(d::setNome);
+
                     /// nome da ptna
                     if (p_uniprot.getDescricao().length() > 3) d.setDescricao(p_uniprot.getDescricao());
 

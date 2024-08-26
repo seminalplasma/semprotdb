@@ -156,7 +156,7 @@ public class CargaService {
         /// 5 - dados, metadata
         /// 6 - restore
         /// 7 - Consolidado
-        /// 8 -
+        /// 8 - download by org
         /// 9 -
 
         if (null != carga.getVersao() && carga.getVersao().getStatus().ordinal() >= Status.DISPONIVEL.ordinal()) {

@@ -77,76 +77,6 @@ public class ProteinaQueryService extends QueryService<Proteina> {
     }
 
     /**
-     * Function para pegar a primeira especificacao da pesquisa
-     * importante pois caso nao definir a primeira algum OR pode ficar
-     * de fora na createSpecification
-     */
-    //    protected Specification<Proteina> firstSpecification(ProteinaCriteria criteria, String qfirst) {
-    //        ProteinaCriteria pc = new ProteinaCriteria();
-    //        qfirst = qfirst == null ? "" : qfirst;
-    //        if (qfirst != "") log.debug("Filter " + qfirst + " => {}", criteria);
-    //        switch (qfirst) {
-    //            case "id" -> {
-    //                pc.setId(criteria.getId());
-    //                criteria.setId(null);
-    //            }
-    //            case "nome" -> {
-    //                pc.setNome(criteria.geneNome());
-    //                criteria.setNome(null);
-    //            }
-    //            case "tamanho" -> {
-    //                pc.setTamanho(criteria.getTamanho());
-    //                criteria.setTamanho(null);
-    //            }
-    //            case "massa" -> {
-    //                pc.setMassa(criteria.getMassa());
-    //                criteria.setMassa(null);
-    //            }
-    //            case "descricao" -> {
-    //                pc.setDescricao(criteria.getDescricao());
-    //                criteria.setDescricao(null);
-    //            }
-    //            case "curadoriaId" -> {
-    //                pc.setCuradoriaId(criteria.getCuradoriaId());
-    //                criteria.setCuradoriaId(null);
-    //            }
-    //            case "versaoId" -> {
-    //                pc.setVersaoId(criteria.getVersaoId());
-    //                criteria.setVersaoId(null);
-    //            }
-    //            case "geneId" -> {
-    //                pc.setGeneId(criteria.getGeneId());
-    //                criteria.setGeneId(null);
-    //            }
-    //            case "geneNome" -> {
-    //                pc.setGeneNome(criteria.getGeneNome());
-    //                criteria.setGeneNome(null);
-    //            }
-    //            case "organismoId" -> {
-    //                pc.setOrganismoId(criteria.getOrganismoId());
-    //                criteria.setOrganismoId(null);
-    //            }
-    //            case "organismoNome" -> {
-    //                pc.setOrganismoNome(criteria.getOrganismoNome());
-    //                criteria.setOrganismoNome(null);
-    //            }
-    //            case "organismoSigla" -> {
-    //                pc.setOrganismoSigla(criteria.getOrganismoSigla());
-    //                criteria.setOrganismoSigla(null);
-    //            }
-    //            case "referenciaId" -> {
-    //                pc.setReferenciaId(criteria.getReferenciaId());
-    //                criteria.setReferenciaId(null);
-    //            }
-    //            case "recursoId" -> {
-    //                pc.setRecursoId(criteria.getRecursoId());
-    //                criteria.setRecursoId(null);
-    //            }
-    //        }
-    //        return createSpecification(pc);
-    //    }
-
-    /**
      * Function to convert {@link ProteinaCriteria} to a {@link Specification}
      *
      * @param criteria The object which holds all the filters, which the entities should match.
@@ -204,12 +134,16 @@ public class ProteinaQueryService extends QueryService<Proteina> {
                 specification = qORsf.contains("descricao") ? specification.or(ps) : specification.and(ps);
             }
             if (criteria.getCuradoriaId() != null && (uniq == null || "curadoriaId".equals(uniq))) {
-                Specification<Proteina> ps = buildSpecification(
-                    criteria.getCuradoriaId(),
-                    root -> root.join(Proteina_.curadoria, JoinType.LEFT).get(Curadoria_.id)
-                );
-                log.debug(qORsf.contains("curadoriaId") ? "OR curadoriaId" : "AND curadoriaId");
-                specification = qORsf.contains("curadoriaId") ? specification.or(ps) : specification.and(ps);
+                if (criteria.getCuradoriaId().getSpecified()) {
+                    Specification<Proteina> ps = buildSpecification(
+                        criteria.getCuradoriaId(),
+                        root -> root.join(Proteina_.curadoria, JoinType.LEFT).get(Curadoria_.id)
+                    );
+                    log.debug(qORsf.contains("curadoriaId") ? "OR curadoriaId" : "AND curadoriaId");
+                    specification = qORsf.contains("curadoriaId") ? specification.or(ps) : specification.and(ps);
+                } else {
+                    log.debug("SKIP curadoriaId unpec");
+                }
             }
             if (criteria.getVersaoId() != null && (uniq == null || "versaoId".equals(uniq))) {
                 Specification<Proteina> ps = buildSpecification(

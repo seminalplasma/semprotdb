@@ -176,11 +176,13 @@ public class DBConfigResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of dBConfigs in body.
      */
     @GetMapping("")
-    public List<DBConfig> getAllDBConfigs() {
-        log.debug("REST request to get all DBConfigs");
+    public List<DBConfig> getAllDBConfigs(boolean logs) {
+        log.debug("REST request to get all DBConfigs {}", logs ? "LOGS" : "");
         List<DBConfig> list = dBConfigRepository.findAllLight(Pageable.unpaged()).toList();
         if (userService.usuarioNAOLogado()) {
             list = list.stream().filter(this::is_pub).toList();
+        } else if (logs) {
+            list = List.of(dBConfigRepository.findDBConfigByKey("log.tail").orElseThrow());
         }
         return list;
     }

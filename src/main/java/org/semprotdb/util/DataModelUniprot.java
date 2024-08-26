@@ -62,7 +62,7 @@ public class DataModelUniprot extends AbstractDataModel {
             String entry = entry_idx >= 0 && entry_idx < l.length ? l[entry_idx] : null;
             acesso = BioDBParser.acesso(entry);
             db = BioDBParser.acesso2db(acesso);
-            if (db != BioDB.OUTRO) p.addRecurso(new Recurso().uid(acesso).db(db));
+            if (db != BioDB.OUTRO) p.addRecurso(new Recurso().uid(acesso).db(db).link("ENTRY"));
 
             String length = length_idx >= 0 && length_idx < l.length ? l[length_idx] : null;
 

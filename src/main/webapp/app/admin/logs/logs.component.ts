@@ -1,14 +1,35 @@
-import { computed, defineComponent, inject, ref, type Ref } from 'vue';
+import { computed, defineComponent, inject, onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import LogsService from './logs.service';
 import { orderAndFilterBy } from '@/shared/computables';
+import DBConfigService from '@/entities/db-config/db-config.service';
+import type { IDBConfig } from '@/shared/model/db-config.model';
+import { useAlertService } from '@/shared/alert/alert.service';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'JhiLogs',
   setup() {
     const logsService = inject('logsService', () => new LogsService(), true);
+
+    const dBConfigService = inject('dBConfigService', () => new DBConfigService());
+    const dBConfig: Ref<IDBConfig> = ref({});
+    const isFetching = ref(false);
+    const alertService = inject('alertService', () => useAlertService(), true);
+
+    const retrieveDBConfigs = async () => {
+      console.log('carregando.....');
+      isFetching.value = true;
+      try {
+        const res = await dBConfigService().retrieve(false, true);
+        dBConfig.value = res.data[0];
+      } catch (err) {
+        alertService.showHttpError(err.response);
+      } finally {
+        isFetching.value = false;
+      }
+    };
 
     const loggers: Ref<any[]> = ref([]);
     const filtered = ref('');
@@ -29,6 +50,9 @@ export default defineComponent({
       orderProp,
       reverse,
       filteredLoggers,
+      isFetching,
+      dBConfig,
+      retrieveDBConfigs,
       t$: useI18n().t,
     };
   },
@@ -39,6 +63,9 @@ export default defineComponent({
     init(): void {
       this.logsService.findAll().then(response => {
         this.extractLoggers(response);
+      });
+      this.retrieveDBConfigs().then(r => {
+        console.log(r);
       });
     },
     updateLevel(name: string, level: string): void {

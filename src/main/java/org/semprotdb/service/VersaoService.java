@@ -221,10 +221,12 @@ public class VersaoService {
             status = versao.getStatus();
 
             if (versao.getStatus() == Status.PROCESSADO) {
-                status = Status.PROCESSADO;
+                versao.setStatus(Status.CARREGADO);
+                versaoRepository.save(versao);
+                status = Status.DISPONIVEL;
                 versao.addLog("Gerando novo arquivo de DOWNLOAD da versao.");
                 log.info("Gerando novo arquivo de DOWNLOAD da versao {}", versao);
-                atualizarDownloadFile(false);
+                atualizarDownloadFile(versaoId);
                 return;
             }
 
@@ -267,8 +269,8 @@ public class VersaoService {
                 log.info("Terminou restauracao das {} cargas", restaurar.size());
                 status = Status.PROCESSADO;
                 log.info("Terminou restauracao VERSAO {}", versao.identfy());
-                makeDownload(versao);
-                versao.setLog("Versao restaurada com sucesso.");
+                gerarXLSXorganismos(makeDownload(versao));
+                versao.addLog("Versao restaurada com sucesso.");
                 return;
             }
 
@@ -342,11 +344,11 @@ public class VersaoService {
             status = Status.PROCESSADO;
             versao.addLog("Terminou o processamento das " + total + " proteinas, " + "Gerando o arquivo de download dessa nova versao.");
 
-            makeDownload(versao);
+            gerarXLSXorganismos(makeDownload(versao));
             log.info("Terminou a integracao de dados com {} proteinas processadas, A PERSISTIR ...", total);
         } catch (Exception e) {
             if (versao != null) versao.setLog(e.toString());
-            else log.error("Falhou ao processar versao", e);
+            log.error("Falhou ao processar versao", e);
         } finally {
             if (versao != null) versaoRepository.save(versao.status(status));
             else log.error("Falhou ao encontrar versao: {}", versaoId);
@@ -443,7 +445,7 @@ public class VersaoService {
         int puladas = 0;
 
         for (Proteina p : ptns) {
-            String p_id = p.getNome(); /// p.getGene().getOrganismo().getNome() + " > " + p.getGene().getNome() + " > " + p.getNome();
+            String p_id = p.getNome();
 
             if (p_id == null || p_id.isEmpty() || p_id.equals(BioDBParser.NO_ID)) {
                 log.warn("Total {} Proteina com ID invalido {} => {} ", ++invalidas, p_id, p.getDescricao());
@@ -535,14 +537,12 @@ public class VersaoService {
                         String curador = g.getCuradoria().getEmail();
                         curador = curador == null ? "" : curador.trim();
                         if (curador.length() > 2) {
-                            _c = curador = versao.getNome() + "_" + p.getCuradoria().getEmail().trim();
+                            _c = versao.getNome() + "_" + curador;
                             if (!C.containsKey(curador)) {
-                                C.put(
-                                    p.getCuradoria().getEmail(),
-                                    curadoriaRepository.save(new Curadoria().email(curador).data(new Date().toInstant()))
-                                );
-                                log.info("NOVO curador {} para os genes", p.getCuradoria().getEmail());
+                                C.put(curador, curadoriaRepository.save(new Curadoria().email(_c).data(new Date().toInstant())));
+                                log.info("NOVO curador {} para os genes", g.getCuradoria().getEmail());
                             }
+                            _c = curador;
                         }
                     }
                     g = geneRepository.save(new Gene().nome(g.getNome()).organismo(o).curadoria(C.get(_c)));
@@ -577,7 +577,9 @@ public class VersaoService {
                                 .link(
                                     recurso.getLink() == null
                                         ? BioDBParser.recurso2link(
-                                            recurso,
+                                            new Recurso()
+                                                .uid(recurso.getUid().contains(":") ? recurso.getUid().split(":")[1] : recurso.getUid())
+                                                .db(recurso.getDb()),
                                             p.getGene().getOrganismo().getSigla() == null
                                                 ? null
                                                 : p.getGene().getOrganismo().getSigla().toLowerCase()
@@ -595,18 +597,27 @@ public class VersaoService {
             }
 
             if ((P.size() < 100) || ((P.size() % 100) == 0)) log.debug(
-                "Status {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS ",
+                "Status {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS > {} CURATORS ",
                 R.size(),
                 O.size(),
                 G.size(),
                 P.size(),
-                X.size()
+                X.size(),
+                C.size()
             );
 
             proteinaRepository.save(PROTEINA);
         }
 
-        log.info("Terminou com {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS ", R.size(), O.size(), G.size(), P.size(), X.size());
+        log.info(
+            "Terminou com {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS > {} CURATORS ",
+            R.size(),
+            O.size(),
+            G.size(),
+            P.size(),
+            X.size(),
+            C.size()
+        );
         log.info("Total {} Proteinas redundantes", puladas);
         log.info("{} RECS: {} => STRING {} KEGG {} encontrados", extend ? "Extend" : "", X.size(), stg.get(), keg.get());
 
@@ -621,7 +632,9 @@ public class VersaoService {
             X.size() +
             " recursos " +
             P.size() +
-            " proteinas."
+            " proteinas" +
+            C.size() +
+            " curadorias."
         );
         return P.size();
     }
@@ -718,7 +731,7 @@ public class VersaoService {
     @Scheduled(cron = "0 0 23 * * ?")
     public void atualizarDownloadFileBackup() {
         log.info("Atualizando BACKUP dos arquivos de DOWNLOAD");
-        atualizarDownloadFile(true);
+        atualizarDownloadFile(null);
     }
 
     public void gerarXLSXorganismos(Carga c) throws Exception {
@@ -743,16 +756,17 @@ public class VersaoService {
                         P.getTamanho() == null ? "0" : P.getTamanho().toString(),
                         String.join(" & ", P.getReferencias().stream().map(Referencia::getCitacao).toList()),
                         String.join(" ; ", P.getRecursos().stream().map(Recurso::getUid).toList()),
-                        P.getCuradoria() == null ? "X" : P.getCuradoria().getEmail(),
+                        (P.getCuradoria() == null ? (P.getGene().getCuradoria() == null ? "X" : "") : P.getCuradoria().getEmail()) +
+                        (P.getGene().getCuradoria() == null ? "" : ("G" + P.getGene().getCuradoria().getEmail())),
                     }
                 );
         }
         log.debug("Persistir arquivos de DOWNLOAD por ORGANISMO para carga {}", c);
-        Carga byo = new Excel(fname(c.getVersao(), "byOrganism", "xlsx"), sheets, sizes).toCarga(c.getVersao());
+        Carga byo = new Excel(fname(c.getVersao(), "byOrganism", "xlsx"), sheets, sizes).toCarga(c.getVersao()).ordem(8);
         cargaRepository.save(byo);
     }
 
-    public void atualizarDownloadFile(boolean all) {
+    public void atualizarDownloadFile(Long vid) {
         log.info("Atualizando arquivos de DOWNLOAD");
 
         HashMap<Long, Carga> tsvs = new HashMap<>();
@@ -762,7 +776,7 @@ public class VersaoService {
             Set<Versao> vs = versaoRepository
                 .findAll()
                 .stream()
-                .filter(_v -> all ? (_v.getStatus().ordinal() >= Status.PROCESSADO.ordinal()) : (_v.getStatus() == Status.PROCESSADO))
+                .filter(_v -> vid == null ? (_v.getStatus().ordinal() >= Status.PROCESSADO.ordinal()) : _v.getId().equals(vid))
                 .collect(Collectors.toSet());
             for (Versao versao : vs) {
                 totalc += (int) versao.getCargas().stream().filter(c -> c.getDestino() == Destino.DOWNLOAD).count();
@@ -818,7 +832,7 @@ public class VersaoService {
             .ifPresentOrElse(
                 backp -> {
                     if (backp.getHabilitado()) {
-                        String D = (backp.getVstring().startsWith("/") ? "" : "/home/semprodb/") + backp.getVstring();
+                        String D = "/home/semprodb/" + backp.getVstring();
                         File dir = new File(D);
                         if (!dir.exists()) dir.mkdir();
                         if (!dir.isDirectory()) log.error("ERRO ao gerar backup {} is NOT dir!!!", D);

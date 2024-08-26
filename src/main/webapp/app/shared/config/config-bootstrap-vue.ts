@@ -35,6 +35,9 @@ import {
   BFormTags,
   BCard,
   BCardGroup,
+  BTabs,
+  BTab,
+  BFormTextarea,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -75,4 +78,7 @@ export function initBootstrapVue(vue) {
   vue.component('b-form-tags', BFormTags);
   vue.component('b-card', BCard);
   vue.component('b-card-group', BCardGroup);
+  vue.component('b-tabs', BTabs);
+  vue.component('b-tab', BTab);
+  vue.component('b-form-textarea', BFormTextarea);
 }

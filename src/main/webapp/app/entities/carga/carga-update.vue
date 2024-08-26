@@ -278,7 +278,7 @@
         </div>
 
         <b-alert variant="warning" :show="isSaving"
-          >Caso demore mais que 1 minuto para validar <b> reinicie a pagina</b> e veja se a carga foi salva.</b-alert
+          >Caso demore mais que 1 minuto para validar <b> atualize a pagina</b> e veja se a carga foi salva.</b-alert
         >
 
         <div>
