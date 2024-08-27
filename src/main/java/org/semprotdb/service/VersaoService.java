@@ -496,6 +496,9 @@ public class VersaoService {
                 handleREF(p, R, PROTEINA);
                 proteinaRepository.save(PROTEINA);
                 puladas++;
+
+                /// links devem ser add
+                handleRecs(p, extend, X, keg, stg, PROTEINA);
                 continue;
             }
 
@@ -560,41 +563,8 @@ public class VersaoService {
                     p
                 );
             }
-            p.setGene(PROTEINA.getGene());
 
-            Set<Recurso> recursos = p.getRecursos();
-
-            if (extend) recursos.addAll(Arrays.stream(BioDBParser.recursos2recursos(p)).toList());
-
-            for (Recurso recurso : recursos) {
-                if (recurso != null) {
-                    if (recurso.getDb() != BioDB.OUTRO) {
-                        Recurso _r = X.get(recurso.getUid());
-                        if (_r == null) {
-                            _r = new Recurso()
-                                .uid(recurso.getUid())
-                                .db(recurso.getDb())
-                                .link(
-                                    recurso.getLink() == null
-                                        ? BioDBParser.recurso2link(
-                                            new Recurso()
-                                                .uid(recurso.getUid().contains(":") ? recurso.getUid().split(":")[1] : recurso.getUid())
-                                                .db(recurso.getDb()),
-                                            p.getGene().getOrganismo().getSigla() == null
-                                                ? null
-                                                : p.getGene().getOrganismo().getSigla().toLowerCase()
-                                        )
-                                        : recurso.getLink()
-                                );
-                            _r = recursoRepository.save(_r);
-                            X.put(recurso.getUid(), _r);
-                            if (_r.getDb() == BioDB.KEGG) keg.getAndIncrement();
-                            else if (_r.getDb() == BioDB.STRINGDB) stg.getAndIncrement();
-                        }
-                        PROTEINA.addRecurso(_r);
-                    }
-                }
-            }
+            handleRecs(p, extend, X, keg, stg, PROTEINA);
 
             if ((P.size() < 100) || ((P.size() % 100) == 0)) log.debug(
                 "Status {} REFS > {} ORGS > {} GENS > {} PTNAS > {} RECS > {} CURATORS ",
@@ -637,6 +607,50 @@ public class VersaoService {
             " curadorias."
         );
         return P.size();
+    }
+
+    private void handleRecs(
+        Proteina p,
+        boolean extend,
+        HashMap<String, Recurso> X,
+        AtomicInteger keg,
+        AtomicInteger stg,
+        Proteina PROTEINA
+    ) {
+        p.setGene(PROTEINA.getGene());
+        Set<Recurso> recursos = p.getRecursos();
+
+        if (extend) recursos.addAll(Arrays.stream(BioDBParser.recursos2recursos(p)).toList());
+
+        for (Recurso recurso : recursos) {
+            if (recurso != null) {
+                if (recurso.getDb() != BioDB.OUTRO) {
+                    Recurso _r = X.get(recurso.getUid());
+                    if (_r == null) {
+                        _r = new Recurso()
+                            .uid(recurso.getUid())
+                            .db(recurso.getDb())
+                            .link(
+                                recurso.getLink() == null
+                                    ? BioDBParser.recurso2link(
+                                        new Recurso()
+                                            .uid(recurso.getUid().contains(":") ? recurso.getUid().split(":")[1] : recurso.getUid())
+                                            .db(recurso.getDb()),
+                                        p.getGene().getOrganismo().getSigla() == null
+                                            ? null
+                                            : p.getGene().getOrganismo().getSigla().toLowerCase()
+                                    )
+                                    : recurso.getLink()
+                            );
+                        _r = recursoRepository.save(_r);
+                        X.put(recurso.getUid(), _r);
+                        if (_r.getDb() == BioDB.KEGG) keg.getAndIncrement();
+                        else if (_r.getDb() == BioDB.STRINGDB) stg.getAndIncrement();
+                    }
+                    PROTEINA.addRecurso(_r);
+                }
+            }
+        }
     }
 
     private void handleREF(Proteina p, HashMap<String, Referencia> R, Proteina PROTEINA) throws Exception {

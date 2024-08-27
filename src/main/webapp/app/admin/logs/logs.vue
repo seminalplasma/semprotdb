@@ -10,8 +10,10 @@
           <div class="row w-100">
             <div class="col" sm="10">
               <b-form-textarea
+                disabled
                 id="textarea-small"
                 size="sm"
+                rows="30"
                 placeholder="empty"
                 v-model="dBConfig.vtext"
                 style="font-size: xx-small; text-wrap: nowrap; font-family: monospace"
