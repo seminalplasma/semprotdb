@@ -491,6 +491,21 @@ public class VersaoService {
                         ? p.getDescricao()
                         : PROTEINA.getDescricao()
                 );
+
+                if (
+                    p.getGene() != null &&
+                    p.getGene().getOrganismo() != null &&
+                    p.getGene().getOrganismo().getNome() != null &&
+                    !p.getGene().getOrganismo().getNome().trim().toUpperCase().equals(PROTEINA.getGene().getNome())
+                ) log.warn(
+                    "Proteina {} em diferentes organismos! {} ({}) {} ({})",
+                    p.getDescricao(),
+                    p.getGene().getOrganismo().getNome(),
+                    p.getReferencias(),
+                    PROTEINA.getGene().getOrganismo().getNome(),
+                    PROTEINA.getReferencias()
+                );
+
                 log.debug("{} descricao: {}", p_id, p.getDescricao());
                 /// referencia deve ser add
                 handleREF(p, R, PROTEINA);
