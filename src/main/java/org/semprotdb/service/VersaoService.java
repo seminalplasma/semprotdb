@@ -494,11 +494,12 @@ public class VersaoService {
                 log.debug("{} descricao: {}", p_id, p.getDescricao());
                 /// referencia deve ser add
                 handleREF(p, R, PROTEINA);
-                proteinaRepository.save(PROTEINA);
-                puladas++;
 
                 /// links devem ser add
                 handleRecs(p, extend, X, keg, stg, PROTEINA);
+
+                proteinaRepository.save(PROTEINA);
+                puladas++;
                 continue;
             }
 
