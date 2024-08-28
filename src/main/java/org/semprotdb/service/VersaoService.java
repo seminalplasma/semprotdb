@@ -34,6 +34,7 @@ import tech.jhipster.service.filter.LongFilter;
 @Transactional
 public class VersaoService {
 
+    private static boolean REMOVENDO = false;
     private static final Logger log = LoggerFactory.getLogger(VersaoService.class);
 
     private final VersaoRepository versaoRepository;
@@ -487,7 +488,9 @@ public class VersaoService {
                 /// ja tem essa ptna
                 /// nome deve ser o menor
                 PROTEINA.setDescricao(
-                    ((p.getDescricao().length() > 1) && (p.getDescricao().length() < PROTEINA.getDescricao().length()))
+                    ((p.getDescricao().length() > 1) &&
+                            (p.getDescricao().length() < PROTEINA.getDescricao().length()) &&
+                            !p.getDescricao().equalsIgnoreCase("deleted"))
                         ? p.getDescricao()
                         : PROTEINA.getDescricao()
                 );
@@ -761,7 +764,7 @@ public class VersaoService {
     @Scheduled(cron = "0 0 23 * * ?")
     public void atualizarDownloadFileBackup() {
         log.info("Atualizando BACKUP dos arquivos de DOWNLOAD");
-        atualizarDownloadFile(null);
+        if (!REMOVENDO) atualizarDownloadFile(null);
     }
 
     public void gerarXLSXorganismos(Carga c) throws Exception {
@@ -898,6 +901,7 @@ public class VersaoService {
             Optional<Versao> _v = versaoRepository.findById(versao.getId());
             if (_v.isEmpty()) return;
             versao = _v.orElseThrow();
+            REMOVENDO = true;
 
             int ptnas = versao.getProteinas().size();
             log.info("Preparando para remover versao {} com {} proteinas", versao.identfy(), ptnas);
@@ -947,6 +951,7 @@ public class VersaoService {
             log.error("FALHA REMOVENDO {} {} ", versao.identfy(), e.toString());
         } finally {
             log.info("Terminou remover versao {}", versao.identfy());
+            REMOVENDO = false;
         }
     }
 }
