@@ -23,7 +23,7 @@
             Version <strong>{{ v.nome }}</strong>
           </h1>
           <ul>
-            <li v-for="carga in cargas.filter(c => c.versao?.id === v.id)" class="my-2">
+            <li v-for="carga in cargas.filter(c => c.versao?.id === v.id && !['DADOS', 'METADADOS'].includes(c.destino))" class="my-2">
               <b>File {{ carga.id }}</b>
               <code class="mx-1">{{ carga.nome }}</code>
               <template v-if="carga.status?.includes('|')">
