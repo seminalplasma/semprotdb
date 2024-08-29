@@ -21,7 +21,7 @@
                   width="80px"
                 />
                 <br />
-                <i>{{ o.pos }} {{ o.apelido || o.nome }}</i>
+                <i>{{ o.apelido || o.nome }}</i>
               </router-link>
             </template>
           </template>
