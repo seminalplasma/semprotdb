@@ -21,7 +21,7 @@
                   width="80px"
                 />
                 <br />
-                <i>{{ o.pos }} {{ o.apelido || o.nome }}</i>
+                <i>{{ o.pos.includes('X') ? o.pos : '' }} {{ o.apelido || o.nome }}</i>
               </router-link>
             </template>
           </template>
@@ -109,7 +109,7 @@
 <style scoped>
 .gota {
   background-image: url('/content/images/semprot-logo2.svg');
-  background-size: 40%;
+  background-size: 35%;
   background-position: top;
   background-repeat: no-repeat;
 }
