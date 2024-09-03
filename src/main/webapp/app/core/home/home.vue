@@ -1,18 +1,18 @@
 <template>
   <div class="p-5 text-center main px-4 gota">
     <div class="d-none d-md-block w-100 container text-center">
-      <template v-for="i in new Array(...new Set(organismos.map(o => o.pos?.split('.')[0]))).sort().reverse()">
+      <template v-for="i in poss">
         <div
           :class="`row justify-content-${organismos.some(z => z.pos?.startsWith(i) && z.pos?.includes('L')) ? 'end' : organismos.some(z => z.pos?.startsWith(i) && z.pos?.includes('C')) ? 'center' : 'between'} my-${organismos
             .filter(z => z.pos?.startsWith(i))
             .map(z => (z.pos + '').split('Y').length - 1)
             .concat([0])
             .reduce((a, b) => a + b)}`"
-          :style="' width: ' + i + '% ; margin-left: ' + (100 - i) / 2 + '%;'"
+          :style="' width: ' + i.replace('-', '') + '% ; margin-left: ' + (100 - parseInt(i.replace('-', ''))) / 2 + '%;'"
         >
           <template v-for="j in [1, 2]">
             <template v-for="o in organismos">
-              <router-link :to="{ path: '/tabela', query: { organismId: o.id } }" v-if="o?.pos?.includes(`${i}.${j}`)">
+              <router-link :to="{ path: '/tabela', query: { organismId: o.id } }" v-if="o?.pos?.startsWith(`${i}.${j}`)">
                 <img
                   v-if="o.silhueta"
                   :class="{ imgorg: 1, 'shadow img-fluid rounded-circle': o?.pos?.includes('R') }"
@@ -21,7 +21,7 @@
                   width="80px"
                 />
                 <br />
-                <i>{{ o.apelido || o.nome }}</i>
+                <i>{{ o.pos }} {{ o.apelido || o.nome }}</i>
               </router-link>
             </template>
           </template>

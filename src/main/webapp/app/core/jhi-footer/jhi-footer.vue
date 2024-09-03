@@ -38,6 +38,16 @@
         </div>
       </div>
 
+      <div class="row mt-2">
+        <div class="col align-self-center"></div>
+        <div class="col align-self-center mx-5 text-center mt-2">
+          <a href="https://www.ufmg.br" target="_blank"><img src="/content/images/Logo_UFMG.png" height="50" /></a>
+        </div>
+        <div class="col align-self-center"></div>
+        <div class="col align-self-center"></div>
+        <div class="col align-self-center"></div>
+      </div>
+
       <ul class="nav justify-content-center border-bottom pb-3 mb-3"></ul>
       <p class="text-center text-body-secondary">
         &copy; 2024 Semprotdb
