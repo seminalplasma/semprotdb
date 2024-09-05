@@ -21,6 +21,7 @@ export default defineComponent({
     const versao: Ref<IVersao> = ref(new Versao());
     const statusValues: Ref<string[]> = ref(Object.keys(Status));
     const isSaving = ref(false);
+    const reaproveitar = ref(false);
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
 
     const route = useRoute();
@@ -93,6 +94,7 @@ export default defineComponent({
       ...useDateFormat({ entityRef: versao }),
       t$,
       isNew,
+      reaproveitar,
     };
   },
   created(): void {},

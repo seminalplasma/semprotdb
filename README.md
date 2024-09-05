@@ -3,10 +3,21 @@
 This application was generated using JHipster 8.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.4.0](https://www.jhipster.tech/documentation-archive/v8.4.0).
 
 - Desenvolvimento:
+  usar https://postgresapp.com/downloads.html para criar a base de dados
+- ![img.png](configdb.png)
 
 ```
-npm run dev
+java
+    -Dspring.datasource.url=jdbc:postgresql://localhost:5432/pg16semprotdb  \
+    -Dspring.datasource.username=dbadmin \
+    -Dspring.datasource.password=12345 \
+    -Dserver.port=80 \
+    -jar semprotdb-0.0.1-SNAPSHOT.jar
 ```
+
+Lembrar de configurar o DBConfig:
+
+![img.png](dbconfig_init.png)
 
 - Compilar:
 

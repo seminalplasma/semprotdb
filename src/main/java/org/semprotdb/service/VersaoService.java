@@ -34,9 +34,8 @@ import tech.jhipster.service.filter.LongFilter;
 @Transactional
 public class VersaoService {
 
-    private static boolean REMOVENDO = false;
     private static final Logger log = LoggerFactory.getLogger(VersaoService.class);
-
+    private static boolean REMOVENDO = false;
     private final VersaoRepository versaoRepository;
     private final CargaQueryService cargaQueryService;
     private final CargaRepository cargaRepository;
@@ -91,6 +90,11 @@ public class VersaoService {
                 ? ("<p class='text-center'>Versao " + versao.getNumero() + " : <b>" + versao.getNome() + "</b><p>")
                 : versao.getTexto()
         );
+
+        if (versao.getLog() != null && versao.getLog().trim().equals("REAPROVEITAR")) {
+            versao.setCargas(cargaRepository.findAll().stream().filter(c -> c.getDestino() == Destino.DADOS).collect(Collectors.toSet()));
+            versao.getCargas().forEach(c -> versao.setLog(versao.getLog() + "\n" + c.getId() + " / " + c.getNome()));
+        }
 
         return versaoRepository.save(versao);
     }
@@ -393,7 +397,11 @@ public class VersaoService {
             }
         }
         if (versao != null) {
-            Carga file = new TSV("Consolidado.tsv", consolidado).toCarga(versao).status("OK").ordem(7).destino(Destino.DOWNLOAD);
+            Carga file = new TSV("Consolidado_" + versao.getNome() + ".tsv", consolidado)
+                .toCarga(versao)
+                .status("OK")
+                .ordem(7)
+                .destino(Destino.DOWNLOAD);
             log.info("Persistindo CONSOLIDADO {}", file);
             cargaRepository.save(file);
         }

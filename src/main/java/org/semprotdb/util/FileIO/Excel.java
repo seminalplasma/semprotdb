@@ -2,6 +2,7 @@ package org.semprotdb.util.FileIO;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,10 +140,12 @@ public class Excel extends AbstractTabela {
         boolean vazio = true;
         for (Cell cell : row) {
             String celula = null;
-
             switch (cell.getCellType()) {
                 case STRING -> celula = cell.getRichStringCellValue().getString();
-                case NUMERIC -> celula = cell.getNumericCellValue() + "";
+                case NUMERIC -> {
+                    celula = BigDecimal.valueOf(cell.getNumericCellValue()).toPlainString();
+                    if (celula.endsWith(".0")) celula = celula.replace(".0", "");
+                }
             }
             celula = celula == null || celula.isBlank() ? null : celula.strip();
 

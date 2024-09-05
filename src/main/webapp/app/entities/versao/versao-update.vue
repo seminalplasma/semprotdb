@@ -14,8 +14,8 @@
           </div>
 
           <b-alert variant="warning" show
-            >Nao recomendo <b>alterar o nome ou numero</b> apos a versao estar disponivel para o usuario.</b-alert
-          >
+            >Nao recomendo <b>alterar o nome ou numero</b> apos a versao estar disponivel para o usuario.
+          </b-alert>
 
           <!--          NOME-->
           <div class="form-group">
@@ -154,9 +154,18 @@
               v-model="versao.imagemContentType"
             />
           </div>
-
           <!--          LOG-->
-          <div class="form-group" :hidden="isNew">
+          <div class="form-group" v-if="isNew">
+            <b-form-checkbox
+              id="checkbox-1"
+              name="checkbox-1"
+              v-model="reaproveitar"
+              @change="versao.log = reaproveitar ? 'REAPROVEITAR' : ''"
+            >
+              Reaproveitar todas cargas de dados anteriores
+            </b-form-checkbox>
+          </div>
+          <div class="form-group" v-else>
             <label class="form-control-label" v-text="t$('semprotdbApp.versao.log')" for="versao-log"></label>
             <textarea
               class="form-control"

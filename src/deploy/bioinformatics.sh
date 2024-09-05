@@ -51,6 +51,7 @@ fi
 #Restart=on-failure
 #RestartSec=5
 #ExecStart=/usr/local/bin/semprotdb.jar SuccessExitStatus=143
+#ExecStart=java -Dspring.datasource.url=jdbc:postgresql://localhost:5432/recov -jar /usr/local/bin/semprotdb.jar
 #
 #[Install]
 #WantedBy=multi-user.target
