@@ -73,32 +73,18 @@
       <!--      <hr style="margin-top: 8rem" />-->
 
       <p>
-        Imagine um catálogo detalhado de todas as proteínas presentes no fluido seminal de diferentes espécies. Essa é a essência de um
-        banco de dados de proteínas seminais. Esses repositórios digitais armazenam e organizam uma vasta quantidade de informações sobre as
-        proteínas encontradas no sêmen, desde a sua sequência de aminoácidos até sua função biológica. Por que eles são importantes?
-        Reprodução animal: Esses bancos de dados são cruciais para a pesquisa em reprodução animal, permitindo a identificação de
-        biomarcadores de fertilidade, a compreensão dos mecanismos de fertilização e o desenvolvimento de novas tecnologias de reprodução
-        assistida. Doenças sexualmente transmissíveis: Ao comparar os perfis proteicos de indivíduos saudáveis e infectados, é possível
-        identificar proteínas associadas a doenças sexualmente transmissíveis, auxiliando no diagnóstico e desenvolvimento de novas
-        terapias. Infertilidade masculina: O estudo das proteínas seminais pode fornecer insights sobre as causas da infertilidade
-        masculina, permitindo o desenvolvimento de novos tratamentos. Biomarcadores: As proteínas seminais podem servir como biomarcadores
-        para avaliar a qualidade do sêmen, a saúde reprodutiva e o potencial de fertilização. Quais informações são armazenadas? Os bancos
-        de dados de proteínas seminais armazenam uma variedade de informações, incluindo: Sequência de aminoácidos: A ordem exata dos
-        aminoácidos que compõem cada proteína. Estrutura tridimensional: A forma tridimensional da proteína, que determina sua função.
-        Função biológica: O papel da proteína no processo de fertilização, como a capacitação espermática, a reação acrossômica e a fusão
-        com o óvulo. Abundância: A quantidade de cada proteína presente no sêmen. Modificações pós-traducionais: Alterações químicas que
-        ocorrem nas proteínas após a sua síntese e que podem afetar sua função. Interações moleculares: Quais outras moléculas a proteína
-        interage no fluido seminal. Exemplos de aplicações: Desenvolvimento de testes de diagnóstico: A identificação de proteínas
-        específicas pode levar ao desenvolvimento de testes rápidos e precisos para avaliar a fertilidade masculina. Desenvolvimento de
-        contraceptivos masculinos não hormonais: O estudo das proteínas envolvidas na fertilização pode levar ao desenvolvimento de novas
-        formas de contracepção masculina. Melhoria da criopreservação do sêmen: A compreensão das proteínas envolvidas na proteção do
-        espermatozoide durante o congelamento pode levar ao desenvolvimento de melhores métodos de criopreservação. Em resumo: Os bancos de
-        dados de proteínas seminais representam uma ferramenta poderosa para a pesquisa em reprodução e saúde masculina. Ao fornecer um
-        repositório abrangente de informações sobre as proteínas presentes no sêmen, esses bancos de dados permitem aos pesquisadores
-        desvendar os mecanismos moleculares que governam a fertilidade e desenvolver novas estratégias para tratar a infertilidade e outras
-        doenças relacionadas. Gostaria de saber mais sobre algum aspecto específico dos bancos de dados de proteínas seminais? Por exemplo,
-        posso explicar como as proteínas são identificadas no sêmen, como os dados são armazenados e organizados em um banco de dados ou
-        como esses dados podem ser utilizados para desenvolver novas tecnologias reprodutivas.
+        O estudo do proteoma do plasma seminal de mamíferos vem da necessidade em compreender a função de proteínas envolvidas no complexo
+        processo de fertilização, desde a proteção dos espermatozoides até a fecundação, e no desenvolvimento embrionário inicial. A
+        identificação de proteínas seminais e espermáticas conservadas entre espécies pode contribuir para informações evolutivas, bem como
+        apontar proteínas que sejam potenciais biomarcadores de fertilidade do macho e congelabilidade do sêmen. SemProtDB é um banco de
+        dados que tem como objetivo reunir e organizar os dados disponíveis de proteoma de plasma seminal de espécies mamíferas presentes na
+        literatura, auxiliando a comunidade científica na análise das informações existentes. Sabe-se que as proteínas ou famílias de
+        proteínas seminais exercem papeis importantes na fisiologia espermática, com impacto direto na habilidade reprodutiva da espécie.
+        Além disso, cada espécie possui um perfil proteico bem definido para o plasma seminal. Portanto, o SemProtDB visar ser uma
+        ferramenta facilitadora na tomada de decisões para futuros desenhos experimentais, evitando desperdício de tempo e recursos de
+        pesquisa. Aqui o usuário encontrará a reunião de todas as proteínas descritas em plasma seminal das principais espécies mamíferas,
+        bem como informações sobre seu peso molecular, tamanho, gene e suas referências. O SemProtDB oferece a opção de link clicável para
+        direcionamento do usuário que direcionará para mais informações sobre a proteína escolhida em bancos de dados de proteínas.
       </p>
     </div>
   </div>

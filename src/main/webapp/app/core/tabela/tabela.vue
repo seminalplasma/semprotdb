@@ -186,7 +186,7 @@
                   class="autores text-black-50"
                   target="_blank"
                 >
-                  {{ referencia.autores ?? referencia.citacao }}, {{ referencia.ano }}
+                  {{ referencia.autores ?? referencia.citacao }} {{ referencia.ano }}
                   {{ proteina.referencias.length > 1 && idx + 1 < proteina.referencias.length ? ' • ' : '' }}
                 </a>
 
