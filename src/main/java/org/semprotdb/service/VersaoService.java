@@ -464,7 +464,7 @@ public class VersaoService {
             if (
                 p.getCuradoria() != null &&
                 p.getCuradoria().getEmail() != null &&
-                p.getCuradoria().getEmail().trim().isEmpty() &&
+                !p.getCuradoria().getEmail().trim().isEmpty() &&
                 !C.containsKey(p.getCuradoria().getEmail())
             ) {
                 String curador = versao.getNome() + "_" + p.getCuradoria().getEmail().trim();
