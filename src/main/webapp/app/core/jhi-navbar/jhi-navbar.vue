@@ -59,7 +59,7 @@
         <b-nav-item to="/tabela" active-class="active" exact>
           <span>
             <font-awesome-icon icon="dna" />
-            <span v-text="t$('Proteinas')"></span>
+            <span v-text="t$('global.menu.entities.proteinas')"></span>
           </span>
         </b-nav-item>
 

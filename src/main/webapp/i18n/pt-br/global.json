@@ -16,7 +16,8 @@
         "gene": "Gene",
         "proteina": "Proteina",
         "recurso": "Recurso",
-        "dbConfig": "DB Config"
+        "dbConfig": "DB Config",
+        "proteinas": "Proteinas"
       },
       "account": {
         "main": "Conta",
