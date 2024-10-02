@@ -911,50 +911,75 @@ public class VersaoService {
             versao = _v.orElseThrow();
             REMOVENDO = true;
 
-            int ptnas = versao.getProteinas().size();
-            log.info("Preparando para remover versao {} com {} proteinas", versao.identfy(), ptnas);
+            log.info("REMOVENDO versao {} [1/8] referencia ", versao.identfy());
+            versaoRepository.removerVersao1(versao.getId());
 
-            Set<Proteina> proteinas = new HashSet<>(versao.getProteinas());
+            log.info("REMOVENDO versao {} [2/8] limpar referencia ", versao.identfy());
+            versaoRepository.removerVersao2();
 
-            HashSet<Recurso> recs = new HashSet<>();
-            for (Proteina p : proteinas) {
-                final HashSet<Recurso> rs = new HashSet<>(p.getRecursos());
-                rs.forEach(r -> r.removeProteina(p));
-                recs.addAll(rs);
-            }
-            recursoRepository.saveAll(recs);
+            log.info("REMOVENDO versao {} [3/8] remover recurso ", versao.identfy());
+            versaoRepository.removerVersao3(versao.getId());
 
-            log.info("ATUALIZANDO {} relacoes", recs.size());
-            proteinas.forEach(
-                p -> p.recursos(Collections.emptySet()).gene(null).referencias(Collections.emptySet()).curadoria(null).versao(null)
-            );
-            versaoRepository.save(versao.proteinas(Collections.emptySet()));
+            log.info("REMOVENDO versao {} [4/8] limpar recurso ", versao.identfy());
+            versaoRepository.removerVersao4(versao.getId());
 
-            List<Recurso> rec_vazio_ids = recursoRepository.findAllByProteinasIsEmpty();
-            log.info("REMOVENDO {} recursos", rec_vazio_ids.size());
-            recursoRepository.deleteAll(rec_vazio_ids);
+            log.info("REMOVENDO versao {} [5/8] remover proteina ", versao.identfy());
+            versaoRepository.removerVersao5(versao.getId());
 
-            log.info("REMOVENDO {} proteinas", proteinas.size());
-            proteinaRepository.saveAll(proteinas);
-            proteinaRepository.deleteAll(proteinas);
+            log.info("REMOVENDO versao {} [6/8] remover gene ", versao.identfy());
+            versaoRepository.removerVersao6();
 
-            log.info("REMOVENDO versao {}", versao.identfy());
-            versaoRepository.delete(versao);
+            log.info("REMOVENDO versao {} [7/8] remover carga ", versao.identfy());
+            versaoRepository.removerVersao7(versao.getId());
 
-            /// remover genes nulos
-            List<Gene> genes = geneRepository.findAllByProteinasIsEmpty();
-            log.info("REMOVENDO {} genes", genes.size());
-            geneRepository.deleteAll(genes);
+            log.info("REMOVENDO versao {} [8/8] remover versao ", versao.identfy());
+            versaoRepository.removerVersao8(versao.getId());
 
-            /// remover organismo nulos
-            List<Organismo> organismos_vazios = organismoRepository.findAllByGenesIsEmpty();
-            log.info("REMOVENDO {} organismos", organismos_vazios.size());
-            organismoRepository.deleteAll(organismos_vazios);
-
-            /// remover referencias nulos
-            List<Referencia> referencias_vazios = referenciaRepository.findAllByProteinasIsEmpty();
-            log.info("REMOVENDO {} referencias", referencias_vazios.size());
-            referenciaRepository.deleteAll(referencias_vazios);
+            log.info("REMOVENDO versao {} terminado.", versao.identfy());
+            //            int ptnas = versao.getProteinas().size();
+            //            log.info("Preparando para remover versao {} com {} proteinas", versao.identfy(), ptnas);
+            //
+            //            Set<Proteina> proteinas = new HashSet<>(versao.getProteinas());
+            //
+            //            HashSet<Recurso> recs = new HashSet<>();
+            //            for (Proteina p : proteinas) {
+            //                final HashSet<Recurso> rs = new HashSet<>(p.getRecursos());
+            //                rs.forEach(r -> r.removeProteina(p));
+            //                recs.addAll(rs);
+            //            }
+            //            recursoRepository.saveAll(recs);
+            //
+            //            log.info("ATUALIZANDO {} relacoes", recs.size());
+            //            proteinas.forEach(
+            //                p -> p.recursos(Collections.emptySet()).gene(null).referencias(Collections.emptySet()).curadoria(null).versao(null)
+            //            );
+            //            versaoRepository.save(versao.proteinas(Collections.emptySet()));
+            //
+            //            List<Recurso> rec_vazio_ids = recursoRepository.findAllByProteinasIsEmpty();
+            //            log.info("REMOVENDO {} recursos", rec_vazio_ids.size());
+            //            recursoRepository.deleteAll(rec_vazio_ids);
+            //
+            //            log.info("REMOVENDO {} proteinas", proteinas.size());
+            //            proteinaRepository.saveAll(proteinas);
+            //            proteinaRepository.deleteAll(proteinas);
+            //
+            //            log.info("REMOVENDO versao {}", versao.identfy());
+            //            versaoRepository.delete(versao);
+            //
+            //            /// remover genes nulos
+            //            List<Gene> genes = geneRepository.findAllByProteinasIsEmpty();
+            //            log.info("REMOVENDO {} genes", genes.size());
+            //            geneRepository.deleteAll(genes);
+            //
+            //            /// remover organismo nulos
+            //            List<Organismo> organismos_vazios = organismoRepository.findAllByGenesIsEmpty();
+            //            log.info("REMOVENDO {} organismos", organismos_vazios.size());
+            //            organismoRepository.deleteAll(organismos_vazios);
+            //
+            //            /// remover referencias nulos
+            //            List<Referencia> referencias_vazios = referenciaRepository.findAllByProteinasIsEmpty();
+            //            log.info("REMOVENDO {} referencias", referencias_vazios.size());
+            //            referenciaRepository.deleteAll(referencias_vazios);
         } catch (Exception e) {
             log.error("FALHA REMOVENDO {} {} ", versao.identfy(), e.toString());
         } finally {
