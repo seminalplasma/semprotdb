@@ -3,8 +3,12 @@ package org.semprotdb.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Locale;
+import org.semprotdb.domain.DBConfig;
 import org.semprotdb.domain.User;
+import org.semprotdb.repository.DBConfigRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -39,16 +43,20 @@ public class MailService {
 
     private final SpringTemplateEngine templateEngine;
 
+    private final DBConfigRepository dbConfigRepository;
+
     public MailService(
         JHipsterProperties jHipsterProperties,
         JavaMailSender javaMailSender,
         MessageSource messageSource,
-        SpringTemplateEngine templateEngine
+        SpringTemplateEngine templateEngine,
+        DBConfigRepository dbConfigRepository
     ) {
         this.jHipsterProperties = jHipsterProperties;
         this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
+        this.dbConfigRepository = dbConfigRepository;
     }
 
     @Async
@@ -66,6 +74,10 @@ public class MailService {
             content
         );
 
+        dbConfigRepository.saveAndFlush(
+            new DBConfig().key("EMAIL RESET SENHA").vtext("Email para " + to).vdate(Instant.now()).vtext(content)
+        );
+
         // Prepare message using a Spring helper
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
@@ -74,7 +86,8 @@ public class MailService {
             message.setFrom(jHipsterProperties.getMail().getFrom());
             message.setSubject(subject);
             message.setText(content, isHtml);
-            javaMailSender.send(mimeMessage);
+            log.warn("TENTANDO ENVIAR EMAIL : FUNCAO DESABILITADA !!!!");
+            ///javaMailSender.send(mimeMessage);
             log.debug("Sent email to User '{}'", to);
         } catch (MailException | MessagingException e) {
             log.warn("Email could not be sent to user '{}'", to, e);
@@ -115,6 +128,14 @@ public class MailService {
     @Async
     public void sendPasswordResetMail(User user) {
         log.debug("Sending password reset email to '{}'", user.getEmail());
+
+        dbConfigRepository.saveAndFlush(
+            new DBConfig()
+                .key("RESET SENHA")
+                .vstring("https://semprotdb.org/account/reset/finish?key=" + user.getResetKey())
+                .vdate(Instant.now())
+        );
+
         this.sendEmailFromTemplateSync(user, "mail/passwordResetEmail", "email.reset.title");
     }
 }
