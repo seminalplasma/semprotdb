@@ -28,6 +28,8 @@ public interface ProteinaRepository
         return this.fetchBagRelationships(this.findAll());
     }
 
+    List<Proteina> findAllByVersaoIdAndCuradoriaIsNotNull(Long versaoId);
+
     default Page<Proteina> findAllWithEagerRelationships(Pageable pageable) {
         return this.findAllLight(Specification.where(null), pageable);
     }

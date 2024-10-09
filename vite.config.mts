@@ -59,7 +59,7 @@ let config = defineConfig({
     host: true,
     port: 9000,
     proxy: Object.fromEntries(
-      ['/semprotdb/api', '/semprotdb/management', '/semprotdb/v3/api-docs'].map(res => [
+      ['/api', '/management', '/v3/api-docs'].map(res => [
         res,
         {
           target: 'http://localhost:8080',

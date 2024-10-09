@@ -34,4 +34,9 @@ export class Versao implements IVersao {
     this.status = s;
     return this;
   }
+
+  with_log(l: string): IVersao {
+    this.log = l;
+    return this;
+  }
 }

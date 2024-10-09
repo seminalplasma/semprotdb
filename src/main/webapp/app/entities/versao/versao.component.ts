@@ -31,6 +31,7 @@ export default defineComponent({
     const queryCount: Ref<number> = ref(null);
     const page: Ref<number> = ref(1);
     const propOrder = ref('id');
+    const ctxt = ref('? de ?');
     const reverse = ref(false);
     const totalItems = ref(0);
 
@@ -62,6 +63,15 @@ export default defineComponent({
         totalItems.value = Number(res.headers['x-total-count']);
         queryCount.value = totalItems.value;
         versaos.value = res.data;
+        ctxt.value =
+          queryCount.value > 1
+            ? versaos.value
+                .map(v => v.id)
+                .sort((a, b) => a - b)
+                .reverse()
+                .slice(0, 2)
+                .join(' de ')
+            : '? de ?';
       } catch (err) {
         alertService.showHttpError(err.response);
       } finally {
@@ -101,6 +111,13 @@ export default defineComponent({
 
     const changeStatus = async (v: IVersao, s: Status) => {
       await versaoService().partialUpdate(new Versao(v.id).with_status(s));
+      await retrieveVersaos();
+    };
+
+    const curar = async () => {
+      const vs = ctxt.value.split('de').map(x => parseInt(x.trim()));
+      if (vs.length < 2) return;
+      await versaoService().partialUpdate(new Versao(vs[0]).with_log('RECUPERAR_CURADORIA:' + vs[1] + ':'));
       await retrieveVersaos();
     };
 
@@ -153,6 +170,8 @@ export default defineComponent({
       accountService,
       hasAnyAuthorityValues,
       changeStatus,
+      ctxt,
+      curar,
     };
   },
   methods: {

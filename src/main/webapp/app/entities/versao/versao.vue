@@ -7,6 +7,12 @@
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
           <span v-text="t$('semprotdbApp.versao.home.refreshListLabel')"></span>
         </button>
+
+        <button class="btn btn-info mr-2" v-on:click="curar" :disabled="ctxt.includes('?')">
+          <font-awesome-icon icon="shield"></font-awesome-icon>
+          <span>Curar {{ ctxt }}</span>
+        </button>
+
         <router-link :to="{ name: 'VersaoCreate' }" custom v-slot="{ navigate }">
           <button
             @click="navigate"
