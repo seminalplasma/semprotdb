@@ -4,7 +4,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Locale;
 import org.semprotdb.domain.DBConfig;
 import org.semprotdb.domain.User;
@@ -132,7 +131,7 @@ public class MailService {
         dbConfigRepository.saveAndFlush(
             new DBConfig()
                 .key("RESET SENHA")
-                .vstring("https://semprotdb.org/account/reset/finish?key=" + user.getResetKey())
+                .vstring("http://http://bioinformatics.icb.ufmg.br/semprotdb/account/reset/finish?key=" + user.getResetKey())
                 .vdate(Instant.now())
         );
 
