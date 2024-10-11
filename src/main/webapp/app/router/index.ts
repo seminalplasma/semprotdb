@@ -14,7 +14,7 @@ const Feedbacks = () => import('@/core/feedbacks/feedback.vue');
 
 export const createRouter = () =>
   createVueRouter({
-    history: createWebHistory(''),
+    history: createWebHistory('/semprotdb'),
     routes: [
       {
         path: '/',
