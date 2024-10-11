@@ -4,7 +4,10 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.semprotdb.domain.Versao;
 import org.semprotdb.domain.enumeration.Status;
 import org.semprotdb.repository.VersaoRepository;
@@ -22,7 +25,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import tech.jhipster.service.filter.Filter;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -38,17 +40,13 @@ public class VersaoResource {
 
     private static final String ENTITY_NAME = "versao";
     private final UserService userService;
+    private final VersaoService versaoService;
+    private final VersaoRepository versaoRepository;
+    private final VersaoQueryService versaoQueryService;
+    private final VersaoCriteria.StatusFilter STATUS_PUBLIC_FILTER;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final VersaoService versaoService;
-
-    private final VersaoRepository versaoRepository;
-
-    private final VersaoQueryService versaoQueryService;
-
-    private final VersaoCriteria.StatusFilter STATUS_PUBLIC_FILTER;
 
     public VersaoResource(
         VersaoService versaoService,
@@ -88,7 +86,7 @@ public class VersaoResource {
     /**
      * {@code PUT  /versaos/:id} : Updates an existing versao.
      *
-     * @param id the id of the versao to save.
+     * @param id     the id of the versao to save.
      * @param versao the versao to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated versao,
      * or with status {@code 400 (Bad Request)} if the versao is not valid,
@@ -122,7 +120,7 @@ public class VersaoResource {
     /**
      * {@code PATCH  /versaos/:id} : Partial updates given fields of an existing versao, field will ignore if it is null
      *
-     * @param id the id of the versao to save.
+     * @param id     the id of the versao to save.
      * @param versao the versao to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated versao,
      * or with status {@code 400 (Bad Request)} if the versao is not valid,
@@ -148,7 +146,9 @@ public class VersaoResource {
         }
 
         Optional<Versao> result = versaoService.partialUpdate(versao);
-        if (!versao.getLog().startsWith("RECUPERAR_CURADORIA")) versaoService.processarVersaoasync(versao.getId());
+
+        if (versao.getLog().startsWith("RECUPERAR_CURADORIA")) versaoService.curarAsync(versao);
+        else versaoService.processarVersaoasync(versao.getId());
 
         return ResponseUtil.wrapOrNotFound(
             result,

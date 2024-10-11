@@ -127,8 +127,6 @@ public class VersaoService {
             .map(existingVersao -> {
                 if (versao.getLog() != null && versao.getLog().startsWith("RECUPERAR_CURADORIA")) {
                     log.info("Request to import curators : {}", versao.getLog());
-                    Optional<Versao> v = versaoRepository.findById(Long.valueOf(versao.getLog().split(":")[1]));
-                    v.ifPresent(antiga -> curar(antiga, existingVersao));
                     return existingVersao.status(Status.CARREGADO);
                 }
 
@@ -1000,7 +998,9 @@ public class VersaoService {
     }
 
     @Async
-    void curar(Versao antiga, Versao nova) {
+    public void curarAsync(Versao nova) {
+        Versao antiga = versaoRepository.findById(Long.valueOf(nova.getLog().split(":")[1])).orElseThrow();
+
         log.info("Restaurando curadoria da versao {} para {}", antiga.identfy(), nova.identfy());
         HashMap<String, Proteina> ps = new HashMap<>();
         HashMap<String, Gene> gs = new HashMap<>();
