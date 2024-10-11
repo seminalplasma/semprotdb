@@ -129,7 +129,7 @@ public class VersaoService {
                     log.info("Request to import curators : {}", versao.getLog());
                     Optional<Versao> v = versaoRepository.findById(Long.valueOf(versao.getLog().split(":")[1]));
                     v.ifPresent(antiga -> curar(antiga, existingVersao));
-                    return existingVersao;
+                    return existingVersao.status(Status.CARREGADO);
                 }
 
                 if (versao.getNome() != null) {
@@ -641,6 +641,8 @@ public class VersaoService {
             C.size() +
             " curadorias."
         );
+
+        versao.addLog("Proteinas, genes e curadorias aproveitadas nao estao contabilizadas nesse log.");
         return P.size();
     }
 
@@ -777,8 +779,9 @@ public class VersaoService {
         return "semprotdb_" + tipo + "_V" + versao.getNumero() + "_" + dt + "." + sfx;
     }
 
-    @Scheduled(cron = "0 0 23 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void atualizarDownloadFileBackup() {
+        if (dbConfigRepository.findDBConfigByKey("download.skip").isPresent()) return;
         log.info("Atualizando BACKUP dos arquivos de DOWNLOAD");
         if (!REMOVENDO) atualizarDownloadFile(null);
     }
@@ -996,76 +999,86 @@ public class VersaoService {
         }
     }
 
-    private void curar(Versao antiga, Versao nova) {
+    @Async
+    void curar(Versao antiga, Versao nova) {
         log.info("Restaurando curadoria da versao {} para {}", antiga.identfy(), nova.identfy());
         HashMap<String, Proteina> ps = new HashMap<>();
         HashMap<String, Gene> gs = new HashMap<>();
 
-        nova
-            .getProteinas()
-            .forEach(p -> ps.put((p.getNome().contains("> ") ? p.getNome().replaceAll("^\\d+> ", "") : p.getNome()).toUpperCase(), p));
+        try {
+            /// force async comportamento
+            Thread.sleep(5000);
 
-        nova.getProteinas().stream().map(Proteina::getGene).forEach(g -> gs.put(g.getOrganismo().getNome() + "." + g.getNome(), g));
+            nova
+                .getProteinas()
+                .forEach(p -> ps.put((p.getNome().contains("> ") ? p.getNome().replaceAll("^\\d+> ", "") : p.getNome()).toUpperCase(), p));
 
-        AtomicInteger criados = new AtomicInteger();
-        AtomicInteger atualizados = new AtomicInteger();
+            nova.getProteinas().stream().map(Proteina::getGene).forEach(g -> gs.put(g.getOrganismo().getNome() + "." + g.getNome(), g));
 
-        List<Proteina> ptns = proteinaRepository.findAllByVersaoIdAndCuradoriaIsNotNull(antiga.getId());
-        ///.filter(p -> Objects.nonNull(p.getCuradoria()) && Objects.equals(p.getVersao().getId(), antiga.getId()))
-        //   .collect(Collectors.toSet());
+            AtomicInteger criados = new AtomicInteger();
+            AtomicInteger atualizados = new AtomicInteger();
 
-        long tot = ptns.size();
+            List<Proteina> ptns = proteinaRepository.findAllByVersaoIdAndCuradoriaIsNotNull(antiga.getId());
+            ///.filter(p -> Objects.nonNull(p.getCuradoria()) && Objects.equals(p.getVersao().getId(), antiga.getId()))
+            //   .collect(Collectors.toSet());
 
-        ptns.forEach(p -> {
-            String gid = p.getGene().getOrganismo().getNome() + "." + p.getGene().getNome();
-            if (!gs.containsKey(gid)) {
-                gs.put(
-                    gid,
-                    geneRepository.save(
-                        new Gene()
-                            .nome(p.getGene().getNome())
-                            .curadoria(p.getGene().getCuradoria())
-                            .descricao(p.getGene().getDescricao())
-                            .organismo(p.getGene().getOrganismo())
-                    )
-                );
-            }
-            if (ps.containsKey(p.getNome().toUpperCase())) {
-                /// se tem proteina na nova versao para curar
-                Proteina _p = ps.get(p.getNome().toUpperCase());
+            long tot = ptns.size();
 
-                _p.setDescricao(p.getDescricao());
-                _p.setMassa(p.getMassa());
-                _p.setTamanho(p.getTamanho());
-                _p.setRecursos(p.getRecursos());
-                _p.setCuradoria(p.getCuradoria());
-                _p.setGene(gs.get(gid));
+            ptns.forEach(p -> {
+                String gid = p.getGene().getOrganismo().getNome() + "." + p.getGene().getNome();
+                if (!gs.containsKey(gid)) {
+                    gs.put(
+                        gid,
+                        geneRepository.save(
+                            new Gene()
+                                .nome(p.getGene().getNome())
+                                .curadoria(p.getGene().getCuradoria())
+                                .descricao(p.getGene().getDescricao())
+                                .organismo(p.getGene().getOrganismo())
+                        )
+                    );
+                }
+                if (ps.containsKey(p.getNome().toUpperCase())) {
+                    /// se tem proteina na nova versao para curar
+                    Proteina _p = ps.get(p.getNome().toUpperCase());
 
-                proteinaRepository.save(_p);
-                atualizados.getAndIncrement();
-            } else {
-                /// se nao tem essa proteina curada na nova versao
-                Proteina _p = new Proteina()
-                    .nome(p.getNome())
-                    .descricao(p.getDescricao())
-                    .massa(p.getMassa())
-                    .tamanho(p.getTamanho())
-                    .curadoria(p.getCuradoria())
-                    .gene(gs.get(gid))
-                    .versao(nova);
-                _p.getRecursos().addAll(p.getRecursos());
-                _p.getReferencias().addAll(p.getReferencias());
-                proteinaRepository.save(_p);
-                criados.getAndIncrement();
-            }
+                    _p.setDescricao(p.getDescricao());
+                    _p.setMassa(p.getMassa());
+                    _p.setTamanho(p.getTamanho());
+                    _p.setRecursos(p.getRecursos());
+                    _p.setCuradoria(p.getCuradoria());
+                    _p.setGene(gs.get(gid));
 
-            log.debug("Total {} de {} processados...", atualizados.get() + criados.get(), tot);
-        });
+                    proteinaRepository.save(_p);
+                    atualizados.getAndIncrement();
+                } else {
+                    /// se nao tem essa proteina curada na nova versao
+                    Proteina _p = new Proteina()
+                        .nome(p.getNome())
+                        .descricao(p.getDescricao())
+                        .massa(p.getMassa())
+                        .tamanho(p.getTamanho())
+                        .curadoria(p.getCuradoria())
+                        .gene(gs.get(gid))
+                        .versao(nova);
+                    _p.getRecursos().addAll(p.getRecursos());
+                    _p.getReferencias().addAll(p.getReferencias());
+                    proteinaRepository.save(_p);
+                    criados.getAndIncrement();
+                }
 
-        int total = criados.get() + atualizados.get();
-        String logtxt = ". Curadoria aproveitada " + total + " (" + criados.get() + " criados e " + atualizados.get() + " atual.).";
+                log.debug("Total {} de {} processados...", atualizados.get() + criados.get(), tot);
+            });
 
-        log.info(logtxt);
-        versaoRepository.save(nova.log(nova.getLog() + ".\n" + logtxt));
+            int total = criados.get() + atualizados.get();
+            String logtxt = ". Curadoria aproveitada " + total + " (" + criados.get() + " criados e " + atualizados.get() + " atual.).";
+
+            log.info(logtxt);
+            versaoRepository.save(nova.log(nova.getLog() + ".\n" + logtxt));
+        } catch (Exception e) {
+            log.error("ERRO AO APROVEITAR CURADORIA", e);
+        } finally {
+            versaoRepository.save(nova.status(Status.CRIADO));
+        }
     }
 }

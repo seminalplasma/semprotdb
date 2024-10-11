@@ -66,6 +66,7 @@ export default defineComponent({
         ctxt.value =
           queryCount.value > 1
             ? versaos.value
+                .filter(v => v.status === 'CRIADO' || v.status === 'DISPONIVEL')
                 .map(v => v.id)
                 .sort((a, b) => a - b)
                 .reverse()
