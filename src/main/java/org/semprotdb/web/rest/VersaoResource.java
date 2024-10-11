@@ -148,7 +148,7 @@ public class VersaoResource {
         }
 
         Optional<Versao> result = versaoService.partialUpdate(versao);
-        versaoService.processarVersaoasync(versao.getId());
+        if (!versao.getLog().startsWith("RECUPERAR_CURADORIA")) versaoService.processarVersaoasync(versao.getId());
 
         return ResponseUtil.wrapOrNotFound(
             result,
