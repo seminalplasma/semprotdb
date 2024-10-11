@@ -131,7 +131,7 @@ public class MailService {
         dbConfigRepository.saveAndFlush(
             new DBConfig()
                 .key("RESET SENHA")
-                .vstring("http://http://bioinformatics.icb.ufmg.br/semprotdb/account/reset/finish?key=" + user.getResetKey())
+                .vstring("http://bioinformatics.icb.ufmg.br/semprotdb/account/reset/finish?key=" + user.getResetKey())
                 .vdate(Instant.now())
         );
 
