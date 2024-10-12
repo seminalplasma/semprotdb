@@ -9,7 +9,7 @@
         </button>
 
         <button
-          v-if="!ctxt?.includes(' de ') && !ctxt?.includes('?')"
+          v-if="ctxt?.includes(' de ') && !ctxt?.includes('?')"
           class="btn btn-info mr-2"
           v-on:click="curar"
           :disabled="ctxt.includes('?') || isFetching"
