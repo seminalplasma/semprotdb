@@ -8,7 +8,12 @@
           <span v-text="t$('semprotdbApp.versao.home.refreshListLabel')"></span>
         </button>
 
-        <button v-if="ctxt?.includes(' de ')" class="btn btn-info mr-2" v-on:click="curar" :disabled="ctxt.includes('?') || isFetching">
+        <button
+          v-if="!ctxt?.includes(' de ') && !ctxt?.includes('?')"
+          class="btn btn-info mr-2"
+          v-on:click="curar"
+          :disabled="ctxt.includes('?') || isFetching"
+        >
           <font-awesome-icon icon="shield"></font-awesome-icon>
           <span>Curar {{ ctxt }}</span>
         </button>
