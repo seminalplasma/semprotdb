@@ -19,7 +19,6 @@ export default defineComponent({
     const alertService = inject('alertService', () => useAlertService(), true);
 
     const retrieveDBConfigs = async () => {
-      console.log('carregando.....');
       isFetching.value = true;
       try {
         const res = await dBConfigService().retrieve(false, true);
@@ -63,9 +62,6 @@ export default defineComponent({
     init(): void {
       this.logsService.findAll().then(response => {
         this.extractLoggers(response);
-      });
-      this.retrieveDBConfigs().then(r => {
-        console.log(r);
       });
     },
     updateLevel(name: string, level: string): void {
