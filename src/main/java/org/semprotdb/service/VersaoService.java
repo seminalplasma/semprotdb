@@ -998,7 +998,8 @@ public class VersaoService {
     }
 
     @Async
-    public void curarAsync(Versao nova) {
+    public void curarAsync(Versao v) {
+        Versao nova = versaoRepository.findById(v.getId()).orElseThrow();
         Versao antiga = versaoRepository.findById(Long.valueOf(nova.getLog().split(":")[1])).orElseThrow();
 
         log.info("Restaurando curadoria da versao {} para {}", antiga.identfy(), nova.identfy());
