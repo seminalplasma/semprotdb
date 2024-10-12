@@ -63,6 +63,9 @@ export default defineComponent({
       this.logsService.findAll().then(response => {
         this.extractLoggers(response);
       });
+      this.retrieveDBConfigs().then(r => {
+        //console.log(r);
+      });
     },
     updateLevel(name: string, level: string): void {
       this.logsService.changeLevel(name, level).then(() => {
