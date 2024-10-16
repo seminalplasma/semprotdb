@@ -454,8 +454,52 @@ public class VersaoService {
         recursoRepository.findAllLight(Pageable.unpaged()).getContent().forEach(x -> X.put(x.getUid(), x));
         log.info("Total {} recursos serao reusadas de versoes anteriores", X.size());
 
+        ///verificar se esta tentando importar proteina ja curada
+        /// se sim -> remover a nova pois ja esta curada
+        /// se nao -> remover a curada pois nao tem no set novo
+
+        List<Proteina> ps = proteinaRepository.findAllByVersaoIdAndCuradoriaIsNotNull(versao.getId());
+
+        boolean recov = ps.stream().allMatch(p -> p.getNome().matches("^\\d+> .+"));
+        log.info("Verificar {} proteinas curadas de versoes anteriores, recov {}", ps.size(), recov);
+
+        HashSet<Proteina> remover = new HashSet<>();
+        HashSet<Proteina> manter = new HashSet<>();
+
+        ps.forEach(p -> {
+            HashSet<String> ids = new HashSet();
+            String nome = p.getNome();
+            ids.add(nome);
+            if (recov) nome = p.getNome().replaceAll("^\\d+> ", "");
+            ids.add(nome.toUpperCase());
+            ids.add(nome.toLowerCase());
+            p.getRecursos().forEach(r -> ids.add(r.getUid()));
+
+            String o = p.getGene().getOrganismo().getNome().trim().toUpperCase();
+            ptns.forEach(pnew -> {
+                if (
+                    pnew.getRecursos().stream().anyMatch(r -> ids.contains(r.getUid())) ||
+                    (ids.contains(pnew.getNome().strip()) && pnew.getGene().getOrganismo().getNome().trim().toUpperCase().equals(o))
+                ) {
+                    remover.add(pnew);
+                    manter.add(p);
+                }
+            });
+            C.put(p.getCuradoria().getEmail(), p.getCuradoria());
+            Gene g = p.getGene();
+            G.put(g.getOrganismo().getNome() + " > " + g.getNome(), g);
+        });
+
+        log.info("Removendo {} proteinas ja curadas na carga", remover.size());
+        remover.forEach(ptns::remove);
+        remover.clear();
+        ps.stream().filter(p -> !manter.contains(p)).forEach(remover::add);
+        log.info("Removendo {} proteinas curadas ausente na carga", remover.size());
+        proteinaRepository.deleteAll(remover);
+
         AtomicInteger keg = new AtomicInteger();
         AtomicInteger stg = new AtomicInteger();
+
         int invalidas = 0;
         int puladas = 0;
 
@@ -690,17 +734,19 @@ public class VersaoService {
 
     private void handleREF(Proteina p, HashMap<String, Referencia> R, Proteina PROTEINA) throws Exception {
         if (p.getReferencias().isEmpty()) throw new Exception("Proteina " + p + " sem referencias.");
-        Referencia r = p.getReferencias().iterator().next();
-        if (R.containsKey(r.getCitacao())) {
-            if (PROTEINA.getReferencias().stream().noneMatch(_r -> _r.getCitacao().equals(r.getCitacao()))) PROTEINA.addReferencia(
-                R.get(r.getCitacao())
-            );
-        } else {
-            Referencia _r = referenciaRepository.save(new Referencia().citacao(r.getCitacao()).link(r.getLink()));
-            R.put(r.getCitacao(), _r);
-            PROTEINA.addReferencia(_r);
-            log.info("NOVA referencia {}", _r);
-        }
+        p
+            .getReferencias()
+            .forEach(r -> {
+                if (R.containsKey(r.getCitacao())) {
+                    PROTEINA.getReferencias().removeIf(_r -> _r.getCitacao().equals(r.getCitacao()));
+                    PROTEINA.addReferencia(R.get(r.getCitacao()));
+                } else {
+                    Referencia _r = referenciaRepository.save(new Referencia().citacao(r.getCitacao()).link(r.getLink()));
+                    R.put(r.getCitacao(), _r);
+                    PROTEINA.addReferencia(_r);
+                    log.info("NOVA referencia {}", _r);
+                }
+            });
     }
 
     private Carga makeDownload(Versao versao) throws IOException {

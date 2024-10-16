@@ -1,9 +1,9 @@
 {
   "name": "semprotdb",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "Description for Semprotdb",
-  "license": "UNLICENSED",
+  "description": "Semprotdb seminal protein database",
+  "license": "(c) 2024",
   "scripts": {
     "app:start": "./mvnw",
     "app:up": "docker compose -f src/main/docker/app.yml up --wait",
