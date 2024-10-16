@@ -5,10 +5,10 @@
 
     <groupId>org.semprotdb</groupId>
     <artifactId>semprotdb</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>Semprotdb</name>
-    <description>Description for Semprotdb</description>
+    <description>Semprotdb seminal protein database</description>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
