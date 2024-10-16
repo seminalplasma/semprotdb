@@ -115,7 +115,7 @@ cd $DIR/semprotdb && JAVA_HOME=$JDK/jdk-21 ./mvnw -Pprod clean verify -DskipTest
 rm -rf $DIR/semprotdb/src/main/resources/config/application-prod.yml
 
 ## subir
-cp $DIR/semprotdb/target/semprotdb-*-SNAPSHOT.jar /usr/local/bin/semprotdb.jar && \
+cp $DIR/semprotdb/target/semprotdb-*.jar /usr/local/bin/semprotdb.jar && \
    echo "REINICIAR O SERVICO:" && sudo systemctl restart semprotdb
 
 echo "... OK ..."
