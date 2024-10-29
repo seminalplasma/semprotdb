@@ -903,7 +903,7 @@ public class VersaoService {
                     carga1.getChecksum() == null ||
                     !carga1.getChecksum().contains("|") ||
                     carga2.getChecksum() == null ||
-                    !carga2.getStatus().contains("|")
+                    !carga2.getChecksum().contains("|")
                 ) continue;
                 String c1MD5 = carga1.getChecksum().split("\\|")[0];
                 String c2MD5 = carga2.getChecksum().split("\\|")[0];
