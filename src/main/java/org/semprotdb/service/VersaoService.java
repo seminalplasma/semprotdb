@@ -823,7 +823,7 @@ public class VersaoService {
         return "semprotdb_" + tipo + "_V" + versao.getNumero() + "_" + dt + "." + sfx;
     }
 
-    @Scheduled(cron = "0 50 7 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void atualizarDownloadFileBackup() {
         if (dbConfigRepository.findDBConfigByKey("download.skip").isPresent()) return;
         log.info("Atualizando BACKUP dos arquivos de DOWNLOAD");
