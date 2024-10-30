@@ -823,7 +823,7 @@ public class VersaoService {
         return "semprotdb_" + tipo + "_V" + versao.getNumero() + "_" + dt + "." + sfx;
     }
 
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "0 50 7 * * ?")
     public void atualizarDownloadFileBackup() {
         if (dbConfigRepository.findDBConfigByKey("download.skip").isPresent()) return;
         log.info("Atualizando BACKUP dos arquivos de DOWNLOAD");
@@ -912,7 +912,7 @@ public class VersaoService {
                 // apagar a que possui o maior nome
                 if (carga1.getNome().compareTo(carga2.getNome()) > 0) {
                     apagar.add(carga1);
-                    tsvs.get(carga1.getId()).validado(false);
+                    if (tsvs.containsKey(carga1.getId())) tsvs.get(carga1.getId()).validado(false);
                 }
             }
         }
