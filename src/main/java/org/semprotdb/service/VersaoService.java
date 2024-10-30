@@ -911,7 +911,7 @@ public class VersaoService {
                 // duas cargas com conteudo igual
                 // apagar a que possui o maior nome
                 if (carga1.getNome().compareTo(carga2.getNome()) > 0) {
-                    apagar.add(carga1);
+                    if (!apagar.contains(carga1)) apagar.add(carga1);
                     if (tsvs.containsKey(carga1.getId())) tsvs.get(carga1.getId()).validado(false);
                 }
             }
@@ -919,7 +919,7 @@ public class VersaoService {
 
         if (!apagar.isEmpty()) {
             log.info("Apagando {} cargas duplicadas: {}", apagar.size(), apagar);
-            cargaRepository.deleteAll(apagar);
+            apagar.forEach(c -> cargaRepository.deleteById(c.getId()));
         }
 
         log.info("Salvar em disco.");
