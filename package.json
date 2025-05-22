@@ -53,7 +53,7 @@
     "pretest": "npm run lint",
     "test": "npm run vitest-run --",
     "test:watch": "npm run vitest",
-    "vite-build": "vite build --base=/semprotdb",
+    "vite-build": "vite build --base=/",
     "vite-serve": "vite",
     "vitest": "vitest",
     "vitest-run": "vitest --run --coverage",

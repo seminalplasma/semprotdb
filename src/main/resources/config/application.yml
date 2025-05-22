@@ -165,7 +165,7 @@ server:
     session:
       cookie:
         http-only: true
-    context-path: /semprotdb/
+    context-path: /
 
 springdoc:
   show-actuator: true

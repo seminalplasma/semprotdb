@@ -52,14 +52,14 @@ let config = defineConfig({
   },
   define: {
     I18N_HASH: '"generated_hash"',
-    SERVER_API_URL: '"/semprotdb/"',
+    SERVER_API_URL: '"/"',
     APP_VERSION: `"${process.env.APP_VERSION ? process.env.APP_VERSION : 'DEV'}"`,
   },
   server: {
     host: true,
     port: 9000,
     proxy: Object.fromEntries(
-      ['/semprotdb/api', '/semprotdb/management', '/semprotdb/v3/api-docs'].map(res => [
+      ['/api', '/management', '/v3/api-docs'].map(res => [
         res,
         {
           target: 'http://localhost:8080',
