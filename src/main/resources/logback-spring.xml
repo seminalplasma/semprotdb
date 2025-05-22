@@ -68,10 +68,10 @@
     <springProperty name="log.level" source="logging.level.root" defaultValue="INFO" />
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/log/semprotdb/semprotdb.current.log</file>
+        <file>/home/ubuntu/semprotdb/logs/semprotdb.current.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>/var/log/semprotdb/semprotdb.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/home/ubuntu/semprotdb/logs/semprotdb.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- keep 30 days' worth of history capped at 3GB total size -->
             <maxHistory>30</maxHistory>
