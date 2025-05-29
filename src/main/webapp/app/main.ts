@@ -19,6 +19,7 @@ import '../content/scss/global.scss';
 import '../content/scss/vendor.scss';
 import TranslationService from '@/locale/translation.service';
 import VersaoService from '@/entities/versao/versao.service';
+import type { AxiosError } from 'axios';
 
 const pinia = createPinia();
 
@@ -54,6 +55,8 @@ Vue.configureCompat({
   RENDER_FUNCTION: 'suppress-warning',
   WATCH_ARRAY: 'suppress-warning',
 });
+
+const LOGIN_BYPASS_URLS = ['/api/account', '/api/authenticate'];
 
 const i18n = initI18N();
 
@@ -143,13 +146,14 @@ const app = createApp({
     });
 
     setupAxiosInterceptors(
-      error => {
+      (error: AxiosError) => {
         const url = error.response?.config?.url;
-        const status = error.status || error.response.status;
+        const path = error.response?.config?.url?.split('?')[0];
+        const status = error.status || error.response?.status;
         if (status === 401) {
           // Store logged out state.
           store.logout();
-          if (!url.endsWith('api/account') && !url.endsWith('api/authenticate')) {
+          if (path && !LOGIN_BYPASS_URLS.includes(path)) {
             // Ask for a new authentication
             loginService.openLogin();
             return;
@@ -157,7 +161,7 @@ const app = createApp({
         }
         return Promise.reject(error);
       },
-      error => {
+      (error: AxiosError) => {
         return Promise.reject(error);
       },
     );
