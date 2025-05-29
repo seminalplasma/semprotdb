@@ -137,6 +137,12 @@
             {{ value.name }}
           </b-dropdown-item>
         </b-nav-item-dropdown>
+        <b-nav-item v-if="!authenticated" data-cy="login" v-on:click="openLogin()" id="login" active-class="active">
+          <span>
+            <font-awesome-icon icon="sign-in-alt" />
+            <span v-text="t$('global.menu.account.login')"></span>
+          </span>
+        </b-nav-item>
         <b-nav-item-dropdown
           v-if="authenticated"
           right
@@ -161,13 +167,9 @@
             <font-awesome-icon icon="lock" />
             <span v-text="t$('global.menu.account.password')"></span>
           </b-dropdown-item>
-          <b-dropdown-item data-cy="logout" v-if="authenticated" v-on:click="logout()" id="logout" active-class="active">
+          <b-dropdown-item data-cy="logout" v-on:click="logout()" id="logout" active-class="active">
             <font-awesome-icon icon="sign-out-alt" />
             <span v-text="t$('global.menu.account.logout')"></span>
-          </b-dropdown-item>
-          <b-dropdown-item data-cy="login" v-if="!authenticated" v-on:click="openLogin()" id="login" active-class="active">
-            <font-awesome-icon icon="sign-in-alt" />
-            <span v-text="t$('global.menu.account.login')"></span>
           </b-dropdown-item>
           <b-dropdown-item data-cy="register" to="/register" id="register" v-if="!authenticated" active-class="active">
             <font-awesome-icon icon="user-plus" />
