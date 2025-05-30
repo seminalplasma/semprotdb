@@ -48,12 +48,14 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const res = await organismoService().retrieve();
-        organismos.value = res.data.map(org => ({
-          ...org,
-          // Use apelido first, then nome, then an empty string for the lookup.
-          // Provide a fallback icon if no mapping is found.
-          silhueta: ORGANISMO_ICON_MAPPER[org.apelido || org.nome || ''] || '/content/images/semprot-logo2.svg',
-        }));
+        organismos.value = res.data
+          .map(org => ({
+            ...org,
+            // Use apelido first, then nome, then an empty string for the lookup.
+            // Provide a fallback icon if no mapping is found.
+            silhueta: ORGANISMO_ICON_MAPPER[org.apelido || ''] || '/content/images/semprot-logo2.svg',
+          }))
+          .sort((a, b) => a.apelido.localeCompare(b.apelido));
       } catch (error) {
         console.error('Failed to load organismos:', error);
       }
@@ -88,8 +90,10 @@ export default defineComponent({
       }
     });
 
-    const getOrganismStyle = (index: number, total: number, radius: number, itemSize: number) => {
+    const getOrganismStyle = (index: number, total: number) => {
       if (total === 0) return {};
+      // radius is the min between 200 and 50% of the viewport width
+      const radius = Math.min(260, window.innerWidth * 0.5) - 60; // 60px padding
       const angle = (index / total) * 2 * Math.PI - Math.PI / 2; // Start from top
 
       const x = radius * Math.cos(angle);

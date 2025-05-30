@@ -77,7 +77,7 @@ export default defineComponent({
     );
 
     const retrieveProteinas = async () => {
-      if (!versao || !versao.value || !versao.value.id || versao.value.id < 1) {
+      if (!versao.value || !versao.value || !versao.value.id || versao.value.id < 1) {
         return;
       }
 
@@ -85,7 +85,7 @@ export default defineComponent({
       const page_size = itemsPerPage.value;
 
       try {
-        let paginationQuery = Object.assign(filters.value, {
+        const paginationQuery = Object.assign(filters.value, {
           page: page.value - 1,
           size: itemsPerPage.value,
           sort: sort(),
@@ -105,7 +105,7 @@ export default defineComponent({
         }
 
         const res = await proteinaService().retrieve(paginationQuery);
-
+        console.log(res);
         if (page_size !== itemsPerPage.value) return;
         totalItems.value = Number(res.headers['x-total-count']);
         queryCount.value = totalItems.value;
@@ -236,7 +236,7 @@ export default defineComponent({
         const parts = this.queryes
           .map(q => q.split(' '))
           .map((x, i) => x.slice(0, i > 0 ? 3 : 2).concat([x.slice(i > 0 ? 3 : 2).join(' ')]));
-        let qfirst = [];
+        const qfirst = [];
         const qors = [];
 
         this.filters = Object.fromEntries(

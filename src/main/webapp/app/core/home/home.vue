@@ -1,10 +1,10 @@
 <template>
   <div class="home-page">
     <!-- Hero Section -->
-    <section class="hero-section text-center py-2">
+    <section class="hero-section text-center py-4">
       <div class="container">
-        <h1 class="display-4 text-primary">SemProtDB</h1>
-        <p class="lead text-muted mb-5">{{ t$('home.hero.tagline') }}</p>
+        <h1 class="semprotdb-title">SemProtDB</h1>
+        <p class="lead text-muted mb-5" style="font-weight: 400">{{ t$('home.hero.tagline') }}</p>
 
         <div class="organism-circle-container my-4">
           <img class="central-image" v-if="organismos.length > 0" src="/content/images/semprot-logo3.svg" alt="Imagem da Versão" />
@@ -13,7 +13,7 @@
             :key="item.id"
             :to="{ path: '/tabela', query: { organismId: item.id } }"
             class="organism-item shadow-sm"
-            :style="getOrganismStyle(index, organismos.length, 220, 100)"
+            :style="getOrganismStyle(index, organismos.length)"
             :title="item.apelido || item.nome"
           >
             <div class="organism-icon-wrapper">
@@ -170,10 +170,16 @@
   color: var(--primary-color);
 }
 
+.semprotdb-title {
+  font-size: 3.5rem; /* Adjust as needed */
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
 .organism-circle-container {
   position: relative;
-  width: 475px; /* Adjust as needed, must be large enough for circle + items */
-  height: 475px; /* Adjust as needed */
+  width: 460px; /* Adjust as needed, must be large enough for circle + items */
+  height: 460px; /* Adjust as needed */
   margin-left: auto;
   margin-right: auto;
   display: flex; /* For centering placeholder content if no organisms */
@@ -203,8 +209,8 @@
 .organism-item {
   position: absolute;
   /* left and top are set by inline style from getOrganismStyle */
-  width: 100px; /* Diameter of the circle */
-  height: 100px; /* Diameter of the circle */
+  width: 120px; /* Diameter of the circle */
+  height: 120px; /* Diameter of the circle */
   background-color: white;
   border-radius: 50%;
   display: flex;
@@ -221,6 +227,8 @@
     box-shadow 0.3s ease;
   padding: 5px;
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: solid 2px rgba(0, 0, 0, 0.1);
 }
 
 .organism-item:hover {
@@ -244,8 +252,8 @@
 }
 
 .organism-icon-wrapper {
-  width: 80px; /* Adjust icon container size */
-  height: 80px; /* Adjust icon container size */
+  width: 100px; /* Adjust icon container size */
+  height: 100px; /* Adjust icon container size */
   padding: 8px;
   display: flex;
   align-items: center;
@@ -261,10 +269,11 @@
 }
 
 .organism-name {
+  width: 80%;
   font-size: 0.75rem; /* Small text for the name */
   color: #555;
   display: block;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .content-section {
@@ -287,6 +296,11 @@
 
 /* Responsive adjustments for the circle container if needed */
 @media (max-width: 768px) {
+  .semprotdb-title {
+    font-size: 2.5rem; /* Adjust as needed */
+    font-weight: 600;
+    color: var(--primary-color);
+  }
   .organism-circle-container {
     width: 350px; /* Smaller circle on smaller screens */
     height: 350px;
@@ -300,15 +314,16 @@
     height: 150px;
   }
   .organism-item {
+    width: 100px;
+    height: 100px;
+  }
+  .organism-icon-wrapper {
     width: 80px;
     height: 80px;
   }
-  .organism-icon-wrapper {
-    width: 35px;
-    height: 35px;
-  }
   .organism-name {
-    font-size: 0.65rem;
+    width: 100%;
+    font-size: 0.75rem;
   }
   .hero-section {
     min-height: auto;

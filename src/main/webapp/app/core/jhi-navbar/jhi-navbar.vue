@@ -1,5 +1,5 @@
 <template>
-  <b-navbar data-cy="navbar" toggleable="md" type="dark" class="bg-primary">
+  <b-navbar data-cy="navbar" toggleable="md" type="dark" class="navbar-container bg-primary">
     <b-navbar-brand class="logo" b-link to="/">
       <span class="logo-img"></span>
       <span v-text="t$('global.title')" class="navbar-title"></span>
@@ -179,6 +179,7 @@
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
+  <div style="height: 60px"></div>
 </template>
 
 <script lang="ts" src="./jhi-navbar.component.ts"></script>
@@ -190,6 +191,15 @@
     ========================================================================== */
 .navbar-version {
   font-size: 0.65em;
+}
+
+.navbar-container {
+  z-index: 1000;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
 }
 
 @media screen and (min-width: 768px) {
@@ -216,10 +226,10 @@
 }
 
 .logo .logo-img {
-  height: 45px;
+  height: 44px;
   display: inline-block;
   vertical-align: middle;
-  width: 45px;
+  width: 44px;
 }
 
 .logo-img {
