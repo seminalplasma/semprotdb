@@ -14,6 +14,7 @@ export default defineComponent({
     const dBConfigService = inject('dBConfigService', () => new DBConfigService());
     const dbc = new DBConfig();
     const disp = ref(true);
+    const currentYear = new Date().getFullYear();
 
     return {
       t$: useI18n().t,
@@ -21,6 +22,7 @@ export default defineComponent({
       dbc,
       alertService,
       disp,
+      currentYear,
     };
   },
 

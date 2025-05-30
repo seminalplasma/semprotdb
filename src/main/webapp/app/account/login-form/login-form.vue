@@ -1,7 +1,7 @@
 <template>
   <div class="modal-body">
     <div class="row justify-content-center">
-      <div class="col-md-8">
+      <div class="col-md-10">
         <b-alert
           show
           data-cy="loginError"
@@ -10,7 +10,7 @@
           v-html="t$('login.messages.error.authentication')"
         ></b-alert>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-10">
         <b-form v-on:submit.prevent="doLogin()">
           <b-form-group v-bind:label="t$('global.form[\'username.label\']')" label-for="username">
             <b-form-input
@@ -35,11 +35,11 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-checkbox id="rememberMe" name="rememberMe" v-model="rememberMe" checked>
+          <b-form-checkbox class="mt-2 mb-4" id="rememberMe" name="rememberMe" v-model="rememberMe" checked>
             <span v-text="t$('login.form.rememberme')"></span>
           </b-form-checkbox>
-          <div>
-            <b-button data-cy="submit" type="submit" variant="primary" v-text="t$('login.form.button')"></b-button>
+          <div class="w-100">
+            <b-button class="w-100" data-cy="submit" type="submit" variant="primary" v-text="t$('login.form.button')"></b-button>
           </div>
         </b-form>
         <p></p>

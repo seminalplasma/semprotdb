@@ -3,7 +3,7 @@
     <div class="px- mx-2 bg-light p-2 m-2 border-left border-secondary" style="border-width: 12px !important ; max-height: 8rem">
       <h1 class="display-3 text-primary">
         <font-awesome-icon icon="dna"></font-awesome-icon>
-        Proteinas
+        Proteínas
       </h1>
     </div>
 

@@ -152,16 +152,23 @@
     <script type="text/javascript">
       // show an error message if the app loading takes more than 4 sec
       window.onload = function () {
-        setTimeout(showError, 4000);
+        setTimeout(showError, 8000);
 
-        if (localStorage.getItem('semprotdb-cookies') === 'OK') {
-          closemsg();
+        if (localStorage.getItem('semprotdb-cookies') !== 'OK') {
+          openmsg();
         }
       };
 
       function closemsg() {
         localStorage.setItem('semprotdb-cookies', 'OK');
         document.getElementById('msg_cookies').style.display = 'none';
+      }
+
+      function openmsg() {
+        var msgElm = document.getElementById('msg_cookies');
+        if (msgElm?.style) {
+          msgElm.style.display = 'flex'; // Changed to flex for better alignment
+        }
       }
 
       function showError() {
@@ -176,21 +183,27 @@
       id="msg_cookies"
       style="
         position: fixed;
-        left: 5rem;
-        bottom: 2rem;
-        border-radius: 1rem;
-        background-color: #bbcedd;
-        margin: 1rem;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #343a40; /* Darker background */
+        color: #f8f9fa; /* Light text color */
         padding: 1rem;
         z-index: 10000;
+        display: none;
+        align-items: center; /* Vertically align items */
+        justify-content: space-between; /* Space out text and button */
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
       "
     >
-      <h3><i>🍪 Cookies</i></h3>
-      <h5>Respeitando sua privacidade, esse site <b>utiliza cookies</b> para melhorar sua experiencia.</h5>
-      <p>Ao navegar no site voce concorda com os termos de uso.</p>
-      <p style="text-align: right">
-        <button class="btn btn-outline-dark" onclick="closemsg()">OK</button>
-      </p>
+      <div style="flex-grow: 1; margin-right: 1rem">
+        <h5 style="margin-bottom: 0.25rem; font-size: 1rem; color: #cecece"><i class="fas fa-cookie-bite"></i> Cookies</h5>
+        <p style="margin-bottom: 0; font-size: 0.875rem">
+          Respeitando sua privacidade, esse site <b>utiliza cookies</b> para melhorar sua experiencia. Ao navegar no site voce concorda com
+          os termos de uso.
+        </p>
+      </div>
+      <button class="btn btn-light btn-sm" onclick="closemsg()">OK</button>
     </div>
   </body>
 </html>

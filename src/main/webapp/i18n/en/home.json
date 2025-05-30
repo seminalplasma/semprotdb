@@ -14,6 +14,29 @@
       "follow": "follow {'@'}jhipster on Twitter"
     },
     "like": "If you like JHipster, don't forget to give us a star on",
-    "github": "GitHub"
+    "github": "GitHub",
+    "hero": {
+      "tagline": "An interactive repository of seminal plasma proteins.",
+      "loadingOrganisms": "Loading organisms...",
+      "currentVersionInfo": "Current version information."
+    },
+    "sections": {
+      "whatIs": {
+        "title": "What is SemProtDB?",
+        "text": "SemProtDB is a database dedicated to consolidating and organizing information about the seminal plasma proteome of various mammalian species, extracted from scientific literature. Our mission is to provide a centralized platform that assists the scientific community in exploring and analyzing this crucial data."
+      },
+      "importance": {
+        "title": "The Importance of Seminal Plasma Research",
+        "text": "Seminal plasma is a vital component for reproduction, containing a myriad of proteins that play essential roles in sperm protection and capacitation, the fertilization process, and early embryonic development. Each species has a unique seminal protein profile, and identifying conserved proteins can reveal evolutionary insights and point to biomarkers for fertility and semen freezability."
+      },
+      "whatYouWillFind": {
+        "title": "What You Will Find in SemProtDB?",
+        "text": "Browse a comprehensive compendium of proteins identified in the seminal plasma of major mammalian species. For each protein, access detailed information such as molecular weight, size, corresponding gene, and bibliographic references. Additionally, we provide direct links to protein databases, facilitating deeper research."
+      },
+      "howItHelps": {
+        "title": "How Can SemProtDB Assist Your Research?",
+        "text": "SemProtDB was built to be a strategic tool, optimizing your experiment planning and decision-making. By centralizing dispersed data, we aim to save your time and resources, allowing you to focus on advancing the science of reproduction."
+      }
+    }
   }
 }

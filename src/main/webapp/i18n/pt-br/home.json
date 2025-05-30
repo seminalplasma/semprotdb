@@ -14,6 +14,29 @@
       "follow": "siga {'@'}jhipster no Twitter"
     },
     "like": "Se você gosta do JHipster, não se esqueça de avaliar no",
-    "github": "GitHub"
+    "github": "GitHub",
+    "hero": {
+      "tagline": "Um repositório interativo de proteínas plasmáticas seminais.",
+      "loadingOrganisms": "Carregando organismos...",
+      "currentVersionInfo": "Informações da versão atual."
+    },
+    "sections": {
+      "whatIs": {
+        "title": "O Que é o SemProtDB?",
+        "text": "SemProtDB é um banco de dados dedicado a consolidar e organizar informações sobre o proteoma do plasma seminal de diversas espécies mamíferas, extraídas da literatura científica. Nossa missão é fornecer uma plataforma centralizada que auxilie a comunidade científica na exploração e análise desses dados cruciais."
+      },
+      "importance": {
+        "title": "A Importância da Pesquisa em Plasma Seminal",
+        "text": "O plasma seminal é um componente vital para a reprodução, contendo uma miríade de proteínas que desempenham papéis essenciais na proteção e capacitação dos espermatozoides, no processo de fertilização e no desenvolvimento embrionário inicial. Cada espécie possui um perfil proteico seminal único, e a identificação de proteínas conservadas pode revelar insights evolutivos e apontar biomarcadores de fertilidade e congelabilidade do sêmen."
+      },
+      "whatYouWillFind": {
+        "title": "O Que Você Encontrará no SemProtDB?",
+        "text": "Navegue por um compêndio abrangente de proteínas identificadas no plasma seminal das principais espécies mamíferas. Para cada proteína, acesse informações detalhadas como peso molecular, tamanho, gene correspondente e referências bibliográficas. Além disso, fornecemos links diretos para bancos de dados de proteínas, facilitando o aprofundamento em suas pesquisas."
+      },
+      "howItHelps": {
+        "title": "Como o SemProtDB Pode Auxiliar Sua Pesquisa?",
+        "text": "O SemProtDB foi construído para ser uma ferramenta estratégica, otimizando o planejamento de seus experimentos e a tomada de decisões. Ao centralizar dados dispersos, buscamos economizar seu tempo e recursos, permitindo que você se concentre no avanço da ciência da reprodução."
+      }
+    }
   }
 }
