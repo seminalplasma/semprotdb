@@ -3,16 +3,24 @@ import { useI18n } from 'vue-i18n';
 import OrganismoService from '@/entities/organismo/organismo.service';
 import type { IOrganismo } from '@/shared/model/organismo.model';
 import type { IVersao } from '@/shared/model/versao.model';
+import ovelha from '../../../content/images/Ovelha.svg';
+import cabra from '../../../content/images/Cabra.svg';
+import touro from '../../../content/images/Touro.svg';
+import cavalo from '../../../content/images/Cavalo.svg';
+import porco from '../../../content/images/Porco.svg';
+import cachorro from '../../../content/images/Cachorro.svg';
+import burro from '../../../content/images/Burro.svg';
+import bufalo from '../../../content/images/Bufalo.svg';
 
 const ORGANISMO_ICON_MAPPER: Record<string, string> = {
-  'Ovis aries': 'https://cdn.bioflore.com.br/semprotdb/Ovelha.svg',
-  'Capra hircus': 'https://cdn.bioflore.com.br/semprotdb/Cabra.svg',
-  'Bos taurus': 'https://cdn.bioflore.com.br/semprotdb/Touro.svg',
-  'Equus caballus': 'https://cdn.bioflore.com.br/semprotdb/Cavalo.svg',
-  'Sus scrofa': 'https://cdn.bioflore.com.br/semprotdb/Porco.svg',
-  'Canis lupus': 'https://cdn.bioflore.com.br/semprotdb/Cachorro.svg',
-  'Equus asinus': 'https://cdn.bioflore.com.br/semprotdb/Burro.svg',
-  'Bubalus bubalis': 'https://cdn.bioflore.com.br/semprotdb/Bufalo.svg',
+  'Ovis aries': ovelha,
+  'Capra hircus': cabra,
+  'Bos taurus': touro,
+  'Equus caballus': cavalo,
+  'Sus scrofa': porco,
+  'Canis lupus': cachorro,
+  'Equus asinus': burro,
+  'Bubalus bubalis': bufalo,
 };
 
 export default defineComponent({
