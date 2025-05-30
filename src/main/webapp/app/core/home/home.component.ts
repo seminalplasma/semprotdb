@@ -5,14 +5,14 @@ import type { IOrganismo } from '@/shared/model/organismo.model';
 import type { IVersao } from '@/shared/model/versao.model';
 
 const ORGANISMO_ICON_MAPPER: Record<string, string> = {
-  'Ovis aries': '/content/icons/Ovelha.svg',
-  'Capra hircus': '/content/icons/Cabra.svg',
-  'Bos taurus': '/content/icons/Touro.svg',
-  'Equus caballus': '/content/icons/Cavalo.svg',
-  'Sus scrofa': '/content/icons/Porco.svg',
-  'Canis lupus': '/content/icons/Cachorro.svg',
-  'Equus asinus': '/content/icons/Burro.svg',
-  'Bubalus bubalis': '/content/icons/Bufalo.svg',
+  'Ovis aries': '/content/images/Ovelha.svg',
+  'Capra hircus': '/content/images/Cabra.svg',
+  'Bos taurus': '/content/images/Touro.svg',
+  'Equus caballus': '/content/images/Cavalo.svg',
+  'Sus scrofa': '/content/images/Porco.svg',
+  'Canis lupus': '/content/images/Cachorro.svg',
+  'Equus asinus': '/content/images/Burro.svg',
+  'Bubalus bubalis': '/content/images/Bufalo.svg',
 };
 
 export default defineComponent({
