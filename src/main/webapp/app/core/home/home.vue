@@ -17,7 +17,7 @@
             :title="item.apelido || item.nome"
           >
             <div class="organism-icon-wrapper">
-              <img :src="item.silhueta" :alt="item.nome" class="organism-icon" />
+              <img :src="item.silhueta || ''" :alt="item.nome" class="organism-icon" />
               <span class="organism-name">{{ item.apelido || item.nome }}</span>
             </div>
           </router-link>
