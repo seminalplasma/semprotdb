@@ -1125,7 +1125,7 @@ public class VersaoService {
         } catch (Exception e) {
             log.error("ERRO AO APROVEITAR CURADORIA", e);
         } finally {
-            versaoRepository.save(nova.status(Status.CRIADO));
+            // versaoRepository.save(nova.status(Status.CRIADO));
             log.info("Restaurou curadoria em {} OK.", nova.identfy());
         }
     }
