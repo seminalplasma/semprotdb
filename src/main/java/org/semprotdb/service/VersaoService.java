@@ -1071,6 +1071,19 @@ public class VersaoService {
 
             long tot = ptns.size();
 
+            log.info(
+                "PS size: {} e GS size: {}. Processando {} proteinas curadas da versao {} para {}",
+                ps.size(),
+                gs.size(),
+                tot,
+                antiga.identfy(),
+                nova.identfy()
+            );
+
+            // log the first 10 keys of ps and gs
+            log.info("PS keys: {}", ps.keySet().stream().limit(10).toList());
+            log.info("GS keys: {}", gs.keySet().stream().limit(10).toList());
+
             ptns.forEach(p -> {
                 String gid = p.getGene().getOrganismo().getNome() + "." + p.getGene().getNome();
                 if (!gs.containsKey(gid)) {
