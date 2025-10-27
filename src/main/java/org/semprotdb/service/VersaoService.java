@@ -1104,7 +1104,7 @@ public class VersaoService {
                     // _p.setDescricao(p.getDescricao());
                     _p.setMassa(p.getMassa());
                     _p.setTamanho(p.getTamanho());
-                    _p.setRecursos(p.getRecursos());
+                    _p.setRecursos(new HashSet<>(p.getRecursos()));
                     _p.setCuradoria(p.getCuradoria());
                     _p.setGene(gs.get(gid));
 
