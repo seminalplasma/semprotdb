@@ -1086,6 +1086,7 @@ public class VersaoService {
                     );
                 }
                 String pname = p.getNome().contains("> ") ? p.getNome().replaceAll("^\\d+> ", "").toUpperCase() : p.getNome().toUpperCase();
+                log.info("Processando curadoria para proteina {}", pname);
                 if (ps.containsKey(pname)) {
                     /// se tem proteina na nova versao para curar
                     Proteina _p = ps.get(pname);
