@@ -1056,9 +1056,7 @@ public class VersaoService {
             /// force async comportamento
             Thread.sleep(5000);
 
-            nova
-                .getProteinas()
-                .forEach(p -> ps.put((p.getNome().contains("> ") ? p.getNome().replaceAll("^\\d+> ", "") : p.getNome()).toUpperCase(), p));
+            nova.getProteinas().forEach(p -> ps.put(p.getDescricao().toUpperCase(), p));
 
             nova.getProteinas().stream().map(Proteina::getGene).forEach(g -> gs.put(g.getOrganismo().getNome() + "." + g.getNome(), g));
 
@@ -1098,13 +1096,12 @@ public class VersaoService {
                         )
                     );
                 }
-                String pname = p.getNome().contains("> ") ? p.getNome().replaceAll("^\\d+> ", "").toUpperCase() : p.getNome().toUpperCase();
-                log.info("Processando curadoria para proteina {}", pname);
+                String pname = p.getDescricao().toUpperCase();
                 if (ps.containsKey(pname)) {
                     /// se tem proteina na nova versao para curar
                     Proteina _p = ps.get(pname);
 
-                    _p.setDescricao(p.getDescricao());
+                    // _p.setDescricao(p.getDescricao());
                     _p.setMassa(p.getMassa());
                     _p.setTamanho(p.getTamanho());
                     _p.setRecursos(p.getRecursos());
@@ -1140,7 +1137,7 @@ public class VersaoService {
         } catch (Exception e) {
             log.error("ERRO AO APROVEITAR CURADORIA", e);
         } finally {
-            // versaoRepository.save(nova.status(Status.CRIADO));
+            versaoRepository.save(nova.status(Status.PROCESSADO));
             log.info("Restaurou curadoria em {} OK.", nova.identfy());
         }
     }
