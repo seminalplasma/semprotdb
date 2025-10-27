@@ -1085,9 +1085,10 @@ public class VersaoService {
                         )
                     );
                 }
-                if (ps.containsKey(p.getNome().toUpperCase())) {
+                String pname = p.getNome().contains("> ") ? p.getNome().replaceAll("^\\d+> ", "").toUpperCase() : p.getNome().toUpperCase();
+                if (ps.containsKey(pname)) {
                     /// se tem proteina na nova versao para curar
-                    Proteina _p = ps.get(p.getNome().toUpperCase());
+                    Proteina _p = ps.get(pname);
 
                     _p.setDescricao(p.getDescricao());
                     _p.setMassa(p.getMassa());
@@ -1100,7 +1101,7 @@ public class VersaoService {
                     atualizados.getAndIncrement();
                 } else {
                     /// se nao tem essa proteina curada na nova versao
-                    Proteina _p = new Proteina()
+                    /* Proteina _p = new Proteina()
                         .nome(p.getNome())
                         .descricao(p.getDescricao())
                         .massa(p.getMassa())
@@ -1110,7 +1111,7 @@ public class VersaoService {
                         .versao(nova);
                     _p.getRecursos().addAll(p.getRecursos());
                     _p.getReferencias().addAll(p.getReferencias());
-                    proteinaRepository.save(_p);
+                    proteinaRepository.save(_p); */
                     criados.getAndIncrement();
                 }
 
