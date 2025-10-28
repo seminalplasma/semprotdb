@@ -18,11 +18,11 @@
         "title": "Gene"
       },
       "id": "ID",
-      "nome": "Nome",
-      "descricao": "Descricao",
+      "nome": "Name",
+      "descricao": "Description",
       "curadoria": "Curadoria",
-      "organismo": "Organismo",
-      "proteina": "Proteina"
+      "organismo": "Organism",
+      "proteina": "Protein"
     }
   }
 }

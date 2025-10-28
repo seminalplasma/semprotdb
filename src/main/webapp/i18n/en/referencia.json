@@ -18,11 +18,11 @@
         "title": "Referencia"
       },
       "id": "ID",
-      "citacao": "Citacao",
+      "citacao": "Citation",
       "link": "Link",
-      "ano": "Ano",
-      "autores": "Autores",
-      "proteina": "Proteina"
+      "ano": "Year",
+      "autores": "Authors",
+      "proteina": "Protein"
     }
   }
 }

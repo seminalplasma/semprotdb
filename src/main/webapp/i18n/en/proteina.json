@@ -2,31 +2,31 @@
   "semprotdbApp": {
     "proteina": {
       "home": {
-        "title": "Proteinas",
+        "title": "Proteins",
         "refreshListLabel": "Refresh list",
-        "createLabel": "Create a new Proteina",
-        "createOrEditLabel": "Create or edit a Proteina",
-        "notFound": "No Proteinas found"
+        "createLabel": "Create a new Protein",
+        "createOrEditLabel": "Create or edit a Protein",
+        "notFound": "No Proteins found"
       },
-      "created": "A new Proteina is created with identifier { param }",
-      "updated": "A Proteina is updated with identifier { param }",
-      "deleted": "A Proteina is deleted with identifier { param }",
+      "created": "A new Protein is created with identifier { param }",
+      "updated": "A Protein is updated with identifier { param }",
+      "deleted": "A Protein is deleted with identifier { param }",
       "delete": {
-        "question": "Are you sure you want to delete Proteina { id }?"
+        "question": "Are you sure you want to delete Protein { id }?"
       },
       "detail": {
-        "title": "Proteina"
+        "title": "Protein"
       },
       "id": "ID",
-      "nome": "Nome",
-      "tamanho": "Tamanho",
-      "massa": "Massa",
-      "descricao": "Descricao",
-      "curadoria": "Curadoria",
-      "versao": "Versao",
+      "nome": "Name",
+      "tamanho": "Size",
+      "massa": "Mass",
+      "descricao": "Description",
+      "curadoria": "Curatorship",
+      "versao": "Version",
       "gene": "Gene",
-      "referencia": "Referencia",
-      "recurso": "Recurso"
+      "referencia": "Reference",
+      "recurso": "Resource"
     }
   }
 }

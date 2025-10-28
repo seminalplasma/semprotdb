@@ -18,17 +18,17 @@
         "title": "Versao"
       },
       "id": "ID",
-      "nome": "Nome",
-      "detalhes": "Detalhes",
+      "nome": "Name",
+      "detalhes": "Details",
       "release": "Release",
       "label": "Label",
       "status": "Status",
-      "numero": "Numero",
+      "numero": "Number",
       "logo": "Logo",
       "log": "Log",
-      "texto": "Texto",
-      "imagem": "Imagem",
-      "proteina": "Proteina",
+      "texto": "Text",
+      "imagem": "Image",
+      "proteina": "Protein",
       "carga": "Carga"
     }
   }

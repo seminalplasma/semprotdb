@@ -1,0 +1,20 @@
+{
+  "semprotdbApp": {
+    "tabela": {
+      "title": "Proteins",
+      "filterBellow": "filter bellow",
+      "proteinOrGeneName": "protein or gene name",
+      "protein": "Protein",
+      "organismo": "Organism",
+      "gene": "Gene",
+      "recurso": "Resource",
+      "referencia": "Reference",
+      "showing": "Showing {count} of {total}",
+      "loading": "Loading {count}...",
+      "totalFound": "Total <strong>{count} proteins</strong> found.",
+      "notFound": "Not found.",
+      "removeAllFilters": "Remove all filters",
+      "loadingVersion": "Loading version..."
+    }
+  }
+}

@@ -3,7 +3,7 @@
     <div class="px- mx-2 bg-light p-2 m-2 border-left border-secondary" style="border-width: 12px !important ; max-height: 8rem">
       <h1 class="display-3 text-primary">
         <font-awesome-icon icon="dna"></font-awesome-icon>
-        Proteínas
+        <span v-text="t$('semprotdbApp.tabela.title')"></span>
       </h1>
     </div>
 
@@ -33,7 +33,13 @@
             </b-dropdown>
           </template>
 
-          <b-form-input id="search" disabled placeholder="filter bellow" type="text" v-model="query"></b-form-input>
+          <b-form-input
+            id="search"
+            disabled
+            :placeholder="t$('semprotdbApp.tabela.filterBellow')"
+            type="text"
+            v-model="query"
+          ></b-form-input>
 
           <b-input-group-append>
             <b-button
@@ -59,7 +65,7 @@
           <b-form-input
             id="search"
             :disabled="isFetching || queryPT2e.length < 1"
-            :placeholder="queryes.length > 0 ? '...' : 'protein or gene name'"
+            :placeholder="queryes.length > 0 ? '...' : t$('semprotdbApp.tabela.proteinOrGeneName')"
             type="text"
             v-model="query"
           ></b-form-input>
@@ -95,15 +101,15 @@
               </b-button>
             </th>
             <th class="align-middle text-center" scope="row" v-on:click="changeOrder('GeneOrganismoApelido')">
-              <span v-text="t$('Organismo')"></span>
+              <span v-text="t$('semprotdbApp.tabela.organismo')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'GeneOrganismoApelido'"></jhi-sort-indicator>
             </th>
             <th class="align-middle" scope="row" v-on:click="changeOrder('GeneNome')">
-              <span v-text="t$('Gene')"></span>
+              <span v-text="t$('semprotdbApp.tabela.gene')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'GeneNome'"></jhi-sort-indicator>
             </th>
             <th class="align-middle" scope="row" v-on:click="changeOrder('descricao')">
-              Protein
+              <span v-text="t$('semprotdbApp.tabela.protein')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'descricao'"></jhi-sort-indicator>
             </th>
             <th class="align-middle text-center" scope="row" v-on:click="changeOrder('tamanho')">
@@ -115,10 +121,10 @@
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'massa'"></jhi-sort-indicator>
             </th>
             <th class="align-middle text-center" scope="row">
-              <span v-text="t$('Recurso')"></span>
+              <span v-text="t$('semprotdbApp.tabela.recurso')"></span>
             </th>
             <th class="align-middle text-center" scope="row">
-              <span v-text="t$('Referencia')"></span>
+              <span v-text="t$('semprotdbApp.tabela.referencia')"></span>
             </th>
           </tr>
         </thead>
@@ -207,10 +213,9 @@
     <div class="d-flex align-items-center justify-content-center w-100" v-if="isFetching">
       <strong role="status">
         <template v-if="proteinas && proteinas.length > 0 && totalItems > 0">
-          Showing {{ proteinas.length }} of
-          {{ totalItems }}
+          {{ t$('semprotdbApp.tabela.showing', { count: proteinas.length, total: totalItems }) }}
         </template>
-        <template v-else>Loading {{ itemsPerPage }}...</template>
+        <template v-else>{{ t$('semprotdbApp.tabela.loading', { count: itemsPerPage }) }}</template>
       </strong>
       <div class="spinner-border ms-auto m-4" aria-hidden="true"></div>
       <div class="btn-group">
@@ -222,17 +227,17 @@
     <div v-else class="m-4">
       <b-alert v-if="proteinas && proteinas.length > 0" variant="success" show>
         <font-awesome-icon icon="check"></font-awesome-icon>
-        Total <strong>{{ proteinas.length }} proteins </strong> found.
+        {{ t$('semprotdbApp.tabela.totalFound', { count: proteinas.length }) }}
       </b-alert>
       <b-alert v-else variant="warning" show>
         <span>
           <font-awesome-icon icon="triangle-exclamation"></font-awesome-icon>
-          <strong>Not found.</strong>
+          <strong><span v-text="t$('semprotdbApp.tabela.notFound')"></span></strong>
         </span>
 
         <b-button class="mx-4" @click="reset()">
           <font-awesome-icon icon="eraser"></font-awesome-icon>
-          Remove all filters
+          <span v-text="t$('semprotdbApp.tabela.removeAllFilters')"></span>
         </b-button>
       </b-alert>
     </div>
@@ -240,7 +245,7 @@
       <font-awesome-icon icon="up-long"></font-awesome-icon>
     </b-button>
   </div>
-  <div v-else>Loading version...</div>
+  <div v-else><span v-text="t$('semprotdbApp.tabela.loadingVersion')"></span></div>
 </template>
 
 <style scoped>

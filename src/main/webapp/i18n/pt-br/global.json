@@ -14,10 +14,10 @@
         "referencia": "Referencia",
         "organismo": "Organismo",
         "gene": "Gene",
-        "proteina": "Proteina",
+        "proteina": "Proteína",
         "recurso": "Recurso",
         "dbConfig": "DB Config",
-        "proteinas": "Proteinas"
+        "proteinas": "Proteínas"
       },
       "account": {
         "main": "Conta",

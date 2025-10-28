@@ -19,9 +19,9 @@
       },
       "id": "ID",
       "email": "Email",
-      "data": "Data",
-      "anotacoes": "Anotacoes",
-      "proteina": "Proteina",
+      "data": "Date",
+      "anotacoes": "Anotations",
+      "proteina": "Protein",
       "gene": "Gene"
     }
   }

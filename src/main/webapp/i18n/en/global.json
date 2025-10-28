@@ -12,10 +12,10 @@
         "carga": "Carga",
         "versao": "Versao",
         "referencia": "Referencia",
-        "organismo": "Organismo",
+        "organismo": "Organism",
         "gene": "Gene",
-        "proteina": "Proteina",
-        "recurso": "Recurso",
+        "proteina": "Protein",
+        "recurso": "Resource",
         "dbConfig": "DB Config",
         "proteinas": "Proteins"
       },
