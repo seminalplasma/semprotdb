@@ -227,7 +227,7 @@
     <div v-else class="m-4">
       <b-alert v-if="proteinas && proteinas.length > 0" variant="success" show>
         <font-awesome-icon icon="check"></font-awesome-icon>
-        {{ t$('semprotdbApp.tabela.totalFound', { count: proteinas.length }) }}
+        <span v-html="t$('semprotdbApp.tabela.totalFound', { count: proteinas.length })"></span>
       </b-alert>
       <b-alert v-else variant="warning" show>
         <span>
