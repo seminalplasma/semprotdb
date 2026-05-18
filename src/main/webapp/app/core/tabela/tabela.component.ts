@@ -29,8 +29,8 @@ export default defineComponent({
 
     const queryPT1: Ref<string> = ref('AND');
     const queryPT2: Ref<string> = ref('Protein');
-    const queryPT2e: Ref<string[]> = ref(['Organism', 'Gene', 'Protein', 'Tamanho']);
-    const queryPT2n: Ref<string[]> = ref(['Tamanho']);
+    const queryPT2e: Ref<string[]> = ref(['Organism', 'Gene', 'Protein', 'Size']);
+    const queryPT2n: Ref<string[]> = ref(['Size']);
 
     const fOps = ['contains', 'doesNotContain', 'equals', 'notEquals', 'in', 'notIn'];
     const fOps2 = ['>', '=', '>=', '<=', '<'];
@@ -215,7 +215,7 @@ export default defineComponent({
       this.curado = false;
       this.queryes = [];
       this.queryPT2 = 'Protein';
-      this.queryPT2e = ['Organism', 'Gene', 'Protein', 'Tamanho'];
+      this.queryPT2e = ['Organism', 'Gene', 'Protein', 'Size'];
       if (Object.keys(this.filters).some(x => x.includes('.'))) {
         this.filters = {};
         this.clear();
@@ -260,8 +260,8 @@ export default defineComponent({
             ent = ent.startsWith('Gen') ? 'geneNome' : ent;
             // "protein" => nome
             ent = ent.startsWith('Prot') ? 'descricao' : ent;
-            // "Tamanho" => tamanho
-            ent = ent.startsWith('Tam') ? 'tamanho' : ent;
+            // "Size" => tamanho
+            ent = ent.startsWith('Siz') ? 'tamanho' : ent;
 
             /// xyz.contains=something
             /// xyz.doesNotContain=something
