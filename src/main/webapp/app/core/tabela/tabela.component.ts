@@ -52,6 +52,24 @@ export default defineComponent({
 
     const isFetching = ref(false);
 
+    type ProteinaReferencia = NonNullable<IProteina['referencias']>[number];
+
+    const compareReferencias = (left: ProteinaReferencia, right: ProteinaReferencia): number => {
+      const leftYear = Number(left?.ano ?? Number.NEGATIVE_INFINITY);
+      const rightYear = Number(right?.ano ?? Number.NEGATIVE_INFINITY);
+
+      if (leftYear !== rightYear) {
+        return leftYear - rightYear;
+      }
+
+      return `${left?.autores ?? left?.citacao ?? ''}`.localeCompare(`${right?.autores ?? right?.citacao ?? ''}`);
+    };
+
+    const normalizeProteina = (proteina: IProteina): IProteina => ({
+      ...proteina,
+      referencias: [...(proteina.referencias ?? [])].sort(compareReferencias),
+    });
+
     const clear = () => {
       page.value = 1;
       links.value = {};
@@ -105,12 +123,11 @@ export default defineComponent({
         }
 
         const res = await proteinaService().retrieve(paginationQuery);
-        console.log(res);
         if (page_size !== itemsPerPage.value) return;
         totalItems.value = Number(res.headers['x-total-count']);
         queryCount.value = totalItems.value;
         links.value = dataUtils.parseLinks(res.headers?.['link']);
-        proteinas.value.push(...(res.data ?? []));
+        proteinas.value.push(...(res.data ?? []).map(normalizeProteina));
       } catch (err) {
         alertService.showHttpError(err.response);
       } finally {

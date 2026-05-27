@@ -16,7 +16,7 @@
               {{ queryPT1 }}
             </b-button>
             <b-dropdown :text="queryPT2" variant="secondary" size="sm">
-              <template v-for="entity of queryPT2e">
+              <template v-for="entity of queryPT2e" :key="entity">
                 <b-dropdown-item
                   @click="
                     queryPT2 = entity;
@@ -27,7 +27,7 @@
               </template>
             </b-dropdown>
             <b-dropdown :text="queryPT3" variant="secondary" size="sm" v-model="queryPT3">
-              <b-dropdown-item v-for="filtOp of queryPT2n.includes(queryPT2) ? fOps2 : fOps" @click="queryPT3 = filtOp">
+              <b-dropdown-item v-for="filtOp of queryPT2n.includes(queryPT2) ? fOps2 : fOps" :key="filtOp" @click="queryPT3 = filtOp">
                 {{ filtOp }}
               </b-dropdown-item>
             </b-dropdown>
@@ -178,8 +178,10 @@
                   >{{ proteina.recursos[0].uid }}
                 </b-button>
 
-                <b-dropdown v-else id="dropdown-1" :text="`${proteina.recursos.length} Links`" size="sm" text="Small">
-                  <b-dropdown-item v-for="r in proteina.recursos" :href="r.link || '#'" target="_blank">{{ r.uid }} </b-dropdown-item>
+                <b-dropdown v-else id="dropdown-1" :text="`${proteina.recursos.length} Links`" size="sm">
+                  <b-dropdown-item v-for="r in proteina.recursos" :key="r.uid ?? r.link" :href="r.link || '#'" target="_blank"
+                    >{{ r.uid }}
+                  </b-dropdown-item>
                 </b-dropdown>
               </template>
             </td>
@@ -187,7 +189,8 @@
             <td class="align-middle text-center">
               <template v-if="proteina.referencias && proteina.referencias.length > 0">
                 <a
-                  v-for="(referencia, idx) in proteina.referencias.sort(r => r.ano)"
+                  v-for="(referencia, idx) in proteina.referencias"
+                  :key="referencia.id ?? `${proteina.id}-${referencia.link ?? idx}`"
                   :href="referencia.link + '?'"
                   class="autores text-black-50"
                   target="_blank"
