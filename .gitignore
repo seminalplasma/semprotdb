@@ -151,3 +151,12 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
+
+# Runtime configuration (only the example belongs in Git)
+.env
+.env.*
+!.env.example
+
+# Local runtime files
+/data/
+/logs/

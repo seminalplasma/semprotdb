@@ -1,5 +1,13 @@
 # semprotdb
 
+## Deploy Docker na Locaweb
+
+O fluxo de produção com Dockerfile, Compose, `.env` e Nginx está em
+[docs/deploy-locaweb.md](docs/deploy-locaweb.md). No checkout `/root/semprotdb` do servidor,
+configure `.env` a partir de `.env.example` e execute `bash commands/deploy.sh`.
+A aplicação usa a porta interna `3001`, publicada no host como `2929`, e as redes
+compartilhadas `platform_proxy` e `platform_database`.
+
 This application was generated using JHipster 8.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.4.0](https://www.jhipster.tech/documentation-archive/v8.4.0).
 
 - Desenvolvimento:

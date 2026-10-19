@@ -66,28 +66,39 @@
     <!-- jhipster-needle-logback-add-log - JHipster will add a new log with level -->
 
     <springProperty name="log.level" source="logging.level.root" defaultValue="INFO" />
+    <springProperty name="SEMPROTDB_LOG_PATH" source="logging.file.path" defaultValue="./logs" />
 
-    <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/semprotdb/logs/semprotdb.current.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>/home/ubuntu/semprotdb/logs/semprotdb.%d{yyyy-MM-dd}.log</fileNamePattern>
+    <!-- Docker collects console logs; the manual deployment keeps file logging. -->
+    <springProfile name="!docker">
+        <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${SEMPROTDB_LOG_PATH}/semprotdb.current.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- daily rollover -->
+                <fileNamePattern>${SEMPROTDB_LOG_PATH}/semprotdb.%d{yyyy-MM-dd}.log</fileNamePattern>
 
-            <!-- keep 30 days' worth of history capped at 3GB total size -->
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+                <!-- keep 30 days' worth of history capped at 3GB total size -->
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>3GB</totalSizeCap>
 
-        </rollingPolicy>
+            </rollingPolicy>
 
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } &#45;&#45;&#45; [%t] %-40.40logger{39} : %crlf(%m) %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}</pattern>
-        </encoder>
-    </appender>
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } &#45;&#45;&#45; [%t] %-40.40logger{39} : %crlf(%m) %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}</pattern>
+            </encoder>
+        </appender>
+    </springProfile>
 
-    <root level="${log.level}">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="ROLLIN"/>
-    </root>
+    <springProfile name="docker">
+        <root level="${log.level}">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+    <springProfile name="!docker">
+        <root level="${log.level}">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="ROLLIN"/>
+        </root>
+    </springProfile>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>

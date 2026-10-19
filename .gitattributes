@@ -24,6 +24,8 @@
 *.sass          text
 *.scss          text
 *.sh            text eol=lf
+mvnw            text eol=lf
+.mvn/wrapper/maven-wrapper.properties text eol=lf
 *.sql           text
 *.txt           text
 *.ts            text

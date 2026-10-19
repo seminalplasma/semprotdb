@@ -1,0 +1,55 @@
+name: semprotdb
+
+services:
+  semprotdb:
+    image: semprotdb:local
+    container_name: semprotdb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    stop_grace_period: 60s
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: prod,docker
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:?Configure SPRING_DATASOURCE_URL in .env}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:?Configure SPRING_DATASOURCE_USERNAME in .env}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:?Configure SPRING_DATASOURCE_PASSWORD in .env}
+      JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET: ${JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET:?Configure the JWT secret in .env}
+      SERVER_PORT: ${SERVER_PORT:-3001}
+      SERVER_ADDRESS: 0.0.0.0
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+      SERVER_SSL_ENABLED: 'false'
+      SEMPROTDB_FILES_PATH: /app/data
+    ports:
+      - '2929:${SERVER_PORT:-3001}'
+    networks:
+      - platform_proxy
+      - platform_database
+    volumes:
+      - semprotdb-files:/app/data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --fail --silent --show-error http://127.0.0.1:$${SERVER_PORT}/management/health > /dev/null']
+      interval: 30s
+      timeout: 10s
+      retries: 6
+      start_period: 120s
+    logging:
+      driver: local
+      options:
+        max-size: 20m
+        max-file: '5'
+    mem_limit: 16g
+    cpus: 8
+
+networks:
+  platform_proxy:
+    external: true
+    name: platform_proxy
+  platform_database:
+    external: true
+    name: platform_database
+
+volumes:
+  semprotdb-files:

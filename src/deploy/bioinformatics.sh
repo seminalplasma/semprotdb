@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Legacy systemd/Apache deployment. Locaweb uses commands/deploy.sh instead.
+
 echo "Implantando nova versao do SEMPRODB"
 
-DIR=/home/semprodb
+# Parent of the checkout (for /root/semprotdb this resolves to /root).
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 
 ## Postgres >=12
 systemctl status postgresql  | head -5
@@ -57,7 +60,7 @@ fi
 #[Install]
 #WantedBy=multi-user.target
 ########################################
-#cp /home/semprodb/semprotdb/target/semprotdb-0.0.1-SNAPSHOT.jar /usr/local/bin/semprotdb.jar
+#cp "$DIR/semprotdb/target/semprotdb-0.0.1-SNAPSHOT.jar" /usr/local/bin/semprotdb.jar
 #chown semprodb /usr/local/bin/semprotdb.jar
 
 ## ******** ------------------------PROXY------------------------------------
@@ -104,10 +107,7 @@ then
 fi
 
 cp $DIR/application-prod.yml $DIR/semprotdb/src/main/resources/config/application-prod.yml
-[ ! -d $DIR/semprotdb/ ] && \
-   mkdir /home/semprodb/logs
-
-sed -i 's/Users\/miqueias\/ARQUIVOS/home\/semprodb\/logs/' $DIR/semprotdb/src/main/resources/logback-spring.xml
+mkdir -p "$DIR/semprotdb/logs"
 
 ## compilar
 rm -rf $DIR/semprotdb/target

@@ -19,6 +19,7 @@ import org.semprotdb.util.FileIO.Excel;
 import org.semprotdb.util.FileIO.TSV;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -47,6 +48,9 @@ public class VersaoService {
     private final ProteinaQueryService proteinaQueryService;
     private final CuradoriaRepository curadoriaRepository;
     private final DBConfigRepository dbConfigRepository;
+
+    @Value("${semprotdb.files-path:./data}")
+    private String filesPath;
 
     public VersaoService(
         VersaoRepository versaoRepository,
@@ -928,9 +932,9 @@ public class VersaoService {
             .ifPresentOrElse(
                 backp -> {
                     if (backp.getHabilitado()) {
-                        String D = "/home/semprodb/" + backp.getVstring();
+                        String D = filesPath + "/" + backp.getVstring();
                         File dir = new File(D);
-                        if (!dir.exists()) dir.mkdir();
+                        if (!dir.exists()) dir.mkdirs();
                         if (!dir.isDirectory()) log.error("ERRO ao gerar backup {} is NOT dir!!!", D);
                         else {
                             boolean clear = Objects.requireNonNull(dir.list()).length < 1;
