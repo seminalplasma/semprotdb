@@ -1,5 +1,21 @@
 # SemProtDB na Locaweb
 
+## Estado de HTTPS em 20/10/2026
+
+As rotas de `semprotdb.org` e `www.semprotdb.org` foram ativadas no Nginx da Locaweb,
+com certificado Let's Encrypt válido até 18/01/2027 e renovação simulada aprovada.
+Origem e Cloudflare passaram nos testes de página HTTP 200, saúde `UP` e
+redirecionamento HTTP 301. O CNAME de `www` foi criado pelo usuário; alguns caches
+recursivos ainda retornavam NXDOMAIN, apesar de 1.1.1.1 e 8.8.8.8 já resolverem o
+novo registro. Para os testes públicos de `www`, foi usado `curl --resolve` com
+um endereço confirmado da Cloudflare, sem desabilitar a validação TLS.
+
+A fonte ativa do proxy é o projeto Locaweb, em
+`config/nginx/conf.d/70-semprotdb.conf`; a operação está registrada em
+`docs/roteamento-semprotdb.md` desse projeto. Os arquivos HTTP em `ops/nginx`
+servem para a preparação inicial de uma nova instalação. Não os reaplique sobre
+a configuração HTTPS ativa. A aplicação e os bancos não foram reiniciados.
+
 ## Arquitetura
 
 O Compose inicia somente a aplicação. PostgreSQL e Nginx continuam nos containers

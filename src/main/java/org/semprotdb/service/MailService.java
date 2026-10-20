@@ -64,14 +64,7 @@ public class MailService {
     }
 
     private void sendEmailSync(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
-        log.info(
-            "Send email[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
-            isMultipart,
-            isHtml,
-            to,
-            subject,
-            content
-        );
+        log.debug("Send email[multipart '{}' and html '{}'] to '{}' with subject '{}'", isMultipart, isHtml, to, subject);
 
         dbConfigRepository.saveAndFlush(
             new DBConfig().key("EMAIL RESET SENHA").vtext("Email para " + to).vdate(Instant.now()).vtext(content)
@@ -85,8 +78,7 @@ public class MailService {
             message.setFrom(jHipsterProperties.getMail().getFrom());
             message.setSubject(subject);
             message.setText(content, isHtml);
-            log.warn("TENTANDO ENVIAR EMAIL : FUNCAO DESABILITADA !!!!");
-            // javaMailSender.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
             log.debug("Sent email to User '{}'", to);
         } catch (MailException | MessagingException e) {
             log.warn("Email could not be sent to user '{}'", to, e);
@@ -131,7 +123,7 @@ public class MailService {
         dbConfigRepository.saveAndFlush(
             new DBConfig()
                 .key("RESET SENHA")
-                .vstring("http://bioinformatics.icb.ufmg.br/semprotdb/account/reset/finish?key=" + user.getResetKey())
+                .vstring(jHipsterProperties.getMail().getBaseUrl() + "/account/reset/finish?key=" + user.getResetKey())
                 .vdate(Instant.now())
         );
 
