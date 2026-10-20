@@ -7,13 +7,15 @@ import org.semprotdb.repository.DBConfigRepository;
 import org.semprotdb.util.FileIO.Tail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
+@Profile("!docker")
 public class LogService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(LogService.class);
 
     private final DBConfigRepository dBConfigRepository;
 
@@ -29,7 +31,7 @@ public class LogService {
 
         dbConfigByKey.ifPresentOrElse(
             logF -> {
-                if (logF.getHabilitado()) {
+                if (Boolean.TRUE.equals(logF.getHabilitado())) {
                     String msgs = "ERRO";
                     try {
                         int rows = dBConfigRepository.findDBConfigByKey("log.file.limit").map(v -> v.getVint()).orElse(1000);
@@ -41,8 +43,6 @@ public class LogService {
                     } finally {
                         dBConfigRepository.save(logs.vtext(msgs));
                     }
-                } else {
-                    log.warn("CONFIGURAR LOCAL DO ARQUIVO DE LOG EM DBConfig !!!");
                 }
             },
             () -> {
